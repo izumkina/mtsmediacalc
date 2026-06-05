@@ -1,0 +1,1360 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Калькулятор прироста бренд-метрик · 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#ffffff; --ink2:#f3f4f7; --panel:#ffffff; --panel2:#f7f8fb; --panel3:#eef0f4;
+  --line:rgba(0,0,0,.09); --line2:rgba(0,0,0,.16);
+  --text:#1d2023; --text2:#44474f; --muted:#71757f; --faint:#a0a4ad;
+  --accent:#ff0032; --accent-deep:#d1002b;
+  --r:14px; --rs:10px;
+  --grid:rgba(0,0,0,.035);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink); color:var(--text);
+  font-family:"Golos Text",system-ui,sans-serif; font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  min-height:100vh; overflow-x:hidden;
+}
+/* atmosphere */
+.bg{position:fixed; inset:0; z-index:-1; pointer-events:none;}
+.bg::before{content:""; position:absolute; inset:0;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:46px 46px; mask-image:radial-gradient(ellipse 120% 80% at 50% -10%,#000 35%,transparent 78%);}
+.bg::after{content:""; position:absolute; top:-30vh; left:50%; transform:translateX(-50%);
+  width:120vw; height:90vh;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,0,50,.05),transparent 70%);
+  filter:blur(10px);}
+.glow2{position:fixed; bottom:-25vh; right:-15vw; width:60vw; height:60vh; z-index:-1; pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(45,127,249,.05),transparent 70%); filter:blur(20px);}
+
+.wrap{max-width:1180px; margin:0 auto; padding:30px 22px 90px;}
+
+/* masthead */
+.mast{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;
+  padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:26px;
+  animation:fu .7s both;}
+.brand{display:flex; align-items:center; gap:11px; margin-bottom:14px;}
+.dot{width:11px; height:11px; border-radius:50%; background:var(--accent);
+  box-shadow:0 0 0 4px rgba(255,0,50,.14),0 0 18px 2px rgba(255,0,50,.5);
+  animation:pulse 2.6s ease-in-out infinite;}
+.brand b{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:12px; letter-spacing:.34em;
+  text-transform:uppercase; color:var(--text2);}
+h1{font-family:"Unbounded",sans-serif; font-weight:700; font-size:clamp(26px,4.4vw,44px);
+  line-height:1.04; letter-spacing:-.01em; margin:0 0 12px;}
+h1 .em{color:var(--accent);}
+.sub{color:var(--muted); max-width:560px; font-size:14.5px;}
+.metabox{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+.metric-pill{background:var(--panel); border:1px solid var(--line); border-radius:var(--rs);
+  padding:11px 15px; min-width:96px; text-align:right;}
+.metric-pill .k{font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--faint); display:block; margin-bottom:3px;}
+.metric-pill .v{font-family:"Unbounded",sans-serif; font-weight:600; font-size:20px;}
+.metric-pill .v small{font-size:11px; color:var(--muted); font-family:"Golos Text"; font-weight:500; margin-left:2px;}
+
+/* section heads */
+.shead{display:flex; align-items:baseline; gap:12px; margin:0 0 16px;}
+.shead .no{font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--accent-deep); font-weight:700;}
+.shead h2{font-family:"Unbounded",sans-serif; font-weight:600; font-size:14px; letter-spacing:.16em;
+  text-transform:uppercase; margin:0; color:var(--text);}
+.shead .hint{font-size:12.5px; color:var(--faint); margin-left:auto;}
+
+/* ===== TOTALS ===== */
+.totals-sec{margin-bottom:40px; animation:fu .7s .05s both;}
+.totals{display:grid; grid-template-columns:repeat(auto-fill,minmax(216px,1fr)); gap:14px;}
+.tcard{position:relative; background:linear-gradient(180deg,var(--panel),var(--ink2));
+  border:1px solid var(--line); border-radius:var(--r); padding:18px 18px 16px; overflow:hidden;
+  transition:transform .25s cubic-bezier(.2,.7,.2,1),border-color .25s;}
+.tcard:hover{transform:translateY(-3px); border-color:var(--line2);}
+.tcard .topbar{position:absolute; top:0; left:0; right:0; height:3px; background:var(--c);}
+.tcard .mname{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2);
+  font-weight:600; min-height:34px; line-height:1.25;}
+.tcard .mname .sw{width:9px; height:9px; border-radius:3px; background:var(--c); flex:none;
+  box-shadow:0 0 10px -1px var(--c);}
+.tcard .big{font-family:"Unbounded",sans-serif; font-weight:700; font-size:clamp(30px,4.6vw,40px);
+  letter-spacing:-.02em; color:var(--c); line-height:1; margin:10px 0 4px;
+  font-feature-settings:"tnum"; font-variant-numeric:tabular-nums;}
+.tcard .cap{font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--faint);}
+.tcard .stackbar{display:flex; height:6px; border-radius:4px; overflow:hidden; margin-top:14px;
+  background:rgba(0,0,0,.05);}
+.tcard .stackbar i{height:100%; transition:width .5s cubic-bezier(.2,.7,.2,1);}
+.tcard .froml{font-size:11px; color:var(--muted); margin-top:9px; display:flex; gap:6px; align-items:center;}
+.empty{grid-column:1/-1; border:1px dashed var(--line2); border-radius:var(--r); padding:34px 24px;
+  text-align:center; color:var(--muted); background:rgba(0,0,0,.012);}
+.empty b{color:var(--text2); font-weight:600;}
+
+/* ===== BUILDER GRID ===== */
+.builder{display:grid; grid-template-columns:1fr; gap:26px; margin-bottom:40px;}
+@media(min-width:980px){ .builder{grid-template-columns:1.42fr .9fr;} }
+
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:20px;}
+.campaigns-sec{animation:fu .7s .1s both;}
+.metrics-sec{animation:fu .7s .15s both;}
+
+/* campaign cards */
+.clist{display:flex; flex-direction:column; gap:13px;}
+.ccard{position:relative; background:var(--panel2); border:1px solid var(--line); border-radius:var(--rs);
+  padding:15px 15px 15px 18px; transition:border-color .2s, background .2s;}
+.ccard:hover{border-color:var(--line2);}
+.ccard .edge{position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px; background:var(--c);}
+.ccard .chead{display:flex; align-items:center; gap:9px; margin-bottom:13px;}
+.ctag{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:11px; letter-spacing:.05em;
+  color:var(--ink); background:var(--c); padding:3px 8px; border-radius:6px;}
+.creach{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted);}
+.creach b{color:var(--text2); font-weight:700;}
+.cdel{background:none; border:1px solid var(--line); color:var(--muted); width:28px; height:28px;
+  border-radius:8px; cursor:pointer; font-size:15px; line-height:1; display:grid; place-items:center;
+  transition:.18s;}
+.cdel:hover{border-color:#ff6b6b; color:#ff8585; background:rgba(255,107,107,.08);}
+
+.fgrid{display:grid; grid-template-columns:1fr 1fr; gap:11px;}
+@media(min-width:560px){ .fgrid{grid-template-columns:1.3fr 1.1fr;} }
+.field{display:flex; flex-direction:column; gap:5px;}
+.field.full{grid-column:1/-1;}
+.field label{font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--faint); padding-left:1px;}
+
+/* selects */
+.sel{position:relative;}
+.sel select{appearance:none; width:100%; background:var(--ink2); color:var(--text);
+  border:1px solid var(--line2); border-radius:9px; padding:10px 32px 10px 12px; font:inherit;
+  font-size:13.5px; font-weight:500; cursor:pointer; transition:.18s;}
+.sel select:hover{border-color:rgba(255,0,50,.4);}
+.sel select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,0,50,.13);}
+.sel::after{content:""; position:absolute; right:13px; top:50%; width:7px; height:7px;
+  border-right:2px solid var(--muted); border-bottom:2px solid var(--muted);
+  transform:translateY(-65%) rotate(45deg); pointer-events:none;}
+.sel select option{background:#ffffff; color:var(--text);}
+
+/* segmented */
+.seg{display:flex; background:var(--ink2); border:1px solid var(--line2); border-radius:9px; padding:3px; gap:3px;}
+.seg button{flex:1; background:none; border:0; color:var(--muted); font:inherit; font-size:12.5px;
+  font-weight:600; padding:7px 4px; border-radius:6px; cursor:pointer; transition:.16s; white-space:nowrap;}
+.seg button:hover{color:var(--text2);}
+.seg button.on{background:var(--accent); color:var(--ink); box-shadow:0 2px 10px -2px rgba(255,0,50,.5);}
+
+/* stepper */
+.step{display:flex; align-items:stretch; background:var(--ink2); border:1px solid var(--line2);
+  border-radius:9px; overflow:hidden;}
+.step button{width:38px; border:0; background:transparent; color:var(--text2); font-size:19px;
+  cursor:pointer; transition:.16s; font-family:"Golos Text"; line-height:1;}
+.step button:hover{background:rgba(255,0,50,.12); color:var(--accent);}
+.step input{flex:1; width:100%; border:0; background:transparent; color:var(--text); text-align:center;
+  font-family:"JetBrains Mono",monospace; font-weight:700; font-size:15px;
+  border-left:1px solid var(--line); border-right:1px solid var(--line);}
+.step input:focus{outline:none;}
+.step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none;}
+
+/* add button */
+.addbtn{margin-top:14px; width:100%; background:transparent; border:1.5px dashed var(--line2);
+  color:var(--text2); border-radius:var(--rs); padding:13px; font:inherit; font-weight:600; font-size:13.5px;
+  cursor:pointer; transition:.2s; display:flex; align-items:center; justify-content:center; gap:9px;}
+.addbtn:hover{border-color:var(--accent); color:var(--accent); background:rgba(255,0,50,.05);}
+.addbtn .pl{font-size:18px; line-height:1;}
+
+.tools{display:flex; justify-content:space-between; align-items:center; margin-top:13px;}
+.clr{background:none; border:0; color:var(--faint); font:inherit; font-size:12px; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px; transition:.16s;}
+.clr:hover{color:var(--text2);}
+
+/* metric chips */
+.mlegend{font-size:12.5px; color:var(--muted); margin-bottom:15px;}
+.chips{display:grid; grid-template-columns:1fr 1fr; gap:9px;}
+.chip{display:flex; align-items:center; gap:9px; background:var(--ink2); border:1px solid var(--line);
+  border-radius:10px; padding:10px 11px; cursor:pointer; transition:.18s; user-select:none; text-align:left;
+  font:inherit;}
+.chip:hover:not(.dis){border-color:var(--line2); background:var(--panel2);}
+.chip .box{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--line2); flex:none;
+  display:grid; place-items:center; transition:.18s;}
+.chip .box svg{width:11px; height:11px; opacity:0; transform:scale(.5); transition:.18s;}
+.chip.on{border-color:var(--c); background:color-mix(in srgb,var(--c) 9%,var(--ink2));}
+.chip.on .box{background:var(--c); border-color:var(--c);}
+.chip.on .box svg{opacity:1; transform:scale(1);}
+.chip .lab{font-size:12.8px; font-weight:600; color:var(--text2); line-height:1.2;}
+.chip.on .lab{color:var(--text);}
+.chip .ab{font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--faint); margin-left:auto;}
+.chip.dis{opacity:.5; cursor:not-allowed;}
+.chip.dis .soon{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:8.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--faint); border:1px solid var(--line); border-radius:5px; padding:2px 5px;}
+@media(max-width:430px){ .chips{grid-template-columns:1fr;} }
+
+/* ===== MAP ===== */
+.map-sec{animation:fu .7s .2s both;}
+.mapwrap{background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+  padding:6px; overflow-x:auto;}
+.matrix{display:grid; min-width:max-content; width:100%;}
+.mcell{padding:13px 14px; border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+  display:flex; align-items:center;}
+.matrix .mcell:nth-last-child(-n+99){}
+.corner{position:sticky; left:0; z-index:3; background:var(--panel);
+  font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--faint); align-items:flex-end;}
+.colh{justify-content:center; flex-direction:column; gap:4px; text-align:center; background:var(--panel);
+  position:sticky; top:0;}
+.colh .sw{width:22px; height:4px; border-radius:3px; background:var(--c);}
+.colh .nm{font-size:11px; font-weight:700; color:var(--text2); line-height:1.15;}
+.rowh{position:sticky; left:0; z-index:2; background:var(--panel); flex-direction:column;
+  align-items:flex-start; gap:4px; min-width:208px;}
+.rowh .rt{display:flex; align-items:center; gap:8px;}
+.rowh .rtag{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:9.5px; color:var(--ink);
+  background:var(--c); padding:2px 6px; border-radius:5px;}
+.rowh .rname{font-size:12.5px; font-weight:700; color:var(--text);}
+.rowh .rmeta{font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--muted); padding-left:1px;}
+.rowh .rmeta b{color:var(--text2);}
+.dcell{justify-content:center; position:relative; flex-direction:column; gap:0; padding:14px 12px 16px;}
+.dcell .val{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:14.5px; color:var(--text);
+  font-variant-numeric:tabular-nums; z-index:1;}
+.dcell .bar{position:absolute; left:10px; right:10px; bottom:8px; height:3px; border-radius:2px;
+  background:rgba(0,0,0,.07); overflow:hidden;}
+.dcell .bar i{display:block; height:100%; border-radius:2px; background:var(--c);
+  transition:width .5s cubic-bezier(.2,.7,.2,1);}
+.dcell.na .val{color:var(--faint); font-weight:500;}
+.totrow .mcell{border-bottom:0; background:linear-gradient(180deg,rgba(255,0,50,.05),transparent);}
+.totrow .rowh{background:var(--panel);}
+.totrow .tlab{font-family:"Unbounded",sans-serif; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); font-weight:600;}
+.totrow .tsum{font-family:"JetBrains Mono",monospace; font-weight:700; color:var(--c); }
+.totrow .dcell{padding:15px 12px;}
+.totrow .dcell .val{font-size:16px; color:var(--c);}
+.matrix .mcell:last-child{border-right:0;}
+
+.map-empty{padding:46px 24px; text-align:center; color:var(--muted);}
+.map-empty b{color:var(--text2);}
+
+/* map controls */
+.mapctl{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+.seg.mini{padding:3px;}
+.seg.mini button{font-size:11.5px; padding:7px 13px;}
+.tablelink{margin-left:auto; background:none; border:1px solid var(--line2); color:var(--text2);
+  font:inherit; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer; transition:.16s;}
+.tablelink:hover{border-color:var(--accent); color:var(--accent);}
+.tablelink.act{border-color:var(--accent); color:var(--accent); background:rgba(255,0,50,.06);}
+
+/* bubble chart */
+.mapwrap.chart{overflow:hidden; padding:12px 10px 6px;}
+#map svg{display:block; width:100%; height:auto; overflow:visible;}
+.gridline{stroke:rgba(0,0,0,.055);}
+.axisline{stroke:rgba(0,0,0,.16);}
+.axislab{fill:var(--muted); font-family:"JetBrains Mono",monospace; font-size:11px;}
+.axistitle{fill:var(--faint); font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.16em;}
+.guideline{stroke:var(--accent); stroke-dasharray:5 5; stroke-width:1.2; opacity:.45;}
+.guidelab{fill:var(--accent); font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.04em;}
+.bub{cursor:pointer;}
+.bub circle{stroke-width:1.6; transition:fill-opacity .15s;}
+.bub:hover circle{fill-opacity:.95;}
+.bub .bin{font-family:"JetBrains Mono",monospace; font-weight:700; fill:#fff;
+  text-anchor:middle; dominant-baseline:central; pointer-events:none;}
+.leader{stroke:rgba(0,0,0,.22); stroke-width:1;}
+.blab{fill:var(--text2); font-family:"Golos Text",sans-serif; font-size:11.5px; font-weight:600; pointer-events:none;}
+
+/* legend */
+.blegend{display:flex; flex-wrap:wrap; gap:9px 18px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);}
+.blegend:empty{display:none;}
+.blegend .li{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2);}
+.blegend .li .d{width:11px; height:11px; border-radius:50%;}
+.blegend .li .ab{font-family:"JetBrains Mono",monospace; font-size:9.5px; color:var(--faint);}
+
+/* bubble tooltip */
+#btip{position:fixed; z-index:60; pointer-events:none; opacity:0; transform:translateY(4px);
+  transition:opacity .12s,transform .12s; background:#0b0c0f; border:1px solid var(--line2);
+  border-radius:11px; padding:11px 13px; max-width:260px; box-shadow:0 16px 38px -10px rgba(0,0,0,.75);}
+#btip.on{opacity:1; transform:none;}
+#btip .tt{font-size:12.5px; font-weight:700; color:var(--text); margin-bottom:2px; display:flex;
+  align-items:center; gap:8px; line-height:1.25;}
+#btip .tt .d{width:9px; height:9px; border-radius:50%; flex:none;}
+#btip .big2{font-family:"Unbounded",sans-serif; font-weight:700; font-size:21px; margin:6px 0 7px; line-height:1;}
+#btip .tr2{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted);
+  display:flex; justify-content:space-between; gap:16px; padding:1px 0;}
+#btip .tr2 b{color:var(--text2); font-weight:700;}
+#btip .sub2{font-size:11px; color:var(--muted); margin-bottom:1px;}
+
+/* footer / formula */
+.formula{margin-top:34px; border-top:1px solid var(--line); padding-top:24px;
+  display:grid; gap:18px; grid-template-columns:1fr; animation:fu .7s .25s both;}
+@media(min-width:760px){ .formula{grid-template-columns:1.3fr 1fr;} }
+.fcard{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px;}
+.fcard h3{font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--faint); margin:0 0 12px; font-weight:700;}
+.eq{font-family:"JetBrains Mono",monospace; font-size:13px; line-height:1.9; color:var(--text2);}
+.eq .hl{color:var(--accent);}
+.eq .op{color:var(--muted);}
+.fcard p{font-size:13px; color:var(--muted); margin:0 0 9px; line-height:1.55;}
+.fcard p:last-child{margin-bottom:0;}
+.fcard b{color:var(--text2); font-weight:600;}
+.src{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--faint); margin-top:22px; text-align:center;}
+
+/* ===== TABS ===== */
+.tabs{display:flex; gap:6px; margin-bottom:30px; border-bottom:1px solid var(--line); animation:fu .7s .04s both; flex-wrap:wrap;}
+.tabs button{background:none; border:0; border-bottom:2px solid transparent; color:var(--muted);
+  font:inherit; font-family:"Unbounded",sans-serif; font-weight:500; font-size:13.5px; letter-spacing:.01em;
+  padding:11px 16px 13px; cursor:pointer; transition:.18s; margin-bottom:-1px; display:flex; align-items:center; gap:8px;}
+.tabs button .tn{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--faint); font-weight:700;}
+.tabs button:hover{color:var(--text2);}
+.tabs button.on{color:var(--text); border-bottom-color:var(--accent);}
+.tabs button.on .tn{color:var(--accent-deep);}
+.tabpanel{display:none;}
+.tabpanel.on{display:block; animation:fu .5s both;}
+
+/* tentative markers */
+.tent{font-family:"JetBrains Mono",monospace; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:#b25e00; border:1px solid rgba(255,122,0,.4); background:rgba(255,122,0,.1); border-radius:5px; padding:2px 6px;}
+.chip.tent .lab{color:var(--text2);}
+.chip.tent .box{border-style:dashed;}
+.soon.tt2{color:#b25e00; border-color:rgba(255,122,0,.4); background:rgba(255,122,0,.1);}
+
+/* card divider + chrono badge */
+.cdiv{display:flex; align-items:center; gap:10px; margin:15px 0 12px; color:var(--faint);
+  font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;}
+.cdiv::before,.cdiv::after{content:""; height:1px; background:var(--line); flex:1;}
+.chrono-wrap{justify-content:center;}
+.chrono-badge{display:flex; align-items:center; gap:12px; width:100%;
+  background:linear-gradient(100deg,rgba(255,0,50,.10),rgba(255,0,50,.02));
+  border:1px solid rgba(255,0,50,.4); border-radius:10px; padding:12px 15px;}
+.chrono-badge .cb-lab{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent-deep); font-weight:700;}
+.chrono-badge .cb-val{font-family:"Unbounded",sans-serif; font-weight:700; font-size:26px; color:var(--accent);
+  line-height:1; letter-spacing:-.02em;}
+.chrono-badge .cb-val small{font-size:12px; color:var(--text2); font-family:"Golos Text"; font-weight:600; margin-left:3px;}
+.chrono-badge .cb-meta{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--muted); text-align:right; line-height:1.4;}
+
+/* chrono logic cards */
+.chrono-logic{display:grid; gap:14px; grid-template-columns:1fr;}
+@media(min-width:760px){ .chrono-logic{grid-template-columns:repeat(2,1fr);} }
+.clog{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px;}
+.clog h4{font-family:"Unbounded",sans-serif; font-weight:600; font-size:13px; margin:0 0 12px; color:var(--text);}
+.clog .row{display:flex; justify-content:space-between; gap:14px; padding:7px 0; border-bottom:1px solid var(--line);
+  font-size:13px; color:var(--text2);}
+.clog .row:last-child{border-bottom:0;}
+.clog .row b{font-family:"JetBrains Mono",monospace; color:var(--accent); font-weight:700;}
+.clog .mut{color:var(--muted); font-size:12.5px; margin:10px 0 0; line-height:1.55;}
+.scale-map{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;}
+.scale-map .sm{flex:1; min-width:64px; text-align:center; background:var(--ink2); border:1px solid var(--line2);
+  border-radius:9px; padding:10px 6px;}
+.scale-map .sm .s{font-family:"Unbounded",sans-serif; font-weight:700; font-size:20px; color:var(--accent);}
+.scale-map .sm .l{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.06em; color:var(--faint);
+  text-transform:uppercase; margin-top:3px;}
+
+/* chrono reference table */
+.chtable{width:100%; border-collapse:collapse; min-width:max-content; font-size:13px;}
+.chtable th{position:sticky; top:0; background:var(--panel); text-align:center; padding:11px 12px;
+  font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); border-bottom:1px solid var(--line2); z-index:2; font-weight:700;}
+.chtable th.lft,.chtable td.lft{text-align:left;}
+.chtable td{padding:10px 12px; border-bottom:1px solid var(--line); color:var(--text2); text-align:center;
+  font-variant-numeric:tabular-nums;}
+.chtable tr:hover td{background:rgba(0,0,0,.02);}
+.chtable .mname2{color:var(--text); font-weight:600;}
+.chsec{display:inline-flex; align-items:center; justify-content:center; min-width:54px; padding:5px 10px;
+  border-radius:7px; font-family:"Unbounded",sans-serif; font-weight:700; font-size:13px;}
+.chsec.s20{background:rgba(25,195,125,.14); color:#0e8f58; border:1px solid rgba(25,195,125,.4);}
+.chsec.s30{background:rgba(45,127,249,.14); color:#1565e0; border:1px solid rgba(45,127,249,.4);}
+.chsec.s45{background:rgba(255,122,0,.16); color:#b25e00; border:1px solid rgba(255,122,0,.4);}
+.chsec.s60{background:rgba(255,0,50,.12); color:#d1002b; border:1px solid rgba(255,0,50,.4);}
+.chms{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted);}
+
+/* budget rule cards */
+.brule{display:grid; gap:14px; grid-template-columns:1fr;}
+@media(min-width:880px){ .brule{grid-template-columns:1.1fr 1fr;} }
+.brule .rcard{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:20px;}
+.brule h4{font-family:"Unbounded",sans-serif; font-weight:600; font-size:13.5px; margin:0 0 14px; color:var(--text);}
+.quad{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.quad .q{border:1px solid var(--line2); border-radius:11px; padding:13px 14px; background:var(--ink2);}
+.quad .q .qt{font-weight:700; font-size:13px; color:var(--text); margin-bottom:4px;}
+.quad .q .qd{font-size:11.5px; color:var(--muted); line-height:1.45;}
+.quad .q .qax{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--faint); margin-bottom:7px;}
+.quad .q.hi{border-color:rgba(255,0,50,.4); background:rgba(255,0,50,.05);}
+.brule .eqx{font-family:"JetBrains Mono",monospace; font-size:13px; line-height:1.85; color:var(--text2); margin:0 0 14px;}
+.brule .eqx .hl{color:var(--accent);}
+.brule .eqx .op{color:var(--muted);}
+.brule ul{margin:0; padding-left:18px;}
+.brule li{font-size:13px; color:var(--text2); margin-bottom:8px; line-height:1.5;}
+.brule li b{color:var(--text);}
+
+/* allocation bars */
+.alloc{display:flex; flex-direction:column; gap:9px;}
+.arow{display:grid; grid-template-columns:188px 1fr 70px; gap:12px; align-items:center;}
+@media(max-width:620px){ .arow{grid-template-columns:120px 1fr 56px;} }
+.arow .an{font-size:12.5px; color:var(--text2); display:flex; align-items:center; gap:7px; line-height:1.2;}
+.arow .an .gd{width:8px; height:8px; border-radius:2px; flex:none;}
+.arow .track{background:rgba(0,0,0,.05); border-radius:6px; height:22px; overflow:hidden; position:relative;}
+.arow .track i{display:block; height:100%; border-radius:6px; transition:width .6s cubic-bezier(.2,.7,.2,1);}
+.arow .track .rg{position:absolute; right:8px; top:50%; transform:translateY(-50%); font-family:"JetBrains Mono",monospace;
+  font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint);}
+.arow .pct{font-family:"Unbounded",sans-serif; font-weight:700; font-size:15px; text-align:right; color:var(--text);}
+/* diverging index track (×к базе) */
+.arow.idxrow{grid-template-columns:188px 1fr 64px;}
+@media(max-width:620px){ .arow.idxrow{grid-template-columns:120px 1fr 54px;} }
+.track2{position:relative; height:26px; background:rgba(0,0,0,.04); border-radius:7px;}
+.track2 .mid{position:absolute; left:50%; top:0; bottom:0; width:1.5px; background:rgba(0,0,0,.22); transform:translateX(-50%); z-index:2;}
+.track2 i{position:absolute; top:5px; bottom:5px; border-radius:5px; transition:width .55s cubic-bezier(.2,.7,.2,1);}
+.track2 .mode{position:absolute; top:50%; transform:translateY(-50%); font-family:"JetBrains Mono",monospace;
+  font-size:8.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--faint); white-space:nowrap; z-index:3;}
+.track2 .mode.r{right:8px;} .track2 .mode.l{left:8px;}
+.alloc-head{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;}
+.alloc-head .leg{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2);}
+.alloc-head .leg .gd{width:11px; height:11px; border-radius:3px;}
+
+/* rub panel */
+.rub-panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:22px 24px;}
+.rub-panel .pend{display:flex; align-items:flex-start; gap:14px; padding:16px; border:1px dashed var(--line2);
+  border-radius:11px; background:rgba(0,0,0,.012); margin-bottom:18px;}
+.rub-panel .pend .ic{width:34px; height:34px; border-radius:9px; background:rgba(255,122,0,.1);
+  border:1px solid rgba(255,122,0,.4); display:grid; place-items:center; color:#b25e00; font-size:18px; flex:none;}
+.rub-panel .pend .tx{font-size:13px; color:var(--text2); line-height:1.55;}
+.rub-panel .pend .tx b{color:var(--text);}
+.rub-inputs{display:grid; gap:12px; grid-template-columns:1fr 1fr; opacity:.5; pointer-events:none;}
+.rub-inputs .field input{background:var(--ink2); border:1px solid var(--line2); border-radius:9px;
+  padding:10px 12px; color:var(--text); font:inherit; font-family:"JetBrains Mono",monospace; width:100%;}
+.prem{margin-top:18px; font-size:13px; color:var(--text2); line-height:1.6;}
+.prem b{color:var(--text);}
+.sos-mini{display:flex; gap:7px; align-items:flex-end; height:90px; margin:14px 0 6px; padding:0 2px;}
+.sos-mini .sb{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; justify-content:flex-end;}
+.sos-mini .sb i{width:100%; max-width:42px; border-radius:5px 5px 0 0;}
+.sos-mini .sb .nm{font-size:10px; color:var(--muted); white-space:nowrap;}
+.sos-mini .sb .vv{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--text2); font-weight:700;}
+
+/* forward-importance toggle */
+.fwd-bar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:16px;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--rs); padding:13px 16px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 22px -14px rgba(0,0,0,.2);}
+.fwd-toggle{display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none;}
+.fwd-toggle input{position:absolute; opacity:0; pointer-events:none;}
+.fwd-toggle .track{width:42px; height:24px; border-radius:13px; background:rgba(0,0,0,.14); position:relative; transition:.2s; flex:none;}
+.fwd-toggle .track::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:.2s;}
+.fwd-toggle input:checked + .track{background:var(--accent);}
+.fwd-toggle input:checked + .track::after{transform:translateX(18px);}
+.fwd-toggle .lbl{font-weight:600; font-size:13.5px; color:var(--text);}
+.fwd-note{font-size:11.5px; color:var(--muted); line-height:1.4;}
+.tent.fwdb{color:var(--accent-deep); border-color:rgba(255,0,50,.4); background:rgba(255,0,50,.08);}
+
+@keyframes fu{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,0,50,.14),0 0 18px 2px rgba(255,0,50,.5);}
+  50%{box-shadow:0 0 0 7px rgba(255,0,50,.05),0 0 22px 4px rgba(255,0,50,.65);}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
+/* light-theme depth */
+.panel,.metric-pill{box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px -12px rgba(0,0,0,.18);}
+.tcard{box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.22);}
+.tcard:hover{box-shadow:0 2px 4px rgba(0,0,0,.05),0 16px 34px -16px rgba(0,0,0,.26);}
+.ccard{background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.03);}
+.ccard:hover{background:#fff;}
+.rcard,.clog{box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 22px -14px rgba(0,0,0,.2);}
+.mapwrap{box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.2);}
+.rub-panel{box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.2);}
+#btip{background:#fff !important; box-shadow:0 16px 38px -10px rgba(0,0,0,.28) !important;}
+.tabs button.on{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="glow2"></div>
+
+<div class="wrap">
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <div>
+      <div class="brand"><span class="dot"></span><b>Brand Lift Lab · 2027</b></div>
+      <h1>Калькулятор прироста<br><span class="em">бренд-метрик</span></h1>
+      <p class="sub">Соберите медиаплан года из рекламных кампаний — задайте тип, подтип, масштаб и количество РК.
+      Модель пересчитает годовой прирост по каждому выбранному бренд-атрибуту.</p>
+    </div>
+    <div class="metabox">
+      <div class="metric-pill"><span class="k">Кампаний</span><span class="v" id="mCamp">0</span></div>
+      <div class="metric-pill"><span class="k">Охват, OTS</span><span class="v" id="mOts">0<small>млн</small></span></div>
+      <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/12</small></span></div>
+    </div>
+  </header>
+
+  <!-- TAB NAV -->
+  <nav class="tabs" id="tabs">
+    <button data-t="calc" class="on"><span class="tn">01</span> Прирост метрик</button>
+    <button data-t="chrono"><span class="tn">02</span> Хронометраж</button>
+    <button data-t="budget"><span class="tn">03</span> Бюджет</button>
+  </nav>
+
+  <!-- ========== TAB: CALC ========== -->
+  <div class="tabpanel on" id="tab-calc">
+
+  <!-- TOTALS -->
+  <section class="totals-sec">
+    <div class="shead"><span class="no">01</span><h2>Годовой прирост по атрибутам</h2>
+      <span class="hint">сумма по всем кампаниям</span></div>
+    <div class="totals" id="totals"></div>
+  </section>
+
+  <!-- BUILDER -->
+  <div class="builder">
+    <section class="campaigns-sec">
+      <div class="shead"><span class="no">02</span><h2>Кампании в году</h2>
+        <span class="hint" id="cCount"></span></div>
+      <div class="panel">
+        <div class="clist" id="clist"></div>
+        <button class="addbtn" id="addBtn"><span class="pl">+</span> Добавить кампанию</button>
+        <div class="tools"><span style="font-size:12px;color:var(--faint)">Один блок = группа РК одного типа</span>
+          <button class="clr" id="clrBtn">очистить всё</button></div>
+      </div>
+    </section>
+
+    <section class="metrics-sec">
+      <div class="shead"><span class="no">03</span><h2>Прогнозируемые метрики</h2></div>
+      <div class="panel">
+        <div class="mlegend">Отметьте атрибуты для прогноза. В модели заполнено <b style="color:var(--accent)">7 из 12</b> —
+        «Развивает 5G» включён как <b style="color:var(--accent)">предварительная оценка</b> (по части данных), остальные станут доступны после загрузки стоимостей.</div>
+        <div class="chips" id="chips"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MAP -->
+  <section class="map-sec">
+    <div class="shead"><span class="no">04</span><h2>Карта вкладов кампаний</h2>
+      <span class="hint" id="mapHint"></span></div>
+    <div class="mapctl">
+      <div class="seg mini" id="modeSeg">
+        <button data-v="attr" class="on">По атрибутам</button>
+        <button data-v="camp">По кампаниям</button>
+      </div>
+      <div class="seg mini" id="xSeg">
+        <button data-v="ots" class="on">Объём ОТС, млн</button>
+        <button data-v="rk">Кол-во РК</button>
+      </div>
+      <button class="tablelink" id="tableBtn">Таблицей</button>
+    </div>
+    <div class="mapwrap" id="mapwrap"><div id="map"></div></div>
+    <div class="blegend" id="blegend"></div>
+  </section>
+
+
+  <!-- FORMULA -->
+  <div class="formula">
+    <div class="fcard">
+      <h3>Логика расчёта</h3>
+      <div class="eq">
+        <span class="hl">прирост за 1 РК</span> <span class="op">=</span> ОБЪЕМ<sub>OTS</sub>(масштаб)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">÷</span> [ стоимость<sub>метрики</sub>(тип) <span class="op">×</span> k<sub>подтип</sub> <span class="op">×</span> k<sub>сложн.</sub> ]<br><br>
+        <span class="hl">годовой прирост</span> <span class="op">=</span> Σ ( кол-во РК <span class="op">×</span> прирост за 1 РК )
+      </div>
+    </div>
+    <div class="fcard">
+      <h3>Коэффициенты модели</h3>
+      <p><b>Масштаб (ОБЪЕМ OTS):</b> макс. охват 3,2 млн · широкий 2,8 млн · селективный 1,25 млн.</p>
+      <p><b>Сложность сообщения:</b> простое ×1,0 · сложное ×1,75. Логика: сложное сообщение труднее донести, поэтому пункт прироста по нему обходится дороже, а сам прирост на тот же охват — ниже.</p>
+      <p><b>Прирост измеряется в пунктах прироста</b> (отношение объёма OTS к стоимости метрики).</p>
+      <p><b>Новые направления</b> (Безопасность, Дети) и метрика «Развивает 5G» — предварительная оценка по части данных: атрибуты новые, полноты факторов в модели могло не хватать.</p>
+      <p><b>k подтипа</b> и базовые стоимости по типу взяты из исходной модели без изменений.</p>
+    </div>
+  </div>
+  <div class="src">источник: Данные_для_моделирования_2027.xlsx · вкладки Dataset + DETAILS (raw) · хроно.xlsx</div>
+  </div><!-- /tab-calc -->
+
+  <!-- ========== TAB: CHRONO ========== -->
+  <div class="tabpanel" id="tab-chrono">
+    <section class="totals-sec">
+      <div class="shead"><span class="no">02</span><h2>Логика хронометража</h2>
+        <span class="hint">балл = тип + сообщение + медиачувствительность → секунды</span></div>
+      <div class="chrono-logic" id="chronoLogic"></div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">02·Б</span><h2>Справочник: рекомендованный хронометраж</h2>
+        <span class="hint">все комбинации из модели</span></div>
+      <div class="mapctl">
+        <div class="seg mini" id="chRoleSeg">
+          <button data-v="промо" class="on">Промо</button>
+          <button data-v="имидж">Имидж</button>
+        </div>
+        <div class="seg mini" id="chCxSeg">
+          <button data-v="простое" class="on">Простое</button>
+          <button data-v="сложное">Сложное</button>
+        </div>
+        <span class="hint" id="chHint" style="margin-left:auto"></span>
+      </div>
+      <div class="mapwrap"><div id="chronoTable"></div></div>
+      <div class="src">источник: хроно.xlsx · 144 комбинации (тип × кол-во сообщений × сложность × метрика)</div>
+    </section>
+  </div><!-- /tab-chrono -->
+
+  <!-- ========== TAB: BUDGET ========== -->
+  <div class="tabpanel" id="tab-budget">
+    <section class="totals-sec">
+      <div class="shead"><span class="no">03</span><h2>Правила распределения медиабюджета</h2>
+        <span class="hint">доля ∝ важность × медиачувствительность × разрыв</span></div>
+      <div class="brule" id="bRule"></div>
+      <div class="fwd-bar">
+        <label class="fwd-toggle"><input type="checkbox" id="fwdToggle"><span class="track"></span><span class="lbl">Учесть форвардную важность</span></label>
+        <span class="fwd-note">демо: финтех ×3, 5G ×3 (целевое влияние на выбор) — состав и величина согласуются с клиентом</span>
+      </div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">03·А</span><h2>Карта режимов: позиция × медиачувствительность</h2>
+        <span class="hint">размер = важность атрибута при выборе</span></div>
+      <div class="mapwrap chart"><div id="budgetMap"></div></div>
+      <div class="blegend" id="budgetLegend"></div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">03·Б</span><h2>Пере-/недоинвестирование к базе по атрибутам</h2>
+        <span class="hint" id="bAllocHint"></span></div>
+      <div class="mapwrap" style="padding:18px 18px 8px"><div id="budgetAlloc"></div></div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">03·В</span><h2>Перевод в рубли · премия эффективности</h2>
+        <span class="hint">ждём CPM</span></div>
+      <div class="rub-panel" id="rubPanel"></div>
+    </section>
+  </div><!-- /tab-budget -->
+
+</div><!-- /wrap -->
+
+<div id="btip"></div>
+
+<script>
+const MODEL = {"scales":{"МАКСИМАЛЬНЫЙ ОХВАТ":3200000,"ШИРОКИЙ ОХВАТ":2800000,"СЕЛЕКТИВНЫЙ ОХВАТ":1250000},"scaleShort":{"МАКСИМАЛЬНЫЙ ОХВАТ":"Макс. охват","ШИРОКИЙ ОХВАТ":"Широкий охват","СЕЛЕКТИВНЫЙ ОХВАТ":"Селективный"},"complexity":{"ПРОСТОЕ":1,"СЛОЖНОЕ":1.75},
+"metrics":[
+ {"i":0,"name":"Лидер технологий","short":"Лидер технологий","abbr":"ЛТ","hasData":false,"ms":0.014949592951770846,"grp":"poz"},
+ {"i":1,"name":"Задает тренды на рынке","short":"Задаёт тренды","abbr":"ТР","hasData":true,"ms":0.02105017440074263,"grp":"poz"},
+ {"i":2,"name":"Помогает чувствовать себя продвинутым","short":"Чувствую себя продвинутым","abbr":"ПР","hasData":false,"ms":0.021491273643561803,"grp":"poz"},
+ {"i":3,"name":"Помогает умнее организовывать свою жизнь","short":"Умнее организую жизнь","abbr":"ОЖ","hasData":false,"ms":0.006740573016965476,"grp":"poz"},
+ {"i":4,"name":"Мне нравится реклама бренда","short":"Нравится реклама","abbr":"РК","hasData":true,"ms":0.007597683702379647,"grp":"poz"},
+ {"i":5,"name":"Предлагает подходящие для меня тарифы и услуги","short":"Подходящие тарифы","abbr":"ТУ","hasData":true,"ms":0.007438242093615525,"grp":"prod"},
+ {"i":6,"name":"Предлагает финансовые сервисы и услуги","short":"Финансовые сервисы","abbr":"ФС","hasData":false,"ms":0.008107683882040924,"grp":"prod"},
+ {"i":7,"name":"Развивает технологии 5G","short":"Развивает 5G","abbr":"5G","hasData":true,"tentative":true,"ms":0.01345463365659376,"grp":"prod"},
+ {"i":8,"name":"Лучшее качество связи","short":"Лучшее качество связи","abbr":"КС","hasData":true,"ms":0.008833580246915624,"grp":"prod"},
+ {"i":9,"name":"Оператор №1","short":"Оператор №1","abbr":"№1","hasData":true,"ms":0.014965024207654276,"grp":"lead"},
+ {"i":10,"name":"Дает ощущение стабильности и предсказуемости","short":"Стабильность","abbr":"СТ","hasData":false,"ms":0.00665870370906711,"grp":"lead"},
+ {"i":11,"name":"оператор, с которым чувствуешь себя уверенно","short":"Уверенность","abbr":"УВ","hasData":true,"ms":0.006822442324863842,"grp":"lead"}
+],
+"types":{
+ "ТЕЛЕКОМ ПРОМО":{"subtypes":{"БЕЗЛИМИТЫ":1,"РОУМИНГ":0.6,"СЕМЕЙНАЯ ГРУППА":0.6},"role":"промо","base":{"0":null,"1":1537329.0,"2":null,"3":null,"4":3438238.5,"5":8090713.0,"6":null,"7":2220708.0,"8":3269335.0,"9":2353821.0,"10":null,"11":3986684.0}},
+ "МОЛОДЕЖКА":{"subtypes":{"РИИЛ":1},"role":"промо","base":{"0":null,"1":1461548.0,"2":null,"3":null,"4":1648860.0,"5":1775390.0,"6":null,"7":2503851.0,"8":2707143.0,"9":1468630.0,"10":null,"11":2668696.0}},
+ "ФИНТЕХ":{"subtypes":{"БАНК":0.5},"role":"промо","base":{"0":null,"1":1272348.0,"2":null,"3":null,"4":1286943.0,"5":2671917.5,"6":null,"7":2476544.0,"8":2682935.5,"9":1521898.0,"10":null,"11":1927110.5}},
+ "ТЕХНОЛОГИИ":{"subtypes":{"ВОЙСТЕХ":1,"5G":1},"role":"имидж","base":{"0":null,"1":1266588.0,"2":null,"3":null,"4":723232.5,"5":955576.5,"6":null,"7":2367784.5,"8":1054920.0,"9":742003.5,"10":null,"11":1090078.5}},
+ "БЕЗОПАСНОСТЬ":{"subtypes":{"ЗАЩИТНИК":1},"role":"имидж","tentative":true,"base":{"0":null,"1":603209.0,"2":null,"3":null,"4":2928247.0,"5":1887399.0,"6":null,"7":1225811.0,"8":1769713.0,"9":1852914.0,"10":null,"11":994184.0}},
+ "ДЕТИ":{"subtypes":{"ДЕТСКИЙ":1},"role":"промо","tentative":true,"base":{"0":null,"1":638507.0,"2":null,"3":null,"4":96454.0,"5":116263.0,"6":null,"7":87991.0,"8":101279.0,"9":371045.0,"10":null,"11":558831.0}}
+}};
+
+// competitive / strategic data for budget tab — источник: BHT 1Q'26 + презентация (стр. 19, 24, 34-35)
+// pos = конкурентная позиция МТС (>0 впереди рынка); imp = важность при выборе, %; impApprox = оценка по части слайдов
+const BUDGET = {
+ pos:{0:0.31,1:0.14,2:0.17,3:0.33,4:0.23,5:0.22,6:0.89,7:-0.07,8:-0.19,9:-0.13,10:0.08,11:0.15},
+ imp:{0:2.6,1:2.3,2:3.4,3:1.2,4:1.5,5:7.1,6:0.8,7:1.8,8:9.4,9:4.8,10:4.3,11:3.0},
+ impApprox:{4:true,6:true,11:true},
+ fwd:{6:3,7:3},   // форвардная важность (демо): финтех ×3, 5G ×3 — согласовать с клиентом
+ grpName:{poz:"Продвижение позиционирования",prod:"Продуктовое продвижение",lead:"Категорийное лидерство"},
+ grpColor:{poz:"#ff0032",prod:"#2d7ff9",lead:"#ff7a00"}
+};
+
+const MCOLOR = {0:"#1d2023",1:"#ff0032",2:"#8e5bff",3:"#ff7a00",4:"#ff5ba8",5:"#00b7c3",6:"#9aa0aa",7:"#2d7ff9",8:"#0fb5a0",9:"#e3002d",10:"#6e56cf",11:"#19c37d"};
+const CCOLOR = ["#ff0032","#1d2023","#2d7ff9","#19c37d","#ff7a00","#8e5bff","#00b7c3","#ff5ba8"];
+const TYPES = Object.keys(MODEL.types);
+const SCALES = Object.keys(MODEL.scales);
+const META = MODEL.metrics;
+
+const nf = new Intl.NumberFormat('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt = x => nf.format(x);
+const fmtOts = ots => { const m=ots/1e6; return (m>=10? m.toFixed(1): m.toFixed(2)).replace('.',','); };
+
+let uid = 0;
+const state = {
+  tab: 'calc',                  // 'calc' | 'chrono' | 'budget'
+  campaigns: [],
+  selected: new Set([8,9,1]),   // default: Лучшее качество связи, Оператор №1, Задаёт тренды
+  mapMode: 'attr',              // 'attr' = по атрибутам | 'camp' = по кампаниям
+  xUnit: 'ots',                 // 'ots' = объём ОТС, млн | 'rk' = кол-во РК
+  mapView: 'bubbles',           // 'bubbles' | 'table'
+  chrono:{role:'промо', cx:'простое'}, // filter state for reference tab
+  fwd:false                            // budget: учитывать форвардную важность (финтех/5G ×3)
+};
+
+// seed two example campaigns (role/msgs/tgt drive chronometer)
+function seed(){
+  state.campaigns = [
+    {id:uid++, type:"ТЕЛЕКОМ ПРОМО", subtype:"БЕЗЛИМИТЫ", scale:"МАКСИМАЛЬНЫЙ ОХВАТ", cx:"ПРОСТОЕ", n:2, role:"промо", msgs:1, tgt:9},
+    {id:uid++, type:"ТЕХНОЛОГИИ", subtype:"5G", scale:"ШИРОКИЙ ОХВАТ", cx:"СЛОЖНОЕ", n:3, role:"имидж", msgs:2, tgt:1},
+  ];
+}
+
+// --- chrono model (reconstructed from файл «хроно») ---
+// тип: имидж=3, промо=1 · сообщение: f(сложность,кол-во) · чувствительность: f(ms) → ИТОГО → секунды
+function roleScore(role){ return role==='имидж' ? 3 : 1; }
+function msgScore(cx, msgs){
+  const m=Math.max(1,Math.min(3,msgs|0));
+  if(cx==='ПРОСТОЕ' || cx==='простое') return m===1?1:2;   // простое: 1→1, 2/3→2
+  return m===1?3:4;                                         // сложное: 1→3, 2/3→4
+}
+function msScore(ms){ return ms<0.012 ? 1 : (ms<0.019 ? 2 : 3); }
+function chronoFor(role, cx, msgs, ms){
+  const I = roleScore(role) + msgScore(cx,msgs) + msScore(ms);
+  const sec = I<=4 ? 20 : I<=6 ? 30 : I<=8 ? 45 : 60;
+  return {I, sec};
+}
+function campChrono(c){ const m=META[c.tgt]; return chronoFor(c.role, c.cx, c.msgs, m.ms); }
+
+// --- model math ---
+function perCampaign(c, mi){
+  const base = MODEL.types[c.type].base[mi];
+  if(base==null) return null;
+  const kpt = MODEL.types[c.type].subtypes[c.subtype];
+  const ksl = MODEL.complexity[c.cx];
+  const vol = MODEL.scales[c.scale];
+  return vol/(base*kpt*ksl);
+}
+const contrib = (c, mi) => { const p=perCampaign(c,mi); return p==null? null : p*c.n; };
+const reachOf = c => MODEL.scales[c.scale]*c.n;
+
+// ============ CAMPAIGN CARDS ============
+const clist = document.getElementById('clist');
+
+function buildCard(c, idx){
+  const col = CCOLOR[idx % CCOLOR.length];
+  const el = document.createElement('div');
+  el.className='ccard'; el.style.setProperty('--c',col);
+  const subOpts = Object.keys(MODEL.types[c.type].subtypes);
+  const ch = campChrono(c);
+  const tentType = MODEL.types[c.type].tentative;
+
+  el.innerHTML = `
+    <div class="edge"></div>
+    <div class="chead">
+      <span class="ctag">К${idx+1}</span>
+      ${tentType?`<span class="tent" title="Новое направление — оценка по части данных">оценка</span>`:''}
+      <span class="creach">охват ≈ <b>${fmtOts(reachOf(c))} млн</b> OTS</span>
+      <button class="cdel" title="Удалить кампанию" aria-label="Удалить">×</button>
+    </div>
+    <div class="fgrid">
+      <div class="field full">
+        <label>Тип РК · продукт</label>
+        <div class="sel"><select data-f="type">${TYPES.map(t=>`<option ${t===c.type?'selected':''}>${t}</option>`).join('')}</select></div>
+      </div>
+      <div class="field">
+        <label>Подтип</label>
+        <div class="sel"><select data-f="subtype">${subOpts.map(s=>`<option ${s===c.subtype?'selected':''}>${s}</option>`).join('')}</select></div>
+      </div>
+      <div class="field">
+        <label>Масштаб РК</label>
+        <div class="sel"><select data-f="scale">${SCALES.map(s=>`<option value="${s}" ${s===c.scale?'selected':''}>${MODEL.scaleShort[s]}</option>`).join('')}</select></div>
+      </div>
+      <div class="field">
+        <label>Сложность сообщения</label>
+        <div class="seg" data-f="cx">
+          <button data-v="ПРОСТОЕ" class="${c.cx==='ПРОСТОЕ'?'on':''}">Простое</button>
+          <button data-v="СЛОЖНОЕ" class="${c.cx==='СЛОЖНОЕ'?'on':''}">Сложное</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Кол-во РК</label>
+        <div class="step">
+          <button data-s="-1" aria-label="минус">–</button>
+          <input type="number" min="1" max="99" value="${c.n}" data-f="n" inputmode="numeric">
+          <button data-s="1" aria-label="плюс">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cdiv"><span>хронометраж ролика</span></div>
+    <div class="fgrid">
+      <div class="field">
+        <label>Роль креатива</label>
+        <div class="seg" data-f="role">
+          <button data-v="имидж" class="${c.role==='имидж'?'on':''}">Имидж</button>
+          <button data-v="промо" class="${c.role==='промо'?'on':''}">Промо</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Сообщений в ролике</label>
+        <div class="seg" data-f="msgs">
+          <button data-v="1" class="${c.msgs===1?'on':''}">1</button>
+          <button data-v="2" class="${c.msgs===2?'on':''}">2</button>
+          <button data-v="3" class="${c.msgs===3?'on':''}">3</button>
+        </div>
+      </div>
+      <div class="field full">
+        <label>Целевая метрика ролика</label>
+        <div class="sel"><select data-f="tgt">${META.map(m=>`<option value="${m.i}" ${m.i===c.tgt?'selected':''}>${m.short}${m.tentative?' · оценка':''}</option>`).join('')}</select></div>
+      </div>
+      <div class="field full chrono-wrap">
+        <div class="chrono-badge" data-sec="${ch.sec}">
+          <span class="cb-lab">Реко хронометраж</span>
+          <span class="cb-val">${ch.sec}<small>сек</small></span>
+          <span class="cb-meta">балл ${ch.I} · ${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${c.msgs} сооб.</span>
+        </div>
+      </div>
+    </div>`;
+
+  // type change -> repopulate subtype + reset role default by product
+  el.querySelector('[data-f="type"]').addEventListener('change', e=>{
+    c.type = e.target.value;
+    const subs = Object.keys(MODEL.types[c.type].subtypes);
+    c.subtype = subs[0];
+    c.role = MODEL.types[c.type].role || c.role;
+    renderCards(); recalc();
+  });
+  el.querySelector('[data-f="subtype"]').addEventListener('change', e=>{ c.subtype=e.target.value; recalc(); });
+  el.querySelector('[data-f="scale"]').addEventListener('change', e=>{ c.scale=e.target.value; sync(el,c); recalc(); });
+  el.querySelectorAll('[data-f="cx"] button').forEach(b=>b.addEventListener('click',()=>{
+    c.cx=b.dataset.v;
+    el.querySelectorAll('[data-f="cx"] button').forEach(x=>x.classList.toggle('on',x===b));
+    syncChrono(el,c); recalc();
+  }));
+  el.querySelectorAll('[data-f="role"] button').forEach(b=>b.addEventListener('click',()=>{
+    c.role=b.dataset.v;
+    el.querySelectorAll('[data-f="role"] button').forEach(x=>x.classList.toggle('on',x===b));
+    syncChrono(el,c);
+  }));
+  el.querySelectorAll('[data-f="msgs"] button').forEach(b=>b.addEventListener('click',()=>{
+    c.msgs=parseInt(b.dataset.v,10);
+    el.querySelectorAll('[data-f="msgs"] button').forEach(x=>x.classList.toggle('on',x===b));
+    syncChrono(el,c);
+  }));
+  el.querySelector('[data-f="tgt"]').addEventListener('change', e=>{ c.tgt=parseInt(e.target.value,10); syncChrono(el,c); });
+  const inp = el.querySelector('[data-f="n"]');
+  inp.addEventListener('input', e=>{ let v=parseInt(e.target.value||'0',10); if(isNaN(v))v=0; c.n=v; sync(el,c); recalc(); });
+  inp.addEventListener('blur', e=>{ let v=parseInt(e.target.value||'1',10); if(isNaN(v)||v<1)v=1; if(v>99)v=99; c.n=v; e.target.value=v; sync(el,c); recalc(); });
+  el.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{
+    let v=c.n+parseInt(b.dataset.s,10); v=Math.max(1,Math.min(99,v)); c.n=v; inp.value=v; sync(el,c); recalc();
+  }));
+  el.querySelector('.cdel').addEventListener('click',()=>{
+    state.campaigns = state.campaigns.filter(x=>x.id!==c.id); renderCards(); recalc();
+  });
+  return el;
+}
+function sync(el,c){ el.querySelector('.creach b').textContent = fmtOts(reachOf(c))+' млн'; }
+function syncChrono(el,c){ const ch=campChrono(c); const b=el.querySelector('.chrono-badge');
+  b.dataset.sec=ch.sec;
+  b.querySelector('.cb-val').innerHTML = ch.sec+'<small>сек</small>';
+  b.querySelector('.cb-meta').textContent = `балл ${ch.I} · ${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${c.msgs} сооб.`;
+}
+
+function renderCards(){
+  clist.innerHTML='';
+  state.campaigns.forEach((c,i)=> clist.appendChild(buildCard(c,i)));
+}
+
+document.getElementById('addBtn').addEventListener('click',()=>{
+  const t=TYPES[0];
+  state.campaigns.push({id:uid++, type:t, subtype:Object.keys(MODEL.types[t].subtypes)[0],
+    scale:SCALES[0], cx:"ПРОСТОЕ", n:1, role:MODEL.types[t].role||"промо", msgs:1, tgt:9});
+  renderCards(); recalc();
+});
+document.getElementById('clrBtn').addEventListener('click',()=>{ state.campaigns=[]; renderCards(); recalc(); });
+
+// ============ METRIC CHIPS ============
+const chipsEl = document.getElementById('chips');
+function renderChips(){
+  chipsEl.innerHTML='';
+  META.forEach(m=>{
+    const b=document.createElement('button');
+    b.className='chip'+(m.hasData?'':' dis')+(m.tentative?' tent':'')+(state.selected.has(m.i)?' on':'');
+    b.style.setProperty('--c',MCOLOR[m.i]);
+    b.innerHTML = m.hasData
+      ? `<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+         <span class="lab">${m.short}</span>${m.tentative?'<span class="soon tt2">оценка</span>':`<span class="ab">${m.abbr}</span>`}`
+      : `<span class="box"></span><span class="lab">${m.short}</span><span class="soon">скоро</span>`;
+    if(m.hasData) b.addEventListener('click',()=>{
+      state.selected.has(m.i)? state.selected.delete(m.i): state.selected.add(m.i);
+      b.classList.toggle('on'); recalc();
+    });
+    chipsEl.appendChild(b);
+  });
+}
+
+// ============ OUTPUTS ============
+const totalsEl=document.getElementById('totals');
+const mapEl=document.getElementById('map');
+const mapwrap=document.getElementById('mapwrap');
+const blegend=document.getElementById('blegend');
+const mapHint=document.getElementById('mapHint');
+const btip=document.getElementById('btip');
+
+// chart control wiring
+function wireSeg(id,key){ const seg=document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(state[key]===b.dataset.v) return;
+    state[key]=b.dataset.v;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    renderMap();
+  }));
+}
+wireSeg('modeSeg','mapMode'); wireSeg('xSeg','xUnit');
+document.getElementById('tableBtn').addEventListener('click',()=>{
+  state.mapView = state.mapView==='table'?'bubbles':'table';
+  const tb=document.getElementById('tableBtn');
+  tb.textContent = state.mapView==='table'?'Пузырьками':'Таблицей';
+  tb.classList.toggle('act', state.mapView==='table');
+  renderMap();
+});
+
+// tooltip (attached once; content set from bubble data-attrs)
+mapEl.addEventListener('mouseover', e=>{
+  const g=e.target.closest('.bub'); if(!g) return; const d=g.dataset;
+  btip.innerHTML = `<div class="tt"><span class="d" style="background:${d.col}"></span>${d.name}</div>`
+    + (d.sub?`<div class="sub2">${d.sub}</div>`:'')
+    + `<div class="big2" style="color:${d.col}">${d.val}</div>`
+    + (d.meta?`<div class="tr2"><span>параметры</span><b>${d.meta}</b></div>`:'')
+    + `<div class="tr2"><span>${state.xUnit==='ots'?'объём ОТС':'кол-во РК'}</span><b>${d.x}</b></div>`;
+  btip.classList.add('on');
+});
+mapEl.addEventListener('mousemove', e=>{
+  if(!btip.classList.contains('on')) return;
+  const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+  const w=btip.offsetWidth, h=btip.offsetHeight;
+  if(x+w>window.innerWidth-8) x=e.clientX-w-pad;
+  if(y+h>window.innerHeight-8) y=e.clientY-h-pad;
+  btip.style.left=Math.max(8,x)+'px'; btip.style.top=Math.max(8,y)+'px';
+});
+mapEl.addEventListener('mouseleave', ()=> btip.classList.remove('on'));
+
+// same tooltip for the budget map
+function wireTip(host){
+  host.addEventListener('mouseover', e=>{ const g=e.target.closest('.bub'); if(!g) return; const d=g.dataset;
+    btip.innerHTML = `<div class="tt"><span class="d" style="background:${d.col}"></span>${d.name}</div>`
+      + (d.sub?`<div class="sub2">${d.sub}</div>`:'')
+      + `<div class="big2" style="color:${d.col}">${d.val}</div>`
+      + (d.meta?`<div class="tr2"><span>параметры</span><b>${d.meta}</b></div>`:'')
+      + `<div class="tr2"><span>данные</span><b>${d.x}</b></div>`;
+    btip.classList.add('on'); });
+  host.addEventListener('mousemove', e=>{ if(!btip.classList.contains('on'))return;
+    const pad=14; let x=e.clientX+pad,y=e.clientY+pad; const w=btip.offsetWidth,h=btip.offsetHeight;
+    if(x+w>window.innerWidth-8)x=e.clientX-w-pad; if(y+h>window.innerHeight-8)y=e.clientY-h-pad;
+    btip.style.left=Math.max(8,x)+'px'; btip.style.top=Math.max(8,y)+'px'; });
+  host.addEventListener('mouseleave', ()=> btip.classList.remove('on'));
+}
+wireTip(document.getElementById('budgetMap'));
+
+function selectedMetrics(){ return META.filter(m=>m.hasData && state.selected.has(m.i)); }
+
+function recalc(){
+  const cs=state.campaigns, sel=selectedMetrics();
+
+  // header meta
+  document.getElementById('mCamp').textContent = cs.length;
+  const ots=cs.reduce((a,c)=>a+reachOf(c),0);
+  document.getElementById('mOts').innerHTML = fmtOts(ots)+'<small>млн</small>';
+  document.getElementById('mMet').innerHTML = sel.length+'<small>/12</small>';
+  document.getElementById('cCount').textContent = cs.length? cs.length+' '+plural(cs.length,'кампания','кампании','кампаний') : '';
+
+  // ---- TOTALS ----
+  if(!cs.length || !sel.length){
+    totalsEl.innerHTML = `<div class="empty">${!cs.length?'Добавьте хотя бы одну <b>кампанию</b>':'Выберите хотя бы один <b>атрибут</b> для прогноза'}, чтобы увидеть годовой прирост.</div>`;
+  } else {
+    totalsEl.innerHTML = sel.map(m=>{
+      const parts = cs.map((c,i)=>({i, v:contrib(c,m.i)||0, col:CCOLOR[i%CCOLOR.length], c})).filter(p=>p.v>0);
+      const tot = parts.reduce((a,p)=>a+p.v,0);
+      parts.sort((a,b)=>b.v-a.v);
+      const seg = parts.map((p,k)=>{
+        const op=(1-0.62*(k/Math.max(1,parts.length-1))).toFixed(2);
+        return `<i style="width:${(p.v/tot*100).toFixed(2)}%;background:${MCOLOR[m.i]};opacity:${op}" title="К${p.i+1} · ${p.c.type} · ${p.c.subtype} — +${fmt(p.v)}"></i>`;
+      }).join('');
+      return `<div class="tcard" style="--c:${MCOLOR[m.i]}">
+        <div class="topbar"></div>
+        <div class="mname"><span class="sw"></span>${m.name}</div>
+        <div class="big">+${fmt(tot)}</div>
+        <div class="cap">единиц прироста · год</div>
+        <div class="stackbar">${seg}</div>
+        <div class="froml">из ${cs.length} ${plural(cs.length,'кампании','кампаний','кампаний')}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---- MAP ----
+  renderMap();
+}
+
+function plural(n,one,few,many){
+  const m10=n%10, m100=n%100;
+  if(m10===1 && m100!==11) return one;
+  if(m10>=2 && m10<=4 && (m100<10||m100>=20)) return few;
+  return many;
+}
+
+// ============ MAP RENDERERS ============
+function renderMap(){
+  const cs=state.campaigns, sel=selectedMetrics();
+  if(!cs.length || !sel.length){
+    mapwrap.className='mapwrap'; mapEl.className=''; mapEl.style.gridTemplateColumns='';
+    mapEl.innerHTML = `<div class="map-empty">${!cs.length?'Добавьте хотя бы одну <b>кампанию</b>':'Выберите хотя бы один <b>атрибут</b>'}, чтобы построить карту.</div>`;
+    blegend.innerHTML=''; mapHint.textContent=''; return;
+  }
+  if(state.mapView==='table'){
+    mapwrap.className='mapwrap'; mapEl.className='matrix';
+    mapEl.style.gridTemplateColumns = `minmax(208px,1.4fr) repeat(${sel.length},minmax(118px,1fr))`;
+    mapEl.innerHTML = renderMatrix(cs,sel);
+    blegend.innerHTML=''; mapHint.textContent='точные значения вкладов';
+  } else {
+    mapwrap.className='mapwrap chart'; mapEl.className=''; mapEl.style.gridTemplateColumns='';
+    mapEl.innerHTML = renderBubbles(cs,sel);
+    blegend.innerHTML = sel.map(m=>`<span class="li"><span class="d" style="background:${MCOLOR[m.i]}"></span>${m.short} <span class="ab">${m.abbr}</span></span>`).join('');
+    mapHint.textContent = state.mapMode==='attr' ? 'шарик = атрибут · размер = годовой прирост' : 'шарик = вклад кампании · размер = прирост';
+  }
+}
+
+function renderMatrix(cs,sel){
+  const colMax = sel.map(m=>Math.max(...cs.map(c=>contrib(c,m.i)||0),0.0001));
+  let html = `<div class="mcell corner">кампания \\ атрибут</div>`;
+  sel.forEach(m=> html+=`<div class="mcell colh" style="--c:${MCOLOR[m.i]}"><span class="sw" style="margin:0 auto"></span><span class="nm">${m.short}</span></div>`);
+  cs.forEach((c,i)=>{
+    const col=CCOLOR[i%CCOLOR.length];
+    html += `<div class="mcell rowh" style="--c:${col}">
+      <div class="rt"><span class="rtag">К${i+1}</span><span class="rname">${c.type}</span></div>
+      <div class="rmeta">${c.subtype} · <b>${MODEL.scaleShort[c.scale]}</b> · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · <b>×${c.n}</b></div>
+    </div>`;
+    sel.forEach((m,j)=>{
+      const v=contrib(c,m.i);
+      if(v==null){ html+=`<div class="mcell dcell na" style="--c:${MCOLOR[m.i]}"><span class="val">—</span></div>`; }
+      else{ const w=(v/colMax[j]*100).toFixed(1);
+        html+=`<div class="mcell dcell" style="--c:${MCOLOR[m.i]}"><span class="val">+${fmt(v)}</span><span class="bar"><i style="width:${w}%"></i></span></div>`; }
+    });
+  });
+  html += `<div class="mcell rowh" style="border-top:1px solid var(--line2)"><span class="tlab">Σ Итого / год</span></div>`;
+  sel.forEach(m=>{ const t=cs.reduce((a,c)=>a+(contrib(c,m.i)||0),0);
+    html+=`<div class="mcell dcell" style="--c:${MCOLOR[m.i]};border-top:1px solid var(--line2);background:linear-gradient(180deg,rgba(255,0,50,.045),transparent)"><span class="val" style="color:${MCOLOR[m.i]};font-size:16px">+${fmt(t)}</span></div>`; });
+  return html;
+}
+
+// --- chart helpers ---
+function niceCeil(x){ if(x<=0)return 1; const p=Math.pow(10,Math.floor(Math.log10(x))); const n=x/p;
+  const steps=[1,1.2,1.5,2,2.5,3,4,5,6,8,10]; const s=steps.find(v=>v>=n-1e-9)||10; return s*p; }
+function niceStep(x){ if(x<=0)return 1; const p=Math.pow(10,Math.floor(Math.log10(x))); const n=x/p;
+  const s=n<1?1:n<2?2:n<2.5?2:n<5?5:10; return s*p; }
+function linTicks(hi){ const step=niceStep(hi/5)||1; const t=[]; for(let v=0; v<=hi+1e-9; v+=step) t.push(+v.toFixed(6)); return t; }
+function logTicks(vmin,vmax){
+  if(!(vmin>0)) vmin=1e-3;
+  let kmin=Math.floor(Math.log2(vmin)), kmax=Math.ceil(Math.log2(vmax));
+  if(kmax<=kmin) kmax=kmin+1;
+  let step=1; while((kmax-kmin)/step>8) step++;
+  const ticks=[]; for(let k=kmin;k<=kmax;k+=step) ticks.push(Math.pow(2,k));
+  if(ticks[ticks.length-1]<vmax) ticks.push(ticks[ticks.length-1]*Math.pow(2,step));
+  return {ticks, lo:ticks[0], hi:ticks[ticks.length-1]};
+}
+function fmtTick(t){ return t>=1 ? new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0}).format(t)
+  : (+t).toFixed(t<0.1?3:2).replace(/0+$/,'').replace(/\.$/,'').replace('.',','); }
+function fmtX(v){
+  if(state.xUnit==='rk') return String(Math.round(v));
+  let s=(v>=10? (+v).toFixed(1) : (+v).toFixed(2));
+  s=s.replace(/0+$/,'').replace(/\.$/,'');
+  return s.replace('.',',')||'0';
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderBubbles(cs,sel){
+  const W=900,H=520, x0=66,x1=872,y0=36,y1=452;
+  const mode=state.mapMode, unit=state.xUnit;
+
+  // build points
+  let pts=[], guideX=0;
+  if(mode==='attr'){
+    guideX = unit==='ots' ? cs.reduce((a,c)=>a+reachOf(c),0)/1e6 : cs.reduce((a,c)=>a+c.n,0);
+    sel.forEach(m=>{ const v=cs.reduce((a,c)=>a+(contrib(c,m.i)||0),0);
+      if(v>0) pts.push({x:guideX, v, mi:m.i, name:m.short, full:m.name, abbr:m.abbr, sub:'вклад всех кампаний за год'}); });
+  } else {
+    cs.forEach((c,ci)=>{ const cx = unit==='ots' ? reachOf(c)/1e6 : c.n;
+      sel.forEach(m=>{ const v=contrib(c,m.i);
+        if(v&&v>0) pts.push({x:cx, v, mi:m.i, name:m.short, full:m.name, abbr:m.abbr, ci,
+          sub:`К${ci+1} · ${c.type} · ${c.subtype}`,
+          meta:`${MODEL.scaleShort[c.scale]} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ×${c.n}`}); }); });
+  }
+
+  // scales
+  const vs=pts.map(p=>p.v); const vmin=Math.min(...vs), vmax=Math.max(...vs);
+  const yt=logTicks(vmin,vmax); const llo=Math.log2(yt.lo), lhi=Math.log2(yt.hi);
+  const ypos=v=> y1-(Math.log2(v)-llo)/(lhi-llo)*(y1-y0);
+  const xsMax = mode==='attr' ? guideX : Math.max(...pts.map(p=>p.x));
+  let xHi = niceCeil((xsMax||1)*(mode==='attr'?1.3:1.18));
+  if(xHi<=xsMax) xHi=niceCeil((xsMax||1)*1.45);
+  if(unit==='rk' && xHi<2) xHi=2;
+  const xpos=v=> x0 + (v/xHi)*(x1-x0);
+
+  // radii — log-compressed so wide value range (ДЕТИ даёт крупный прирост) остаётся читаемым
+  const rmin=13, rmax=(mode==='attr'?46:34);
+  const lv=Math.log, lmin=lv(Math.max(vmin,1e-6)), lmax=lv(Math.max(vmax,vmin*1.0001));
+  const rad=v=> (lmax<=lmin)?(rmin+rmax)/2 : rmin + Math.pow((lv(Math.max(v,1e-6))-lmin)/(lmax-lmin),0.78)*(rmax-rmin);
+
+  pts.forEach(p=>{ p.px=xpos(p.x); p.py=ypos(p.v); p.r=rad(p.v); });
+
+  // collision resolve — disperse on X, keep Y (the data axis) exact
+  for(let it=0; it<90; it++){ let moved=false;
+    for(let a=0;a<pts.length;a++) for(let b=a+1;b<pts.length;b++){
+      const A=pts[a],B=pts[b]; const dx=B.px-A.px, dy=B.py-A.py;
+      const d=Math.hypot(dx,dy), mn=A.r+B.r+3;
+      if(d<mn){ const push=(mn-d)/2+0.4;
+        if(Math.abs(dx)<0.8){ A.px-=push; B.px+=push; }
+        else { const ux=dx/d; A.px-=ux*push; B.px+=ux*push; }
+        moved=true;
+      }
+    }
+    if(!moved) break;
+  }
+  pts.forEach(p=>{ p.px=Math.max(x0+p.r+1,Math.min(x1-p.r-1,p.px)); p.py=Math.max(y0+p.r+1,Math.min(y1-p.r-1,p.py)); });
+
+  // ---- SVG ----
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Пузырьковая карта прироста">`;
+  // y gridlines + labels
+  yt.ticks.forEach(t=>{ const y=ypos(t);
+    s+=`<line class="gridline" x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}"/>`;
+    s+=`<text class="axislab" x="${x0-11}" y="${(y+3.6).toFixed(1)}" text-anchor="end">${fmtTick(t)}</text>`; });
+  // axes
+  s+=`<line class="axisline" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/>`;
+  s+=`<line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
+  // x gridlines + labels
+  linTicks(xHi).forEach(t=>{ const x=xpos(t);
+    s+=`<line class="gridline" x1="${x.toFixed(1)}" y1="${y0}" x2="${x.toFixed(1)}" y2="${y1}"/>`;
+    s+=`<text class="axislab" x="${x.toFixed(1)}" y="${y1+21}" text-anchor="middle">${fmtX(t)}</text>`; });
+  // axis titles
+  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-9}" text-anchor="middle">${unit==='ots'?'ОБЪЁМ ОТС, МЛН':'КОЛИЧЕСТВО РК'}</text>`;
+  s+=`<text class="axistitle" transform="translate(15,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">ГОДОВОЙ ПРИРОСТ</text>`;
+  // guides
+  if(mode==='attr'){ const gx=xpos(guideX);
+    s+=`<line class="guideline" x1="${gx.toFixed(1)}" y1="${y0}" x2="${gx.toFixed(1)}" y2="${y1}"/>`;
+    s+=`<text class="guidelab" x="${gx.toFixed(1)}" y="${(y0-9)}" text-anchor="middle">план: ${fmtX(guideX)} ${unit==='ots'?'млн ОТС':'РК'}</text>`;
+  } else {
+    cs.forEach((c,ci)=>{ const xv= unit==='ots'? reachOf(c)/1e6 : c.n; const gx=xpos(xv);
+      s+=`<line x1="${gx.toFixed(1)}" y1="${y0}" x2="${gx.toFixed(1)}" y2="${y1}" stroke="rgba(0,0,0,.11)" stroke-dasharray="3 4"/>`;
+      s+=`<text class="guidelab" x="${gx.toFixed(1)}" y="${(y0-9)}" text-anchor="middle" style="fill:var(--muted)">К${ci+1}</text>`; });
+  }
+  // external labels with leaders (attr mode only — few enough to be readable)
+  if(mode==='attr'){
+    const mid=(x0+x1)/2;
+    ['R','L'].forEach(side=>{
+      const arr=pts.filter(p=> (p.px>mid?'L':'R')===side).sort((a,b)=>a.py-b.py);
+      let lastY=-1e9; const gap=16;
+      arr.forEach(p=>{ let ly=p.py; if(ly-lastY<gap) ly=lastY+gap; lastY=ly;
+        const lx = side==='R'? p.px+p.r+9 : p.px-p.r-9;
+        const ex = side==='R'? p.px+p.r : p.px-p.r;
+        s+=`<line class="leader" x1="${ex.toFixed(1)}" y1="${p.py.toFixed(1)}" x2="${lx.toFixed(1)}" y2="${ly.toFixed(1)}"/>`;
+        s+=`<text class="blab" x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${side==='R'?'start':'end'}">${esc(p.name)}</text>`;
+      });
+    });
+  }
+  // bubbles
+  pts.forEach(p=>{ const col=MCOLOR[p.mi];
+    const dx=fmtX(p.x)+(unit==='ots'?' млн ОТС':' РК');
+    s+=`<g class="bub" data-name="${esc(p.full)}" data-sub="${esc(p.sub||'')}" data-meta="${esc(p.meta||'')}" data-val="+${esc(fmt(p.v))}" data-x="${esc(dx)}" data-col="${col}">`;
+    s+=`<circle cx="${p.px.toFixed(1)}" cy="${p.py.toFixed(1)}" r="${p.r.toFixed(1)}" fill="${col}" fill-opacity="0.8" stroke="${col}"/>`;
+    if(p.r>=15) s+=`<text class="bin" x="${p.px.toFixed(1)}" y="${p.py.toFixed(1)}" style="font-size:${Math.min(15,p.r*0.6).toFixed(0)}px">${p.abbr}</text>`;
+    s+=`</g>`;
+  });
+  s+=`</svg>`;
+  return s;
+}
+
+// ============ TABS ============
+function switchTab(t){
+  state.tab=t;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+t));
+  if(t==='chrono'){ renderChronoLogic(); renderChronoTable(); }
+  if(t==='budget'){ renderBudget(); }
+}
+document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
+
+// ============ CHRONO LOGIC EXPLAINER ============
+function renderChronoLogic(){
+  const el=document.getElementById('chronoLogic');
+  el.innerHTML = `
+   <div class="clog">
+     <h4>Из чего складывается балл</h4>
+     <div class="row"><span>Балл типа · <b style="color:var(--text2)">имидж</b></span><b>3</b></div>
+     <div class="row"><span>Балл типа · <b style="color:var(--text2)">промо</b></span><b>1</b></div>
+     <div class="row"><span>Балл сообщения · простое (1 / 2-3)</span><b>1 / 2</b></div>
+     <div class="row"><span>Балл сообщения · сложное (1 / 2-3)</span><b>3 / 4</b></div>
+     <div class="row"><span>Балл медиачувствительности (низк/сред/выс)</span><b>1 / 2 / 3</b></div>
+     <p class="mut">Чем выше медиачувствительность метрики и чем «тяжелее» креатив (имидж, сложное сообщение, несколько посылов) — тем длиннее рекомендованный ролик.</p>
+   </div>
+   <div class="clog">
+     <h4>Итоговый балл → секунды</h4>
+     <div class="scale-map">
+       <div class="sm"><div class="s" style="color:#0e8f58">20</div><div class="l">балл 3–4</div></div>
+       <div class="sm"><div class="s" style="color:#1565e0">30</div><div class="l">балл 5–6</div></div>
+       <div class="sm"><div class="s" style="color:#b25e00">45</div><div class="l">балл 7–8</div></div>
+       <div class="sm"><div class="s" style="color:#d1002b">60</div><div class="l">балл 9–10</div></div>
+     </div>
+     <p class="mut">Тот же расчёт показывается прямо в карточке каждой кампании на вкладке «Прирост метрик» — по выбранной целевой метрике ролика.</p>
+   </div>`;
+}
+
+// ============ CHRONO REFERENCE TABLE ============
+function renderChronoTable(){
+  const role=state.chrono.role, cxLabel=state.chrono.cx;
+  const cxKey = cxLabel==='простое'?'ПРОСТОЕ':'СЛОЖНОЕ';
+  document.getElementById('chHint').textContent = `${role} · ${cxLabel} сообщение · по всем 12 метрикам × 1–3 сообщения`;
+  const ms=[...META].sort((a,b)=>b.ms-a.ms);
+  let h=`<table class="chtable"><thead><tr>
+    <th class="lft">Метрика</th><th>Медиа-<br>чувств.</th><th>1 сооб.</th><th>2 сооб.</th><th>3 сооб.</th></tr></thead><tbody>`;
+  ms.forEach(m=>{
+    const cells=[1,2,3].map(n=>{ const r=chronoFor(role,cxKey,n,m.ms);
+      return `<td><span class="chsec s${r.sec}">${r.sec}</span></td>`; }).join('');
+    h+=`<tr><td class="lft mname2">${m.short}${m.tentative?' <span class="tent">оценка</span>':''}</td>
+      <td><span class="chms">${(m.ms*100).toFixed(2)}%</span></td>${cells}</tr>`;
+  });
+  h+=`</tbody></table>`;
+  document.getElementById('chronoTable').innerHTML=h;
+}
+function wireChSeg(id,key){ const seg=document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    state.chrono[key]=b.dataset.v;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    renderChronoTable();
+  }));
+}
+wireChSeg('chRoleSeg','role'); wireChSeg('chCxSeg','cx');
+document.getElementById('fwdToggle').addEventListener('change', e=>{ state.fwd=e.target.checked; renderBudget(); });
+
+// ============ BUDGET ============
+function effImp(i){ const f=(state.fwd && BUDGET.fwd[i])? BUDGET.fwd[i] : 1; return BUDGET.imp[i]*f; }
+function budgetRows(){
+  // доля ∝ важность × медиачувствительность × разрыв, с поправкой на режим (где медиа — рычаг)
+  const modeW={restore:1.3, defend:1.0, moderate:0.7, limited:0.6};
+  return META.map(m=>{
+    const imp=effImp(m.i), pos=BUDGET.pos[m.i], ms=m.ms;
+    const gap = Math.max(0.25, 1 - Math.max(-0.5,Math.min(0.9,pos))); // слабая позиция → больше веса
+    const mode = (ms>=0.012)
+      ? (pos<0.05 ? {k:'restore',t:'Восстанавливать'} : {k:'defend',t:'Защищать позицию'})
+      : (pos<0.05 ? {k:'limited',t:'Ограниченная роль'} : {k:'moderate',t:'Умеренная поддержка'});
+    const raw = imp * (ms*100) * gap * modeW[mode.k];
+    return {m, imp, pos, ms, raw, mode, fwd:(state.fwd && BUDGET.fwd[m.i])||0};
+  });
+}
+function renderBudget(){
+  renderBudgetRule();
+  renderBudgetMap();
+  renderBudgetAlloc();
+  renderRubPanel();
+}
+function renderBudgetRule(){
+  document.getElementById('bRule').innerHTML = `
+   <div class="rcard">
+     <h4>Правило аллокации</h4>
+     <div class="eqx"><span class="hl">коэффициент к базе</span> <span class="op">∝</span> важность<sub>при выборе</sub>
+       <span class="op">×</span> медиачувствительность <span class="op">×</span> разрыв<sub>до цели</sub></div>
+     <ul>
+       <li>Это <b>не</b> деление одного бюджета на 100% — метрики не финансируются одновременно. Каждая — <b>самостоятельная кампания</b>.</li>
+       <li>Смотрим на них как на рейтинг: на приоритетных тратим <b>выше базы</b>, на слабых — <b>ниже базы</b>.</li>
+       <li>Отклонение ограничено <b>±100% от средней кампании</b> (коэффициент ×0…×2) — реалистичный коридор пере-/недоинвестирования.</li>
+       <li>Режим (квадрант ниже) определяет, <b>защищаем</b> мы атрибут или <b>восстанавливаем</b>, и сдвигает кампанию вверх/вниз по коридору.</li>
+     </ul>
+   </div>
+   <div class="rcard">
+     <h4>Режимы медиаподдержки</h4>
+     <div class="quad">
+       <div class="q hi"><div class="qax">выс. чувств. · слабая позиция</div><div class="qt">Восстанавливать</div><div class="qd">Активная поддержка, быстрый рост восприятия, сокращение отставания.</div></div>
+       <div class="q"><div class="qax">выс. чувств. · сильная позиция</div><div class="qt">Защищать позицию</div><div class="qd">Регулярное присутствие с интенсивностью, достаточной для удержания.</div></div>
+       <div class="q"><div class="qax">низ. чувств. · слабая позиция</div><div class="qt">Ограниченная роль</div><div class="qd">Точечная поддержка, подкреплённая продуктовыми доказательствами.</div></div>
+       <div class="q"><div class="qax">низ. чувств. · сильная позиция</div><div class="qt">Умеренная поддержка</div><div class="qd">Базовый уровень без избыточного давления. «Один из», не фокус.</div></div>
+     </div>
+   </div>`;
+}
+function renderBudgetMap(){
+  const W=900,H=480,x0=70,x1=864,y0=34,y1=410;
+  const rows=budgetRows();
+  const xs=rows.map(r=>r.pos), xmin=Math.min(...xs,-0.25), xmax=Math.max(...xs,0.4);
+  const ys=rows.map(r=>r.ms), ymax=Math.max(...ys)*1.08, ymin=0;
+  const xp=v=> x0+(v-xmin)/(xmax-xmin)*(x1-x0);
+  const yp=v=> y1-(v-ymin)/(ymax-ymin)*(y1-y0);
+  const imax=Math.max(...rows.map(r=>r.imp));
+  const rad=v=> 11+Math.sqrt(v/imax)*30;
+  rows.forEach(r=>{ r.px=xp(r.pos); r.py=yp(r.ms); r.r=rad(r.imp); });
+  // collision
+  for(let it=0;it<120;it++){let mv=false;
+    for(let a=0;a<rows.length;a++)for(let b=a+1;b<rows.length;b++){
+      const A=rows[a],B=rows[b],dx=B.px-A.px,dy=B.py-A.py,d=Math.hypot(dx,dy)||0.1,mn=A.r+B.r+3;
+      if(d<mn){const p=(mn-d)/2+0.4,ux=dx/d,uy=dy/d;A.px-=ux*p;A.py-=uy*p;B.px+=ux*p;B.py+=uy*p;mv=true;}}
+    if(!mv)break;}
+  rows.forEach(r=>{r.px=Math.max(x0+r.r,Math.min(x1-r.r,r.px));r.py=Math.max(y0+r.r,Math.min(y1-r.r,r.py));});
+  const midx=xp(0.05), midy=yp(0.012);
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+  // quadrant shading
+  s+=`<rect x="${x0}" y="${y0}" width="${midx-x0}" height="${midy-y0}" fill="rgba(255,0,50,.05)"/>`;
+  s+=`<line class="guideline" x1="${midx}" y1="${y0}" x2="${midx}" y2="${y1}" style="opacity:.3"/>`;
+  s+=`<line class="guideline" x1="${x0}" y1="${midy}" x2="${x1}" y2="${midy}" style="opacity:.3"/>`;
+  s+=`<line class="axisline" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/><line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
+  // quadrant labels
+  s+=`<text class="guidelab" x="${x0+8}" y="${y0+16}" style="fill:var(--accent);opacity:.7">Восстанавливать</text>`;
+  s+=`<text class="guidelab" x="${x1-8}" y="${y0+16}" text-anchor="end" style="fill:var(--muted)">Защищать</text>`;
+  s+=`<text class="guidelab" x="${x0+8}" y="${y1-10}" style="fill:var(--muted)">Ограниченная роль</text>`;
+  s+=`<text class="guidelab" x="${x1-8}" y="${y1-10}" text-anchor="end" style="fill:var(--muted)">Умеренная</text>`;
+  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">КОНКУРЕНТНАЯ ПОЗИЦИЯ МТС →</text>`;
+  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
+  // bubbles
+  const gc=BUDGET.grpColor;
+  rows.forEach(r=>{ const col=gc[r.m.grp]; const fw=r.fwd;
+    s+=`<g class="bub" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="режим: ${r.mode.t}" data-x="поз ${r.pos.toFixed(2)} · важн ${r.imp.toFixed(1)}%${fw?` · форвард ×${fw}`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')}" data-col="${col}">`;
+    if(fw) s+=`<circle cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${(r.r+5).toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.85"/>`;
+    s+=`<circle cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="0.78" stroke="${col}"/>`;
+    s+=`<text class="bin" x="${r.px.toFixed(1)}" y="${r.py.toFixed(1)}" style="font-size:${Math.min(13,r.r*0.6).toFixed(0)}px">${r.m.abbr}</text></g>`;
+  });
+  s+=`</svg>`;
+  document.getElementById('budgetMap').innerHTML=s;
+  document.getElementById('budgetLegend').innerHTML = Object.keys(BUDGET.grpName).map(g=>
+    `<span class="li"><span class="d" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
+    + `<span class="li" style="color:var(--faint)">размер круга = важность атрибута</span>`;
+}
+function renderBudgetAlloc(){
+  const rows=budgetRows();
+  const mean=rows.reduce((a,r)=>a+r.raw,0)/rows.length;
+  rows.forEach(r=>{
+    r.idx = r.raw/mean;                       // сырой приоритет относительно средней кампании
+    r.coef = Math.max(0, Math.min(2, r.idx)); // лимит: ×0…×2  (−100%…+100% от базы)
+    r.dev  = (r.coef-1)*100;                   // отклонение от базы, %
+    r.capped = r.idx>2;
+  });
+  rows.sort((a,b)=>b.coef-a.coef);
+  const gc=BUDGET.grpColor;
+  document.getElementById('bAllocHint').textContent='база = средняя кампания · лимит пере-/недоинвестирования ±100% (×0…×2)';
+  let head=`<div class="alloc-head">`+Object.keys(BUDGET.grpName).map(g=>
+    `<span class="leg"><span class="gd" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
+    +`<span class="leg" style="color:var(--faint)">−100% ← база → +100%</span></div>`;
+  let h=`<div class="alloc idx">`;
+  rows.forEach(r=>{ const col=gc[r.m.grp]; const above=r.dev>=0;
+    const w=Math.abs(r.dev)/100*46;            // 100% = полуширина дорожки (46%)
+    const bar = above
+      ? `<i class="pos" style="left:50%;width:${w.toFixed(1)}%;background:${col}"></i>`
+      : `<i class="neg" style="left:${(50-w).toFixed(1)}%;width:${w.toFixed(1)}%;background:${col};opacity:.55"></i>`;
+    const lbl=(r.dev>=0?'+':'')+Math.round(r.dev)+'%';
+    const fb = r.fwd?` <span class="tent fwdb">форвард ×${r.fwd}</span>`:'';
+    h+=`<div class="arow idxrow">
+      <span class="an"><span class="gd" style="background:${col}"></span>${r.m.short}${r.m.tentative?' <span class="tent">оц.</span>':''}${fb}</span>
+      <span class="track2"><span class="mid"></span>${bar}<span class="mode ${above?'r':'l'}">${r.mode.t}${r.capped?' · лимит':''}</span></span>
+      <span class="pct" style="color:${above?col:'var(--muted)'}">${lbl}</span>
+    </div>`; });
+  h+=`</div>`;
+  document.getElementById('budgetAlloc').innerHTML=head+h;
+}
+function renderRubPanel(){
+  // category SOS 2025, млрд руб — презентация стр.18
+  const sos=[{n:'Мегафон',v:15.2,c:'#3ac569'},{n:'Т2',v:9.2,c:'#888'},{n:'МТС',v:7.2,c:'#ff3b4e'},
+    {n:'билайн',v:5.9,c:'#ffd24b'},{n:'YOTA',v:2.3,c:'#4fd1ff'},{n:'Сбер',v:2.9,c:'#7be36b'},{n:'Т-Моб',v:2.2,c:'#b084ff'}];
+  const mx=Math.max(...sos.map(s=>s.v));
+  const bars=sos.map(s=>`<div class="sb"><span class="vv">${s.v.toFixed(1).replace('.',',')}</span>
+    <i style="height:${(s.v/mx*100).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
+  document.getElementById('rubPanel').innerHTML = `
+    <div class="pend">
+      <span class="ic">₽</span>
+      <span class="tx">Отклонения слева превращаются в рубли по схеме <b>₽ = базовый бюджет кампании × (1 + отклонение)</b>, а стоимость прироста — через <b>CPM/CPT</b>. Поля активируются, как только вы пришлёте CPM по каналам.</span>
+    </div>
+    <div class="rub-inputs">
+      <div class="field"><label style="font-family:'JetBrains Mono';font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em">CPM, ₽ — ждём данные</label><input placeholder="напр. 350" disabled></div>
+      <div class="field"><label style="font-family:'JetBrains Mono';font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em">Базовый бюджет 1 кампании, млн ₽</label><input placeholder="напр. 120" disabled></div>
+    </div>
+    <div class="prem">
+      <b>Премия эффективности vs конкуренты.</b> На базе категорийного SOS 2025 (стр. 18): МТС обеспечивает лидерство по знанию и образу бренда при <b>3-м месте по доле затрат</b> — то есть достигает сопоставимого/более высокого уровня атрибутов при меньшем SOS. После ввода CPM выведем «₽ на пункт прироста» по МТС против Мегафон/Т2/билайн.
+      <div class="sos-mini">${bars}</div>
+      <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--faint);text-align:center">SOS категории Телеком 2025, млрд ₽ · источник: презентация стр. 18</div>
+    </div>`;
+}
+
+// init
+seed(); renderCards(); renderChips(); recalc();
+</script>
+</body>
+</html>
