@@ -438,6 +438,41 @@ h1 .em{color:var(--accent);}
 .fwd-note{font-size:11.5px; color:var(--muted); line-height:1.4;}
 .tent.fwdb{color:var(--accent-deep); border-color:rgba(255,0,50,.4); background:rgba(255,0,50,.08);}
 
+/* chrono mini lookup table in explainer */
+.chmini{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:4px;}
+.chmini th{text-align:center; padding:6px 8px; font-family:"JetBrains Mono",monospace; font-size:9px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--faint); border-bottom:1px solid var(--line2);}
+.chmini th.lft,.chmini td.lft{text-align:left;}
+.chmini td{padding:6px 8px; border-bottom:1px solid var(--line); color:var(--text2); text-align:center;}
+.chmini td.lft{color:var(--text2); font-size:12px;}
+
+/* length-vs-OTS chart */
+.ecchart{display:flex; gap:14px; align-items:flex-end; height:210px; padding:8px 6px 0;}
+.ecbar{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px; position:relative;}
+.ecbar .ecv{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); font-weight:700;}
+.ecbar .eccol{width:100%; max-width:90px; border-radius:7px 7px 0 0; transition:height .5s cubic-bezier(.2,.7,.2,1); min-height:6px;}
+.ecbar .ecl{font-family:"Unbounded",sans-serif; font-weight:700; font-size:17px; color:var(--text2); margin-top:2px;}
+.ecbar.best .ecl{color:var(--text);}
+.ecbar .ecl small{font-size:11px; color:var(--muted); font-weight:600;}
+.ecbar .ecl .recmark{display:block; font-family:"JetBrains Mono",monospace; font-size:8px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent); font-weight:700; margin-top:2px;}
+.ecbar .ecsub{font-family:"JetBrains Mono",monospace; font-size:9.5px; color:var(--faint); text-align:center; line-height:1.3;}
+.ecbar.best::before{content:"оптимум"; position:absolute; top:-2px; font-family:"JetBrains Mono",monospace;
+  font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:var(--text); opacity:.5;}
+.ecverdict{margin-top:18px; font-size:13.5px; color:var(--text2); line-height:1.6; padding-top:16px; border-top:1px solid var(--line);}
+.ecgap{margin-top:12px; font-size:12.5px; color:var(--muted); line-height:1.55; background:var(--ink2);
+  border:1px solid var(--line); border-radius:9px; padding:11px 13px;}
+.ecgap b{color:var(--text);} .ecgap.ok{color:var(--text2);}
+.ecclass-head{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); margin:26px 0 12px;}
+.econclass{display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(250px,1fr));}
+.ecls{display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--line);
+  border-radius:9px; padding:9px 12px; box-shadow:0 1px 2px rgba(0,0,0,.03);}
+.ecls .d{width:9px; height:9px; border-radius:50%; flex:none;}
+.ecls .n{flex:1; font-size:12.5px; color:var(--text2);}
+.ecls .t{font-size:11px; font-weight:700;}
+.ecls .ms{font-family:"JetBrains Mono",monospace; font-size:9.5px; color:var(--faint); min-width:54px; text-align:right;}
+
 @keyframes fu{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,0,50,.14),0 0 18px 2px rgba(255,0,50,.5);}
   50%{box-shadow:0 0 0 7px rgba(255,0,50,.05),0 0 22px 4px rgba(255,0,50,.65);}}
@@ -560,13 +595,13 @@ h1 .em{color:var(--accent);}
   <div class="tabpanel" id="tab-chrono">
     <section class="totals-sec">
       <div class="shead"><span class="no">02</span><h2>Логика хронометража</h2>
-        <span class="hint">балл = тип + сообщение + медиачувствительность → секунды</span></div>
+        <span class="hint">роль задаёт диапазон · сложность и медиачувствительность — внутри него</span></div>
       <div class="chrono-logic" id="chronoLogic"></div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
       <div class="shead"><span class="no">02·Б</span><h2>Справочник: рекомендованный хронометраж</h2>
-        <span class="hint">все комбинации из модели</span></div>
+        <span class="hint">по обновлённому анализу</span></div>
       <div class="mapctl">
         <div class="seg mini" id="chRoleSeg">
           <button data-v="промо" class="on">Промо</button>
@@ -579,7 +614,25 @@ h1 .em{color:var(--accent);}
         <span class="hint" id="chHint" style="margin-left:auto"></span>
       </div>
       <div class="mapwrap"><div id="chronoTable"></div></div>
-      <div class="src">источник: хроно.xlsx · 144 комбинации (тип × кол-во сообщений × сложность × метрика)</div>
+      <div class="src">источник: калькулятор_хроно_upd.xlsx · таблица-справочник (роль · сложность · кол-во сообщений · медиачувствительность)</div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">02·В</span><h2>Длина vs OTS: где экономить</h2>
+        <span class="hint">при фиксированном бюджете</span></div>
+      <div class="brule" style="grid-template-columns:1fr">
+        <div class="rcard">
+          <div class="mapctl" style="margin-bottom:18px">
+            <div class="seg mini" id="ecRoleSeg"><button data-v="промо">Промо</button><button data-v="имидж">Имидж</button></div>
+            <div class="seg mini" id="ecCxSeg"><button data-v="ПРОСТОЕ">Простое</button><button data-v="СЛОЖНОЕ">Сложное</button></div>
+            <div class="sel" style="min-width:230px"><select id="ecTgt"></select></div>
+          </div>
+          <div id="econPanel"></div>
+        </div>
+      </div>
+      <div class="ecclass-head">Классификация метрик по медиачувствительности</div>
+      <div class="econclass" id="econClass"></div>
+      <div class="src">слой «длина vs OTS» — рабочие допущения (длительностные коэффициенты стоимости и доходимость сообщения), калибруются по реальным CPP</div>
     </section>
   </div><!-- /tab-chrono -->
 
@@ -674,6 +727,7 @@ const state = {
   xUnit: 'ots',                 // 'ots' = объём ОТС, млн | 'rk' = кол-во РК
   mapView: 'bubbles',           // 'bubbles' | 'table'
   chrono:{role:'промо', cx:'простое'}, // filter state for reference tab
+  econ:{role:'промо', cx:'ПРОСТОЕ', msgs:1, tgt:9}, // length-vs-OTS explorer
   fwd:false                            // budget: учитывать форвардную важность (финтех/5G ×3)
 };
 
@@ -685,21 +739,41 @@ function seed(){
   ];
 }
 
-// --- chrono model (reconstructed from файл «хроно») ---
-// тип: имидж=3, промо=1 · сообщение: f(сложность,кол-во) · чувствительность: f(ms) → ИТОГО → секунды
-function roleScore(role){ return role==='имидж' ? 3 : 1; }
-function msgScore(cx, msgs){
-  const m=Math.max(1,Math.min(3,msgs|0));
-  if(cx==='ПРОСТОЕ' || cx==='простое') return m===1?1:2;   // простое: 1→1, 2/3→2
-  return m===1?3:4;                                         // сложное: 1→3, 2/3→4
-}
-function msScore(ms){ return ms<0.012 ? 1 : (ms<0.019 ? 2 : 3); }
+// --- chrono model (обновлённый анализ: таблица-справочник, роль задаёт диапазон) ---
+// порядок в массиве = диапазон медиачувствительности [низкая, средняя, высокая]
+const CHRONO = {
+ 'промо':{ 'ПРОСТОЕ':{1:[20,20,30]},
+           'СЛОЖНОЕ':{1:[30,30,45], 2:[30,45,45], 3:[30,45,45]} },
+ 'имидж':{ 'ПРОСТОЕ':{1:[45,45,45]},
+           'СЛОЖНОЕ':{1:[45,45,60], 2:[45,60,60], 3:[45,60,60]} }
+};
+function msBand(ms){ return ms<0.012 ? 1 : (ms<0.019 ? 2 : 3); }   // 1 низк · 2 сред · 3 выс
+const BANDNAME={1:'низкая',2:'средняя',3:'высокая'};
 function chronoFor(role, cx, msgs, ms){
-  const I = roleScore(role) + msgScore(cx,msgs) + msScore(ms);
-  const sec = I<=4 ? 20 : I<=6 ? 30 : I<=8 ? 45 : 60;
-  return {I, sec};
+  const cxk = (cx==='ПРОСТОЕ'||cx==='простое') ? 'ПРОСТОЕ' : 'СЛОЖНОЕ';
+  const cnt = cxk==='ПРОСТОЕ' ? 1 : Math.max(1,Math.min(3,msgs|0));  // простое = всегда 1 сообщение
+  const band = msBand(ms);
+  const sec = CHRONO[role][cxk][cnt][band-1];
+  return {sec, band, cnt, cxk};
 }
 function campChrono(c){ const m=META[c.tgt]; return chronoFor(c.role, c.cx, c.msgs, m.ms); }
+
+// --- слой «длина vs OTS» (рабочие допущения, калибруются по реальным CPP/доходимости) ---
+const LEN=[20,30,45,60];
+const DUR={20:0.65,30:1.0,45:1.45,60:1.85};        // длительностный коэф стоимости (отн. 30")
+const QSIMPLE={20:0.95,30:1.0,45:1.0,60:1.0};      // доходимость простого сообщения
+const QCOMPLEX={20:0.35,30:0.60,45:0.90,60:1.0};   // доходимость сложного/имиджевого
+function otsMult(L){ return DUR[30]/DUR[L]; }                       // OTS при фикс. бюджете отн. 30"
+function qOf(L, cx, role){ return (cx==='СЛОЖНОЕ'||cx==='сложное'||role==='имидж') ? QCOMPLEX[L] : QSIMPLE[L]; }
+function alphaOf(band){ return {1:0.6, 2:1.0, 3:1.4}[band]; }       // выс. медиачувств. → контакты сильнее работают
+function impactOf(L, cx, role, band){ return Math.pow(otsMult(L),alphaOf(band)) * qOf(L,cx,role); }
+function lengthEconomy(role, cx, ms){
+  const band=msBand(ms);
+  const arr=LEN.map(L=>({L, ots:otsMult(L), q:qOf(L,cx,role), imp:impactOf(L,cx,role,band)}));
+  const best=arr.reduce((a,b)=>b.imp>a.imp?b:a);
+  const cls = band>=3 ? 'reach' : (band===1 ? 'message' : 'mixed');   // охватная / сообщенческая / смешанная
+  return {arr, best, band, cls};
+}
 
 // --- model math ---
 function perCampaign(c, mi){
@@ -787,7 +861,7 @@ function buildCard(c, idx){
         <div class="chrono-badge" data-sec="${ch.sec}">
           <span class="cb-lab">Реко хронометраж</span>
           <span class="cb-val">${ch.sec}<small>сек</small></span>
-          <span class="cb-meta">балл ${ch.I} · ${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${c.msgs} сооб.</span>
+          <span class="cb-meta">${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${ch.cnt} сооб. · медиа: ${BANDNAME[ch.band]}</span>
         </div>
       </div>
     </div>`;
@@ -833,7 +907,7 @@ function sync(el,c){ el.querySelector('.creach b').textContent = fmtOts(reachOf(
 function syncChrono(el,c){ const ch=campChrono(c); const b=el.querySelector('.chrono-badge');
   b.dataset.sec=ch.sec;
   b.querySelector('.cb-val').innerHTML = ch.sec+'<small>сек</small>';
-  b.querySelector('.cb-meta').textContent = `балл ${ch.I} · ${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${c.msgs} сооб.`;
+  b.querySelector('.cb-meta').textContent = `${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ${ch.cnt} сооб. · медиа: ${BANDNAME[ch.band]}`;
 }
 
 function renderCards(){
@@ -1153,7 +1227,7 @@ function switchTab(t){
   state.tab=t;
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+t));
-  if(t==='chrono'){ renderChronoLogic(); renderChronoTable(); }
+  if(t==='chrono'){ renderChronoLogic(); renderChronoTable(); renderEconomy(); }
   if(t==='budget'){ renderBudget(); }
 }
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
@@ -1163,23 +1237,21 @@ function renderChronoLogic(){
   const el=document.getElementById('chronoLogic');
   el.innerHTML = `
    <div class="clog">
-     <h4>Из чего складывается балл</h4>
-     <div class="row"><span>Балл типа · <b style="color:var(--text2)">имидж</b></span><b>3</b></div>
-     <div class="row"><span>Балл типа · <b style="color:var(--text2)">промо</b></span><b>1</b></div>
-     <div class="row"><span>Балл сообщения · простое (1 / 2-3)</span><b>1 / 2</b></div>
-     <div class="row"><span>Балл сообщения · сложное (1 / 2-3)</span><b>3 / 4</b></div>
-     <div class="row"><span>Балл медиачувствительности (низк/сред/выс)</span><b>1 / 2 / 3</b></div>
-     <p class="mut">Чем выше медиачувствительность метрики и чем «тяжелее» креатив (имидж, сложное сообщение, несколько посылов) — тем длиннее рекомендованный ролик.</p>
+     <h4>Роль задаёт диапазон длины</h4>
+     <div class="row"><span><b style="color:var(--text2)">Промо</b> — короткие, охватные ролики</span><b>20–45 сек</b></div>
+     <div class="row"><span><b style="color:var(--text2)">Имидж</b> — длинные, на построение восприятия</span><b>45–60 сек</b></div>
+     <p class="mut">Внутри диапазона длину поднимают сложность сообщения и число посылов, а высокая медиачувствительность добавляет шаг у верхней границы. Простое сообщение — всегда 1 посыл.</p>
    </div>
    <div class="clog">
-     <h4>Итоговый балл → секунды</h4>
-     <div class="scale-map">
-       <div class="sm"><div class="s" style="color:#0e8f58">20</div><div class="l">балл 3–4</div></div>
-       <div class="sm"><div class="s" style="color:#1565e0">30</div><div class="l">балл 5–6</div></div>
-       <div class="sm"><div class="s" style="color:#b25e00">45</div><div class="l">балл 7–8</div></div>
-       <div class="sm"><div class="s" style="color:#d1002b">60</div><div class="l">балл 9–10</div></div>
-     </div>
-     <p class="mut">Тот же расчёт показывается прямо в карточке каждой кампании на вкладке «Прирост метрик» — по выбранной целевой метрике ролика.</p>
+     <h4>Справочная таблица (сек)</h4>
+     <table class="chmini"><thead><tr><th class="lft">роль · сложность · сообщений</th><th>низк.</th><th>сред.</th><th>выс.</th></tr></thead><tbody>
+       ${[['промо','ПРОСТОЕ',1],['промо','СЛОЖНОЕ',1],['промо','СЛОЖНОЕ',2],['промо','СЛОЖНОЕ',3],
+          ['имидж','ПРОСТОЕ',1],['имидж','СЛОЖНОЕ',1],['имидж','СЛОЖНОЕ',2],['имидж','СЛОЖНОЕ',3]]
+         .map(([r,cx,n])=>{const v=CHRONO[r][cx][n];
+           return `<tr><td class="lft">${r} · ${cx==='ПРОСТОЕ'?'простое':'сложное'} · ${n}</td>`+
+             v.map(s=>`<td><span class="chsec s${s}">${s}</span></td>`).join('')+`</tr>`;}).join('')}
+     </tbody></table>
+     <p class="mut">«выс. медиачувствительность» подталкивает к верхней границе диапазона. Экономику этого выбора — на блоке 02·В ниже.</p>
    </div>`;
 }
 
@@ -1187,18 +1259,68 @@ function renderChronoLogic(){
 function renderChronoTable(){
   const role=state.chrono.role, cxLabel=state.chrono.cx;
   const cxKey = cxLabel==='простое'?'ПРОСТОЕ':'СЛОЖНОЕ';
-  document.getElementById('chHint').textContent = `${role} · ${cxLabel} сообщение · по всем 12 метрикам × 1–3 сообщения`;
+  const counts = cxKey==='ПРОСТОЕ' ? [1] : [1,2,3];
+  document.getElementById('chHint').textContent = `${role} · ${cxLabel} сообщение · по всем 12 метрикам`;
   const ms=[...META].sort((a,b)=>b.ms-a.ms);
-  let h=`<table class="chtable"><thead><tr>
-    <th class="lft">Метрика</th><th>Медиа-<br>чувств.</th><th>1 сооб.</th><th>2 сооб.</th><th>3 сооб.</th></tr></thead><tbody>`;
+  let h=`<table class="chtable"><thead><tr><th class="lft">Метрика</th><th>Медиа-<br>чувств.</th>`
+    + counts.map(n=>`<th>${n} сооб.</th>`).join('') + `</tr></thead><tbody>`;
   ms.forEach(m=>{
-    const cells=[1,2,3].map(n=>{ const r=chronoFor(role,cxKey,n,m.ms);
+    const cells=counts.map(n=>{ const r=chronoFor(role,cxKey,n,m.ms);
       return `<td><span class="chsec s${r.sec}">${r.sec}</span></td>`; }).join('');
     h+=`<tr><td class="lft mname2">${m.short}${m.tentative?' <span class="tent">оценка</span>':''}</td>
-      <td><span class="chms">${(m.ms*100).toFixed(2)}%</span></td>${cells}</tr>`;
+      <td><span class="chms">${(m.ms*100).toFixed(2)}% · ${BANDNAME[msBand(m.ms)]}</span></td>${cells}</tr>`;
   });
   h+=`</tbody></table>`;
   document.getElementById('chronoTable').innerHTML=h;
+}
+
+// ============ LENGTH vs OTS ECONOMY ============
+function renderEconomy(){
+  // selectors
+  const role=state.econ.role, cx=state.econ.cx, mi=state.econ.tgt;
+  const m=META[mi]; const ec=lengthEconomy(role,cx,m.ms);
+  const recSec=chronoFor(role,cx, (cx==='СЛОЖНОЕ'?state.econ.msgs:1), m.ms).sec;
+  document.querySelectorAll('#ecRoleSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===role));
+  document.querySelectorAll('#ecCxSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===cx));
+  // chart: impact bars across lengths
+  const maxImp=Math.max(...ec.arr.map(a=>a.imp));
+  const col = ec.cls==='reach' ? '#0e8f58' : (ec.cls==='message' ? '#d1002b' : '#1565e0');
+  let bars=ec.arr.map(a=>{
+    const h=Math.max(6,a.imp/maxImp*100);
+    const isBest=a.L===ec.best.L, isRec=a.L===recSec;
+    return `<div class="ecbar ${isBest?'best':''}">
+       <div class="ecv">${a.imp.toFixed(2)}</div>
+       <div class="eccol" style="height:${h}%;background:${isBest?col:'rgba(0,0,0,.14)'}"></div>
+       <div class="ecl">${a.L}<small>с</small>${isRec?'<span class=" recmark">реко</span>':''}</div>
+       <div class="ecsub">OTS ×${a.ots.toFixed(2)} · q ${(a.q*100).toFixed(0)}%</div>
+     </div>`;
+  }).join('');
+  const short = ec.best.L<=30;
+  const why = short
+    ? `${BANDNAME[ec.band]} медиачувствительность${(cx==='ПРОСТОЕ')?' + простое сообщение':''} → охват работает лучше длины.`
+    : ((cx==='СЛОЖНОЕ'||role==='имидж') ? `сложное/имиджевое сообщение требует времени на доходимость — охватом не компенсировать.`
+                                        : `низкая медиачувствительность — лишний охват слабо помогает, важнее качество контакта.`);
+  const verdict = short
+    ? `<b style="color:#0e8f58">Выгодно короче + больше OTS.</b> Экономический оптимум — <b>${ec.best.L} сек</b> (≈ ×${ec.best.ots.toFixed(2)} OTS к 30-секундной базе). ${why}`
+    : `<b style="color:#d1002b">Нужна длина.</b> Экономический оптимум — <b>${ec.best.L} сек</b>. ${why}`;
+  const gap = recSec!==ec.best.L
+    ? `<div class="ecgap">Справочник BHT рекомендует <b>${recSec} сек</b>, экономика длины — <b>${ec.best.L} сек</b>. ${ec.best.L<recSec?`Зона экономии: можно короче и докупить ≈ ×${(otsMult(ec.best.L)/otsMult(recSec)).toFixed(2)} OTS — если сообщение успевает донестись.`:`Стоит добавить длины: короткий ролик не донесёт сообщение.`}</div>`
+    : `<div class="ecgap ok">Справочник BHT и экономика длины сходятся на <b>${ec.best.L} сек</b>.</div>`;
+  document.getElementById('econPanel').innerHTML = `
+    <div class="ecchart">${bars}</div>
+    <div class="ecverdict">${verdict}</div>
+    ${gap}`;
+  // classification strip for all 12 metrics
+  const cells=[...META].sort((a,b)=>b.ms-a.ms).map(mm=>{
+    const e=lengthEconomy('промо','ПРОСТОЕ',mm.ms); // классификация по медиачувствительности
+    const c = e.cls==='reach'?'#0e8f58':(e.cls==='message'?'#d1002b':'#1565e0');
+    const lab = e.cls==='reach'?'охватная':(e.cls==='message'?'сообщенческая':'смешанная');
+    return `<div class="ecls"><span class="d" style="background:${c}"></span>
+      <span class="n">${mm.short}${mm.tentative?' <span class="tent">оц.</span>':''}</span>
+      <span class="t" style="color:${c}">${lab}</span>
+      <span class="ms">${BANDNAME[msBand(mm.ms)]}</span></div>`;
+  }).join('');
+  document.getElementById('econClass').innerHTML=cells;
 }
 function wireChSeg(id,key){ const seg=document.getElementById(id);
   seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
@@ -1208,6 +1330,11 @@ function wireChSeg(id,key){ const seg=document.getElementById(id);
   }));
 }
 wireChSeg('chRoleSeg','role'); wireChSeg('chCxSeg','cx');
+function wireEcSeg(id,key){ const seg=document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ state.econ[key]=b.dataset.v; renderEconomy(); }));
+}
+wireEcSeg('ecRoleSeg','role'); wireEcSeg('ecCxSeg','cx');
+document.getElementById('ecTgt').addEventListener('change', e=>{ state.econ.tgt=parseInt(e.target.value,10); renderEconomy(); });
 document.getElementById('fwdToggle').addEventListener('change', e=>{ state.fwd=e.target.checked; renderBudget(); });
 
 // ============ BUDGET ============
@@ -1352,6 +1479,9 @@ function renderRubPanel(){
       <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--faint);text-align:center">SOS категории Телеком 2025, млрд ₽ · источник: презентация стр. 18</div>
     </div>`;
 }
+
+// populate length-economy metric selector
+document.getElementById('ecTgt').innerHTML = META.map(m=>`<option value="${m.i}" ${m.i===state.econ.tgt?'selected':''}>${m.short}${m.tentative?' · оценка':''}</option>`).join('');
 
 // init
 seed(); renderCards(); renderChips(); recalc();
