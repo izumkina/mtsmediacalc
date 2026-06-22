@@ -653,13 +653,13 @@ h1 .em{color:var(--accent);}
       <div class="brule" id="bRule"></div>
       <div class="fwd-bar">
         <label class="fwd-toggle"><input type="checkbox" id="fwdToggle"><span class="track"></span><span class="lbl">Учесть форвардную важность</span></label>
-        <span class="fwd-note">демо: финтех ×2, 5G ×2 (+100% к важности) — состав и величина согласуются с клиентом</span>
+        <span class="fwd-note">новые/растущие атрибуты ×2 (+100% к важности): продвинутость, «умнее», стабильность (с Q2'25), лидер технологий (Q3'25), финансовые (Q1'26), 5G — состав и величина согласуются с клиентом</span>
       </div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">03·А</span><h2>Карта режимов: позиция × медиачувствительность</h2>
-        <span class="hint">размер = важность атрибута при выборе</span></div>
+      <div class="shead"><span class="no">03·А</span><h2>Карта стратегий: важность × медиачувствительность</h2>
+        <span class="hint">размер = позиция МТС · форвардная важность двигает кружок вправо</span></div>
       <div class="mapwrap chart"><div id="budgetMap"></div></div>
       <div class="blegend" id="budgetLegend"></div>
     </section>
@@ -711,7 +711,8 @@ const BUDGET = {
  pos:{0:0.31,1:0.14,2:0.17,3:0.33,4:0.23,5:0.22,6:0.89,7:-0.07,8:-0.19,9:-0.13,10:0.08,11:0.15},
  imp:{0:2.6,1:2.3,2:3.4,3:1.2,4:1.5,5:7.1,6:0.8,7:1.8,8:9.4,9:4.8,10:4.3,11:3.0},
  impApprox:{4:true,6:true,11:true},
- fwd:{6:2,7:2},   // форвардная важность (демо): финтех ×2 (+100%), 5G ×2 — согласовать с клиентом
+ fwd:{0:2,2:2,3:2,6:2,7:2,10:2},   // форвардная важность ×2 (+100%): новые/растущие атрибуты
+ fwdSince:{2:"Q2'25",3:"Q2'25",10:"Q2'25",0:"Q3'25",6:"Q1'26"},  // с какого замера в трекере
  grpName:{poz:"Продвижение позиционирования",prod:"Продуктовое продвижение",lead:"Категорийное лидерство"},
  grpColor:{poz:"#ff0032",prod:"#2d7ff9",lead:"#ff7a00"}
 };
@@ -751,7 +752,7 @@ function seed(){
 // --- chrono model (обновлённый анализ: таблица-справочник, роль задаёт диапазон) ---
 // порядок в массиве = диапазон медиачувствительности [низкая, средняя, высокая]
 const CHRONO = {
- 'промо':{ 'ПРОСТОЕ':{1:[20,20,30]},
+ 'промо':{ 'ПРОСТОЕ':{1:[30,30,30]},
            'СЛОЖНОЕ':{1:[30,30,45], 2:[30,45,45], 3:[30,45,45]} },
  'имидж':{ 'ПРОСТОЕ':{1:[45,45,45]},
            'СЛОЖНОЕ':{1:[45,45,60], 2:[45,60,60], 3:[45,60,60]} }
@@ -769,7 +770,7 @@ function chronoFor(role, cx, msgs, ms, force30){
 function campChrono(c){ const m=MBI[c.tgt]; return chronoFor(c.role, c.cx, c.msgs, m.ms, m.force30); }
 
 // --- слой «длина vs OTS» (рабочие допущения, калибруются по реальным CPP/доходимости) ---
-const LEN=[20,30,45,60];
+const LEN=[30,45,60];
 const DUR={20:0.65,30:1.0,45:1.45,60:1.85};        // длительностный коэф стоимости (отн. 30")
 const QSIMPLE={20:0.95,30:1.0,45:1.0,60:1.0};      // доходимость простого сообщения
 const QCOMPLEX={20:0.35,30:0.60,45:0.90,60:1.0};   // доходимость сложного/имиджевого
@@ -1249,7 +1250,7 @@ function renderChronoLogic(){
   el.innerHTML = `
    <div class="clog">
      <h4>Роль задаёт диапазон длины</h4>
-     <div class="row"><span><b style="color:var(--text2)">Промо</b> — короткие, охватные ролики</span><b>20–45 сек</b></div>
+     <div class="row"><span><b style="color:var(--text2)">Промо</b> — короткие, охватные ролики</span><b>30–45 сек</b></div>
      <div class="row"><span><b style="color:var(--text2)">Имидж</b> — длинные, на построение восприятия</span><b>45–60 сек</b></div>
      <p class="mut">Внутри диапазона длину поднимают сложность сообщения и число посылов, а высокая медиачувствительность добавляет шаг у верхней границы. Простое сообщение — всегда 1 посыл.</p>
    </div>
@@ -1262,7 +1263,7 @@ function renderChronoLogic(){
            return `<tr><td class="lft">${r} · ${cx==='ПРОСТОЕ'?'простое':'сложное'} · ${n}</td>`+
              v.map(s=>`<td><span class="chsec s${s}">${s}</span></td>`).join('')+`</tr>`;}).join('')}
      </tbody></table>
-     <p class="mut">«выс. медиачувствительность» подталкивает к верхней границе диапазона. По ряду метрик (Оператор №1, Лидер технологий, 5G, качество связи, финансовые сервисы, тарифы) промо-простое принудительно ≥30 сек. Экономику этого выбора — на блоке 02·В ниже.</p>
+     <p class="mut">«выс. медиачувствительность» подталкивает к верхней границе диапазона. 20-секундные ролики не используем — нижняя граница везде 30 сек. Экономику длины — на блоке 02·В ниже.</p>
    </div>`;
 }
 
@@ -1362,16 +1363,18 @@ document.getElementById('fwdToggle').addEventListener('change', e=>{ state.fwd=e
 // ============ BUDGET ============
 function effImp(i){ const f=(state.fwd && BUDGET.fwd[i])? BUDGET.fwd[i] : 1; return BUDGET.imp[i]*f; }
 function budgetRows(){
-  // доля ∝ важность × медиачувствительность × разрыв, с поправкой на режим (где медиа — рычаг)
-  const modeW={restore:1.3, defend:1.0, moderate:0.7, limited:0.6};
+  // доля ∝ важность × медиачувствительность × разрыв, с поправкой на стратегию (квадрант важность × чувствительность)
+  const quadW={over:1.3, base:1.0, spot:0.85, min:0.65};
+  const IMP_HI=3.0, MS_HI=0.012;
   return META.map(m=>{
     const imp=effImp(m.i), pos=BUDGET.pos[m.i], ms=m.ms;
-    const gap = Math.max(0.25, 1 - Math.max(-0.5,Math.min(0.9,pos))); // слабая позиция → больше веса
-    const mode = (ms>=0.012)
-      ? (pos<0.05 ? {k:'restore',t:'Восстанавливать'} : {k:'defend',t:'Защищать позицию'})
-      : (pos<0.05 ? {k:'limited',t:'Ограниченная роль'} : {k:'moderate',t:'Умеренная поддержка'});
-    const raw = imp * (ms*100) * gap * modeW[mode.k];
-    return {m, imp, pos, ms, raw, mode, fwd:(state.fwd && BUDGET.fwd[m.i])||0};
+    const gap = Math.max(0.25, 1 - Math.max(-0.5,Math.min(0.9,pos))); // слабая позиция → больше веса (догонять)
+    const impHi=imp>=IMP_HI, sensHi=ms>=MS_HI;
+    const quad = impHi
+      ? (sensHi ? {k:'over', t:'Переинвестировать'} : {k:'base', t:'Удержание'})
+      : (sensHi ? {k:'spot', t:'Точечные инвестиции'} : {k:'min', t:'Минимальные инвестиции'});
+    const raw = imp * (ms*100) * gap * quadW[quad.k];
+    return {m, imp, pos, ms, raw, mode:quad, fwd:(state.fwd && BUDGET.fwd[m.i])||0};
   });
 }
 function renderBudget(){
@@ -1390,29 +1393,28 @@ function renderBudgetRule(){
        <li>Это <b>не</b> деление одного бюджета на 100% — метрики не финансируются одновременно. Каждая — <b>самостоятельная кампания</b>.</li>
        <li>Смотрим на них как на рейтинг: на приоритетных тратим <b>выше базы</b>, на слабых — <b>ниже базы</b>.</li>
        <li>Отклонение ограничено <b>±100% от средней кампании</b> (коэффициент ×0…×2) — реалистичный коридор пере-/недоинвестирования.</li>
-       <li>Режим (квадрант ниже) определяет, <b>защищаем</b> мы атрибут или <b>восстанавливаем</b>, и сдвигает кампанию вверх/вниз по коридору.</li>
+       <li>Стратегия (квадрант ниже) задаёт, <b>переинвестировать</b> атрибут или держать <b>минимум</b>; позиция МТС (размер круга) уточняет, догонять или защищать.</li>
      </ul>
    </div>
    <div class="rcard">
-     <h4>Режимы медиаподдержки</h4>
+     <h4>Стратегии инвестирования</h4>
      <div class="quad">
-       <div class="q hi"><div class="qax">выс. чувств. · слабая позиция</div><div class="qt">Восстанавливать</div><div class="qd">Активная поддержка, быстрый рост восприятия, сокращение отставания.</div></div>
-       <div class="q"><div class="qax">выс. чувств. · сильная позиция</div><div class="qt">Защищать позицию</div><div class="qd">Регулярное присутствие с интенсивностью, достаточной для удержания.</div></div>
-       <div class="q"><div class="qax">низ. чувств. · слабая позиция</div><div class="qt">Ограниченная роль</div><div class="qd">Точечная поддержка, подкреплённая продуктовыми доказательствами.</div></div>
-       <div class="q"><div class="qax">низ. чувств. · сильная позиция</div><div class="qt">Умеренная поддержка</div><div class="qd">Базовый уровень без избыточного давления. «Один из», не фокус.</div></div>
+       <div class="q hi"><div class="qax">выс. важность · выс. чувствительность</div><div class="qt">Переинвестировать</div><div class="qd">Главный фокус денег: атрибут важен и медиа эффективно его двигает.</div></div>
+       <div class="q"><div class="qax">выс. важность · низ. чувствительность</div><div class="qt">Удержание</div><div class="qd">Важно, но медиа — слабый рычаг. Держим базу, тянем продуктом.</div></div>
+       <div class="q"><div class="qax">низ. важность · выс. чувствительность</div><div class="qt">Точечные инвестиции</div><div class="qd">Медиа сработает дёшево, но стратегически второстепенно. Тактически.</div></div>
+       <div class="q"><div class="qax">низ. важность · низ. чувствительность</div><div class="qt">Минимальные инвестиции</div><div class="qd">Ни важности, ни отклика на медиа. Минимум присутствия.</div></div>
      </div>
    </div>`;
 }
 function budgetLayout(){
-  const W=900,H=480,x0=70,x1=864,y0=34,y1=410;
+  const W=900,H=480,x0=78,x1=864,y0=34,y1=404;
   const rows=budgetRows();
-  const xs=rows.map(r=>r.pos), xmin=Math.min(...xs,-0.25), xmax=Math.max(...xs,0.4);
-  const ys=rows.map(r=>r.ms), ymax=Math.max(...ys)*1.08, ymin=0;
-  const xp=v=> x0+(v-xmin)/(xmax-xmin)*(x1-x0);
-  const yp=v=> y1-(v-ymin)/(ymax-ymin)*(y1-y0);
-  const imax=Math.max(...rows.map(r=>r.imp));
-  const rad=v=> 11+Math.sqrt(v/imax)*30;
-  rows.forEach(r=>{ r.px=xp(r.pos); r.py=yp(r.ms); r.r=rad(r.imp); });
+  const xmin=0, xmax=10;       // важность при выборе, %
+  const ymin=0, ymax=0.024;    // медиачувствительность
+  const xp=v=> x0+(Math.max(xmin,Math.min(xmax,v))-xmin)/(xmax-xmin)*(x1-x0);
+  const yp=v=> y1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin)*(y1-y0);
+  const rad=pos=>{ const p=Math.max(-0.25,Math.min(0.9,pos)); return 12+(p+0.25)/1.15*26; }; // позиция: отстаёт→мал, перебивает→велик
+  rows.forEach(r=>{ r.px=xp(r.imp); r.py=yp(r.ms); r.r=rad(r.pos); });
   // collision
   for(let it=0;it<140;it++){let mv=false;
     for(let a=0;a<rows.length;a++)for(let b=a+1;b<rows.length;b++){
@@ -1420,25 +1422,28 @@ function budgetLayout(){
       if(d<mn){const p=(mn-d)/2+0.4,ux=dx/d,uy=dy/d;A.px-=ux*p;A.py-=uy*p;B.px+=ux*p;B.py+=uy*p;mv=true;}}
     if(!mv)break;}
   rows.forEach(r=>{r.px=Math.max(x0+r.r,Math.min(x1-r.r,r.px));r.py=Math.max(y0+r.r,Math.min(y1-r.r,r.py));});
-  return {W,H,x0,x1,y0,y1,xp,yp,rows};
+  return {W,H,x0,x1,y0,y1,xp,yp,xmin,xmax,ymin,ymax,rows};
 }
-function bubTip(r){ return `поз ${r.pos.toFixed(2)} · важн ${r.imp.toFixed(1)}%${r.fwd?` · форвард ×${r.fwd}`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')}`; }
+function posLabel(p){ return p>0.2?'перебивает конкурентов':(p<0?'отстаёт':'на уровне'); }
+function bubTip(r){ const since=BUDGET.fwdSince[r.m.i]; return `важн ${r.imp.toFixed(1)}%${r.fwd?` (форвард ×${r.fwd}${since?', замер с '+since:''})`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')} · позиция: ${posLabel(r.pos)} (${r.pos.toFixed(2)})`; }
 function renderBudgetMap(){
   const G=budgetLayout(); const {W,H,x0,x1,y0,y1,xp,yp,rows}=G;
-  const midx=xp(0.05), midy=yp(0.012); const gc=BUDGET.grpColor;
+  const midx=xp(3.0), midy=yp(0.012); const gc=BUDGET.grpColor;
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
-  s+=`<rect x="${x0}" y="${y0}" width="${midx-x0}" height="${midy-y0}" fill="rgba(255,0,50,.05)"/>`;
+  // приоритетная зона (выс. важность + выс. чувствительность) = верх-право
+  s+=`<rect x="${midx}" y="${y0}" width="${x1-midx}" height="${midy-y0}" fill="rgba(255,0,50,.06)"/>`;
   s+=`<line class="guideline" x1="${midx}" y1="${y0}" x2="${midx}" y2="${y1}" style="opacity:.3"/>`;
   s+=`<line class="guideline" x1="${x0}" y1="${midy}" x2="${x1}" y2="${midy}" style="opacity:.3"/>`;
   s+=`<line class="axisline" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/><line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
-  s+=`<text class="guidelab" x="${x0+8}" y="${y0+16}" style="fill:var(--accent);opacity:.7">Восстанавливать</text>`;
-  s+=`<text class="guidelab" x="${x1-8}" y="${y0+16}" text-anchor="end" style="fill:var(--muted)">Защищать</text>`;
-  s+=`<text class="guidelab" x="${x0+8}" y="${y1-10}" style="fill:var(--muted)">Ограниченная роль</text>`;
-  s+=`<text class="guidelab" x="${x1-8}" y="${y1-10}" text-anchor="end" style="fill:var(--muted)">Умеренная</text>`;
-  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">КОНКУРЕНТНАЯ ПОЗИЦИЯ МТС →</text>`;
+  // quadrant labels (важность→, чувствительность↑)
+  s+=`<text class="guidelab" x="${x1-8}" y="${y0+16}" text-anchor="end" style="fill:var(--accent);opacity:.85">Переинвестировать</text>`;
+  s+=`<text class="guidelab" x="${x0+8}" y="${y0+16}" style="fill:var(--muted)">Точечные инвестиции</text>`;
+  s+=`<text class="guidelab" x="${x1-8}" y="${y1-10}" text-anchor="end" style="fill:var(--muted)">Удержание</text>`;
+  s+=`<text class="guidelab" x="${x0+8}" y="${y1-10}" style="fill:var(--muted)">Минимальные инвестиции</text>`;
+  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">ВАЖНОСТЬ ПРИ ВЫБОРЕ →</text>`;
   s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
   rows.forEach(r=>{ const col=gc[r.m.grp];
-    s+=`<g class="bub${r.fwd?' fwd':''}" data-i="${r.m.i}" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="режим: ${r.mode.t}" data-x="${bubTip(r)}" data-col="${col}">`;
+    s+=`<g class="bub${r.fwd?' fwd':''}" data-i="${r.m.i}" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="стратегия: ${r.mode.t}" data-x="${bubTip(r)}" data-col="${col}">`;
     s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="0.78" stroke="${col}"/>`;
     s+=`<text class="bin" x="${r.px.toFixed(1)}" y="${r.py.toFixed(1)}" style="font-size:${Math.min(13,r.r*0.6).toFixed(0)}px">${r.m.abbr}</text></g>`;
   });
@@ -1446,7 +1451,7 @@ function renderBudgetMap(){
   document.getElementById('budgetMap').innerHTML=s;
   document.getElementById('budgetLegend').innerHTML = Object.keys(BUDGET.grpName).map(g=>
     `<span class="li"><span class="d" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
-    + `<span class="li" style="color:var(--faint)">размер круга = важность атрибута</span>`;
+    + `<span class="li" style="color:var(--faint)">размер круга = позиция МТС: больше — перебивает конкурентов, меньше — отстаёт</span>`;
 }
 // animate existing bubbles to the new layout (forward toggle) — без перестроения SVG
 function layoutBudgetMap(){
@@ -1486,7 +1491,7 @@ function renderBudgetAlloc(){
       ? `<i class="pos" style="left:50%;width:${w.toFixed(1)}%;background:${col}"></i>`
       : `<i class="neg" style="left:${(50-w).toFixed(1)}%;width:${w.toFixed(1)}%;background:${col};opacity:.55"></i>`;
     const lbl=(r.dev>=0?'+':'')+Math.round(r.dev)+'%';
-    const fb = r.fwd?` <span class="tent fwdb">форвард ×${r.fwd}</span>`:'';
+    const fb = r.fwd?` <span class="tent fwdb"${BUDGET.fwdSince[r.m.i]?` title="новый замер с ${BUDGET.fwdSince[r.m.i]}"`:''}>форвард ×${r.fwd}</span>`:'';
     h+=`<div class="arow idxrow">
       <span class="an"><span class="gd" style="background:${col}"></span>${r.m.short}${r.m.tentative?' <span class="tent">оц.</span>':''}${fb}</span>
       <span class="track2"><span class="mid"></span>${bar}<span class="mode ${above?'r':'l'}">${r.mode.t}${r.capped?' · лимит':''}</span></span>
