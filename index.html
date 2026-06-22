@@ -476,6 +476,11 @@ h1 .em{color:var(--accent);}
 .ecls .t{font-size:11px; font-weight:700;}
 .ecls .ms{font-family:"JetBrains Mono",monospace; font-size:9.5px; color:var(--faint); min-width:54px; text-align:right;}
 
+/* budget map: плавное перемещение/рост пузырьков при форвардной важности */
+#budgetMap .bcore{transition:cx .85s cubic-bezier(.34,.8,.3,1), cy .85s cubic-bezier(.34,.8,.3,1), r .85s cubic-bezier(.34,.8,.3,1), stroke-width .3s, fill-opacity .3s;}
+#budgetMap .bin{transition:x .85s cubic-bezier(.34,.8,.3,1), y .85s cubic-bezier(.34,.8,.3,1), font-size .85s;}
+#budgetMap .bub.fwd .bcore{stroke-width:2.5; fill-opacity:0.9;}
+
 @keyframes fu{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,0,50,.14),0 0 18px 2px rgba(255,0,50,.5);}
   50%{box-shadow:0 0 0 7px rgba(255,0,50,.05),0 0 22px 4px rgba(255,0,50,.65);}}
@@ -508,7 +513,7 @@ h1 .em{color:var(--accent);}
     <div class="metabox">
       <div class="metric-pill"><span class="k">Кампаний</span><span class="v" id="mCamp">0</span></div>
       <div class="metric-pill"><span class="k">Охват, OTS</span><span class="v" id="mOts">0<small>млн</small></span></div>
-      <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/12</small></span></div>
+      <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/11</small></span></div>
     </div>
   </header>
 
@@ -545,8 +550,8 @@ h1 .em{color:var(--accent);}
     <section class="metrics-sec">
       <div class="shead"><span class="no">03</span><h2>Прогнозируемые метрики</h2></div>
       <div class="panel">
-        <div class="mlegend">Отметьте атрибуты для прогноза. В модели заполнено <b style="color:var(--accent)">6 из 11</b> —
-        «Развивает 5G» включён как <b style="color:var(--accent)">предварительная оценка</b> (по части данных), остальные станут доступны после загрузки стоимостей.</div>
+        <div class="mlegend">Отметьте атрибуты для прогноза. В обновлённой модели заполнены <b style="color:var(--accent)">все 11 метрик</b> —
+        «Развивает 5G» по-прежнему помечен как <b style="color:var(--accent)">предварительная оценка</b>.</div>
         <div class="chips" id="chips"></div>
       </div>
     </section>
@@ -648,7 +653,7 @@ h1 .em{color:var(--accent);}
       <div class="brule" id="bRule"></div>
       <div class="fwd-bar">
         <label class="fwd-toggle"><input type="checkbox" id="fwdToggle"><span class="track"></span><span class="lbl">Учесть форвардную важность</span></label>
-        <span class="fwd-note">демо: финтех ×3, 5G ×3 (целевое влияние на выбор) — состав и величина согласуются с клиентом</span>
+        <span class="fwd-note">демо: финтех ×2, 5G ×2 (+100% к важности) — состав и величина согласуются с клиентом</span>
       </div>
     </section>
 
@@ -679,25 +684,25 @@ h1 .em{color:var(--accent);}
 <script>
 const MODEL = {"scales":{"МАКСИМАЛЬНЫЙ ОХВАТ":3200000,"ШИРОКИЙ ОХВАТ":2800000,"СЕЛЕКТИВНЫЙ ОХВАТ":1250000},"scaleShort":{"МАКСИМАЛЬНЫЙ ОХВАТ":"Макс. охват","ШИРОКИЙ ОХВАТ":"Широкий охват","СЕЛЕКТИВНЫЙ ОХВАТ":"Селективный"},"complexity":{"ПРОСТОЕ":1,"СЛОЖНОЕ":1.75},
 "metrics":[
- {"i":0,"name":"Лидер технологий","short":"Лидер технологий","abbr":"ЛТ","hasData":false,"ms":0.014949592951770846,"grp":"poz","force30":true},
+ {"i":0,"name":"Лидер технологий","short":"Лидер технологий","abbr":"ЛТ","hasData":true,"ms":0.014949592951770846,"grp":"poz","force30":true},
  {"i":1,"name":"Задает тренды на рынке","short":"Задаёт тренды","abbr":"ТР","hasData":true,"ms":0.02105017440074263,"grp":"poz"},
- {"i":2,"name":"Помогает чувствовать себя продвинутым","short":"Чувствую себя продвинутым","abbr":"ПР","hasData":false,"ms":0.021491273643561803,"grp":"poz"},
- {"i":3,"name":"Помогает умнее организовывать свою жизнь","short":"Умнее организую жизнь","abbr":"ОЖ","hasData":false,"ms":0.006740573016965476,"grp":"poz"},
+ {"i":2,"name":"Помогает чувствовать себя продвинутым","short":"Чувствую себя продвинутым","abbr":"ПР","hasData":true,"ms":0.021491273643561803,"grp":"poz"},
+ {"i":3,"name":"Помогает умнее организовывать свою жизнь","short":"Умнее организую жизнь","abbr":"ОЖ","hasData":true,"ms":0.006740573016965476,"grp":"poz"},
  {"i":5,"name":"Предлагает подходящие для меня тарифы и услуги","short":"Подходящие тарифы","abbr":"ТУ","hasData":true,"ms":0.007438242093615525,"grp":"prod","force30":true},
- {"i":6,"name":"Предлагает финансовые сервисы и услуги","short":"Финансовые сервисы","abbr":"ФС","hasData":false,"ms":0.008107683882040924,"grp":"prod","force30":true},
+ {"i":6,"name":"Предлагает финансовые сервисы и услуги","short":"Финансовые сервисы","abbr":"ФС","hasData":true,"ms":0.008107683882040924,"grp":"prod","force30":true},
  {"i":7,"name":"Развивает технологии 5G","short":"Развивает 5G","abbr":"5G","hasData":true,"tentative":true,"ms":0.01345463365659376,"grp":"prod","force30":true},
  {"i":8,"name":"Лучшее качество связи","short":"Лучшее качество связи","abbr":"КС","hasData":true,"ms":0.008833580246915624,"grp":"prod","force30":true},
  {"i":9,"name":"Оператор №1","short":"Оператор №1","abbr":"№1","hasData":true,"ms":0.014965024207654276,"grp":"lead","force30":true},
- {"i":10,"name":"Дает ощущение стабильности и предсказуемости","short":"Стабильность","abbr":"СТ","hasData":false,"ms":0.00665870370906711,"grp":"lead"},
+ {"i":10,"name":"Дает ощущение стабильности и предсказуемости","short":"Стабильность","abbr":"СТ","hasData":true,"ms":0.00665870370906711,"grp":"lead"},
  {"i":11,"name":"оператор, с которым чувствуешь себя уверенно","short":"Уверенность","abbr":"УВ","hasData":true,"ms":0.006822442324863842,"grp":"lead"}
 ],
 "types":{
- "ТЕЛЕКОМ ПРОМО":{"subtypes":{"БЕЗЛИМИТЫ":1,"РОУМИНГ":0.6,"СЕМЕЙНАЯ ГРУППА":0.6},"role":"промо","base":{"0":null,"1":1537329.0,"2":null,"3":null,"4":3438238.5,"5":8090713.0,"6":null,"7":2220708.0,"8":3269335.0,"9":2353821.0,"10":null,"11":3986684.0}},
- "МОЛОДЕЖКА":{"subtypes":{"РИИЛ":1},"role":"промо","base":{"0":null,"1":1461548.0,"2":null,"3":null,"4":1648860.0,"5":1775390.0,"6":null,"7":2503851.0,"8":2707143.0,"9":1468630.0,"10":null,"11":2668696.0}},
- "ФИНТЕХ":{"subtypes":{"дебет карта с кэшбеком":0.5},"role":"промо","base":{"0":null,"1":1272348.0,"2":null,"3":null,"4":1286943.0,"5":2671917.5,"6":null,"7":2476544.0,"8":2682935.5,"9":1521898.0,"10":null,"11":1927110.5}},
- "ТЕХНОЛОГИИ":{"subtypes":{"ВОЙСТЕХ":1,"5G":1},"role":"имидж","base":{"0":null,"1":1266588.0,"2":null,"3":null,"4":723232.5,"5":955576.5,"6":null,"7":2367784.5,"8":1054920.0,"9":742003.5,"10":null,"11":1090078.5}},
- "БЕЗОПАСНОСТЬ":{"subtypes":{"ЗАЩИТНИК":1},"role":"имидж","tentative":true,"base":{"0":null,"1":603209.0,"2":null,"3":null,"4":2928247.0,"5":1887399.0,"6":null,"7":1225811.0,"8":1769713.0,"9":1852914.0,"10":null,"11":994184.0}},
- "ДЕТИ":{"subtypes":{"ДЕТСКИЙ":1},"role":"промо","tentative":true,"base":{"0":null,"1":638507.0,"2":null,"3":null,"4":96454.0,"5":116263.0,"6":null,"7":87991.0,"8":101279.0,"9":371045.0,"10":null,"11":558831.0}}
+ "ТЕЛЕКОМ ПРОМО":{"subtypes":{"БЕЗЛИМИТЫ":1,"РОУМИНГ":0.6,"СЕМЕЙНАЯ ГРУППА":0.6},"role":"промо","base":{"0":3089512,"1":4611987,"2":7266135,"3":4064760,"4":null,"5":8090713,"6":7107301,"7":2220708,"8":3269335,"9":2353821,"10":5356542,"11":3986684}},
+ "МОЛОДЕЖКА":{"subtypes":{"РИИЛ":1},"role":"промо","base":{"0":3199088,"1":1461548,"2":2265413,"3":1643773,"4":null,"5":1775390,"6":9715797,"7":2503851,"8":2707143,"9":1468630,"10":9829750,"11":2668696}},
+ "ФИНТЕХ":{"subtypes":{"дебет карта с кэшбеком":0.5},"role":"промо","base":{"0":6005619,"1":3180870,"2":3021827,"3":5748785,"4":null,"5":6679794,"6":2118340,"7":6191360,"8":6707339,"9":9131388,"10":5299554,"11":4817776}},
+ "ТЕХНОЛОГИИ":{"subtypes":{"ВОЙСТЕХ":1,"5G":1},"role":"имидж","base":{"0":974682,"1":1266588,"2":1122781,"3":1393247,"4":null,"5":955577,"6":6389979,"7":2367785,"8":1054920,"9":742004,"10":1308094,"11":1090079}},
+ "БЕЗОПАСНОСТЬ":{"subtypes":{"ЗАЩИТНИК":1},"role":"имидж","tentative":true,"base":{"0":1189037,"1":803209,"2":1033369,"3":1093602,"4":null,"5":1887399,"6":5126114,"7":1225811,"8":1769713,"9":1852914,"10":984242,"11":994184}},
+ "ДЕТИ":{"subtypes":{"ДЕТСКИЙ":1},"role":"промо","tentative":true,"base":{"0":null,"1":638507,"2":null,"3":null,"4":null,"5":116263,"6":null,"7":87991,"8":101279,"9":371045,"10":null,"11":558831}}
 }};
 
 // competitive / strategic data for budget tab — источник: BHT 1Q'26 + презентация (стр. 19, 24, 34-35)
@@ -706,7 +711,7 @@ const BUDGET = {
  pos:{0:0.31,1:0.14,2:0.17,3:0.33,4:0.23,5:0.22,6:0.89,7:-0.07,8:-0.19,9:-0.13,10:0.08,11:0.15},
  imp:{0:2.6,1:2.3,2:3.4,3:1.2,4:1.5,5:7.1,6:0.8,7:1.8,8:9.4,9:4.8,10:4.3,11:3.0},
  impApprox:{4:true,6:true,11:true},
- fwd:{6:3,7:3},   // форвардная важность (демо): финтех ×3, 5G ×3 — согласовать с клиентом
+ fwd:{6:2,7:2},   // форвардная важность (демо): финтех ×2 (+100%), 5G ×2 — согласовать с клиентом
  grpName:{poz:"Продвижение позиционирования",prod:"Продуктовое продвижение",lead:"Категорийное лидерство"},
  grpColor:{poz:"#ff0032",prod:"#2d7ff9",lead:"#ff7a00"}
 };
@@ -732,7 +737,7 @@ const state = {
   mapView: 'bubbles',           // 'bubbles' | 'table'
   chrono:{role:'промо', cx:'простое'}, // filter state for reference tab
   econ:{role:'промо', cx:'ПРОСТОЕ', msgs:1, tgt:9}, // length-vs-OTS explorer
-  fwd:false                            // budget: учитывать форвардную важность (финтех/5G ×3)
+  fwd:false                            // budget: учитывать форвардную важность (финтех/5G ×2)
 };
 
 // seed two example campaigns (role/msgs/tgt drive chronometer)
@@ -1021,7 +1026,7 @@ function recalc(){
   document.getElementById('mCamp').textContent = cs.length;
   const ots=cs.reduce((a,c)=>a+reachOf(c),0);
   document.getElementById('mOts').innerHTML = fmtOts(ots)+'<small>млн</small>';
-  document.getElementById('mMet').innerHTML = sel.length+'<small>/12</small>';
+  document.getElementById('mMet').innerHTML = sel.length+'<small>/11</small>';
   document.getElementById('cCount').textContent = cs.length? cs.length+' '+plural(cs.length,'кампания','кампании','кампаний') : '';
 
   // ---- TOTALS ----
@@ -1352,7 +1357,7 @@ function wireEcSeg(id,key){ const seg=document.getElementById(id);
 wireEcSeg('ecRoleSeg','role'); wireEcSeg('ecCxSeg','cx');
 document.querySelectorAll('#ecMsgSeg button').forEach(b=>b.addEventListener('click',()=>{ state.econ.msgs=parseInt(b.dataset.v,10); renderEconomy(); }));
 document.getElementById('ecTgt').addEventListener('change', e=>{ state.econ.tgt=parseInt(e.target.value,10); renderEconomy(); });
-document.getElementById('fwdToggle').addEventListener('change', e=>{ state.fwd=e.target.checked; renderBudget(); });
+document.getElementById('fwdToggle').addEventListener('change', e=>{ state.fwd=e.target.checked; renderBudgetRule(); renderBudgetAlloc(); layoutBudgetMap(); });
 
 // ============ BUDGET ============
 function effImp(i){ const f=(state.fwd && BUDGET.fwd[i])? BUDGET.fwd[i] : 1; return BUDGET.imp[i]*f; }
@@ -1398,7 +1403,7 @@ function renderBudgetRule(){
      </div>
    </div>`;
 }
-function renderBudgetMap(){
+function budgetLayout(){
   const W=900,H=480,x0=70,x1=864,y0=34,y1=410;
   const rows=budgetRows();
   const xs=rows.map(r=>r.pos), xmin=Math.min(...xs,-0.25), xmax=Math.max(...xs,0.4);
@@ -1409,32 +1414,32 @@ function renderBudgetMap(){
   const rad=v=> 11+Math.sqrt(v/imax)*30;
   rows.forEach(r=>{ r.px=xp(r.pos); r.py=yp(r.ms); r.r=rad(r.imp); });
   // collision
-  for(let it=0;it<120;it++){let mv=false;
+  for(let it=0;it<140;it++){let mv=false;
     for(let a=0;a<rows.length;a++)for(let b=a+1;b<rows.length;b++){
       const A=rows[a],B=rows[b],dx=B.px-A.px,dy=B.py-A.py,d=Math.hypot(dx,dy)||0.1,mn=A.r+B.r+3;
       if(d<mn){const p=(mn-d)/2+0.4,ux=dx/d,uy=dy/d;A.px-=ux*p;A.py-=uy*p;B.px+=ux*p;B.py+=uy*p;mv=true;}}
     if(!mv)break;}
   rows.forEach(r=>{r.px=Math.max(x0+r.r,Math.min(x1-r.r,r.px));r.py=Math.max(y0+r.r,Math.min(y1-r.r,r.py));});
-  const midx=xp(0.05), midy=yp(0.012);
+  return {W,H,x0,x1,y0,y1,xp,yp,rows};
+}
+function bubTip(r){ return `поз ${r.pos.toFixed(2)} · важн ${r.imp.toFixed(1)}%${r.fwd?` · форвард ×${r.fwd}`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')}`; }
+function renderBudgetMap(){
+  const G=budgetLayout(); const {W,H,x0,x1,y0,y1,xp,yp,rows}=G;
+  const midx=xp(0.05), midy=yp(0.012); const gc=BUDGET.grpColor;
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
-  // quadrant shading
   s+=`<rect x="${x0}" y="${y0}" width="${midx-x0}" height="${midy-y0}" fill="rgba(255,0,50,.05)"/>`;
   s+=`<line class="guideline" x1="${midx}" y1="${y0}" x2="${midx}" y2="${y1}" style="opacity:.3"/>`;
   s+=`<line class="guideline" x1="${x0}" y1="${midy}" x2="${x1}" y2="${midy}" style="opacity:.3"/>`;
   s+=`<line class="axisline" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/><line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
-  // quadrant labels
   s+=`<text class="guidelab" x="${x0+8}" y="${y0+16}" style="fill:var(--accent);opacity:.7">Восстанавливать</text>`;
   s+=`<text class="guidelab" x="${x1-8}" y="${y0+16}" text-anchor="end" style="fill:var(--muted)">Защищать</text>`;
   s+=`<text class="guidelab" x="${x0+8}" y="${y1-10}" style="fill:var(--muted)">Ограниченная роль</text>`;
   s+=`<text class="guidelab" x="${x1-8}" y="${y1-10}" text-anchor="end" style="fill:var(--muted)">Умеренная</text>`;
   s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">КОНКУРЕНТНАЯ ПОЗИЦИЯ МТС →</text>`;
   s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
-  // bubbles
-  const gc=BUDGET.grpColor;
-  rows.forEach(r=>{ const col=gc[r.m.grp]; const fw=r.fwd;
-    s+=`<g class="bub" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="режим: ${r.mode.t}" data-x="поз ${r.pos.toFixed(2)} · важн ${r.imp.toFixed(1)}%${fw?` · форвард ×${fw}`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')}" data-col="${col}">`;
-    if(fw) s+=`<circle cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${(r.r+5).toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.85"/>`;
-    s+=`<circle cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="0.78" stroke="${col}"/>`;
+  rows.forEach(r=>{ const col=gc[r.m.grp];
+    s+=`<g class="bub${r.fwd?' fwd':''}" data-i="${r.m.i}" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="режим: ${r.mode.t}" data-x="${bubTip(r)}" data-col="${col}">`;
+    s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="0.78" stroke="${col}"/>`;
     s+=`<text class="bin" x="${r.px.toFixed(1)}" y="${r.py.toFixed(1)}" style="font-size:${Math.min(13,r.r*0.6).toFixed(0)}px">${r.m.abbr}</text></g>`;
   });
   s+=`</svg>`;
@@ -1442,6 +1447,22 @@ function renderBudgetMap(){
   document.getElementById('budgetLegend').innerHTML = Object.keys(BUDGET.grpName).map(g=>
     `<span class="li"><span class="d" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
     + `<span class="li" style="color:var(--faint)">размер круга = важность атрибута</span>`;
+}
+// animate existing bubbles to the new layout (forward toggle) — без перестроения SVG
+function layoutBudgetMap(){
+  const host=document.getElementById('budgetMap');
+  if(!host.querySelector('svg')) return renderBudgetMap();
+  const G=budgetLayout();
+  G.rows.forEach(r=>{
+    const g=host.querySelector('.bub[data-i="'+r.m.i+'"]'); if(!g) return;
+    g.classList.toggle('fwd', !!r.fwd);
+    g.dataset.x = bubTip(r);
+    const c=g.querySelector('.bcore');
+    c.setAttribute('cx', r.px.toFixed(1)); c.setAttribute('cy', r.py.toFixed(1)); c.setAttribute('r', r.r.toFixed(1));
+    const t=g.querySelector('.bin');
+    t.setAttribute('x', r.px.toFixed(1)); t.setAttribute('y', r.py.toFixed(1));
+    t.style.fontSize = Math.min(13,r.r*0.6).toFixed(0)+'px';
+  });
 }
 function renderBudgetAlloc(){
   const rows=budgetRows();
