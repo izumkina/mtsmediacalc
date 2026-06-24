@@ -248,6 +248,7 @@ h1 .em{color:var(--accent);}
 .axistitle{fill:var(--faint); font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.16em;}
 .guideline{stroke:var(--accent); stroke-dasharray:5 5; stroke-width:1.2; opacity:.45;}
 .guidelab{fill:var(--accent); font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.04em;}
+.zlab{font-family:"JetBrains Mono",monospace; font-size:11px; font-weight:700; letter-spacing:.1em;}
 .bub{cursor:pointer;}
 .bub circle{stroke-width:1.6; transition:fill-opacity .15s;}
 .bub:hover circle{fill-opacity:.95;}
@@ -481,6 +482,135 @@ h1 .em{color:var(--accent);}
 #budgetMap .bin{transition:x .85s cubic-bezier(.34,.8,.3,1), y .85s cubic-bezier(.34,.8,.3,1), font-size .85s;}
 #budgetMap .bub.fwd .bcore{stroke-width:2.5; fill-opacity:0.9;}
 
+/* ====== MODE TOGGLE / EXPERT VISIBILITY ====== */
+.modebox{display:flex; flex-direction:column; align-items:flex-end; gap:12px;}
+.modetoggle{display:inline-flex; background:var(--ink2); border:1px solid var(--line); border-radius:999px; padding:3px;}
+.modetoggle button{border:none; background:none; cursor:pointer; font-family:inherit; font-size:13px; font-weight:600;
+  color:var(--muted); padding:7px 18px; border-radius:999px; transition:.18s;}
+.modetoggle button.on{background:var(--accent); color:#fff; box-shadow:0 2px 8px -2px rgba(255,0,50,.5);}
+body:not(.mode-detail) .expert-only{display:none !important;}
+
+/* ====== RECOMMENDATION BAR ====== */
+.recobar{display:flex; align-items:center; gap:14px; margin:14px 0 26px; padding:13px 18px;
+  background:linear-gradient(100deg,rgba(255,0,50,.07),rgba(255,0,50,.01)); border:1px solid rgba(255,0,50,.28);
+  border-radius:12px;}
+.recobar .rl{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent-deep); font-weight:700; flex:none;}
+.recobar .rt{font-size:13.5px; color:var(--text2); line-height:1.5;} .recobar .rt b{color:var(--text);}
+
+.step-lead{font-size:14px; color:var(--text2); line-height:1.6; max-width:880px; margin:2px 0 22px;}
+
+/* ====== OVERVIEW ====== */
+.ov-hero{display:grid; grid-template-columns:1.15fr .85fr; gap:26px; align-items:start;}
+@media(max-width:880px){ .ov-hero{grid-template-columns:1fr;} }
+.ov-lead h2{font-family:"Unbounded",sans-serif; font-size:24px; letter-spacing:-.02em; margin:0 0 12px;}
+.ov-lead p{font-size:14.5px; color:var(--text2); line-height:1.65; margin:0 0 22px;}
+.ov-q{display:flex; flex-direction:column; gap:11px;}
+.ovq{display:flex; align-items:center; gap:14px; text-align:left; cursor:pointer; font-family:inherit;
+  background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px 17px; transition:.18s;
+  box-shadow:0 1px 2px rgba(0,0,0,.03);}
+.ovq:hover{border-color:var(--accent); transform:translateX(3px); box-shadow:0 6px 18px -10px rgba(255,0,50,.4);}
+.ovq .n{font-family:"Unbounded",sans-serif; font-weight:700; font-size:15px; color:var(--accent); flex:none; width:26px;}
+.ovq .t{font-weight:600; font-size:14.5px; color:var(--text);}
+.ovq .d{font-size:12px; color:var(--muted); margin-left:auto; text-align:right; max-width:200px;}
+.ov-fact{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 30px -16px rgba(0,0,0,.2);}
+.ov-fact-h{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint);}
+.ov-big{font-family:"Unbounded",sans-serif; font-weight:700; font-size:46px; color:var(--accent); line-height:1; margin:8px 0 4px; letter-spacing:-.03em;}
+.ov-big span{display:block; font-family:"Golos Text",sans-serif; font-weight:600; font-size:13px; color:var(--text2); letter-spacing:0; margin-top:6px;}
+.ov-sub{font-size:13px; color:var(--text2); line-height:1.5;} .ov-sub b{color:var(--text);}
+.ov-take{margin-top:16px; padding-top:15px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted); line-height:1.55;}
+.ov-take b{color:var(--accent-deep);}
+.ov-fact.wide{padding:0; background:none; border:none; box-shadow:none;}
+.ov-tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px;}
+@media(max-width:680px){.ov-tiles{grid-template-columns:1fr;}}
+.ov-tile{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -18px rgba(0,0,0,.2);}
+.t-big{font-family:"Unbounded",sans-serif; font-weight:700; font-size:38px; color:var(--accent); line-height:1; letter-spacing:-.03em;}
+.t-big small{font-size:20px;}
+.t-lab{font-size:12.5px; color:var(--text2); line-height:1.45; margin-top:8px;} .t-lab b{color:var(--text);}
+.ov-bd-h{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin:6px 0 10px;}
+.ov-cols{display:grid; grid-template-columns:1fr 1fr; gap:26px; align-items:start;}
+@media(max-width:680px){.ov-cols{grid-template-columns:1fr; gap:20px;}}
+.ov-brand{display:flex; flex-direction:column; gap:8px;}
+.bdrow{display:grid; grid-template-columns:64px 1fr 30px; align-items:center; gap:10px;}
+.bn{font-size:12px; color:var(--text2);}
+.bt{height:16px; background:rgba(0,0,0,.04); border-radius:5px; overflow:hidden;}
+.bt i{display:block; height:100%; border-radius:5px;}
+.bv{font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:700; text-align:right; color:var(--text);}
+
+/* ====== PRIORITIES ====== */
+.prio-groups{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+@media(max-width:880px){ .prio-groups{grid-template-columns:1fr;} }
+.prio-card{position:relative; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 18px;
+  overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.18);}
+.prio-card .pc-bar{position:absolute; top:0; left:0; right:0; height:4px; background:var(--gc);}
+.pc-h{font-family:"Unbounded",sans-serif; font-weight:700; font-size:15px; margin:6px 0 10px; letter-spacing:-.01em;}
+.pc-p{font-size:12.5px; color:var(--muted); line-height:1.55; margin-bottom:16px; min-height:58px;}
+.pc-list{display:flex; flex-direction:column; gap:7px;}
+.pc-attr{font-size:13px; color:var(--text2); padding:7px 11px; background:var(--ink2); border-radius:8px;
+  border-left:3px solid var(--gc); display:flex; align-items:center; gap:7px;}
+.pc-attr .tent{font-size:8px;}
+
+/* ====== SCENARIOS ====== */
+.scen-th{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:12px;}
+.scen-total{margin-bottom:30px;}
+.scenrow{display:grid; grid-template-columns:230px 1fr 80px; align-items:center; gap:14px; padding:8px 10px; border-radius:10px; cursor:pointer; transition:.15s;}
+.scenrow:hover{background:var(--ink2);}
+.scenrow.rec{background:rgba(255,0,50,.04);}
+@media(max-width:620px){ .scenrow{grid-template-columns:150px 1fr 60px;} }
+.scenrow .sn b{font-size:13.5px; color:var(--text); display:block;}
+.scenrow .sn small{font-size:11px; color:var(--muted);}
+.scenrow .strack{height:22px; background:rgba(0,0,0,.05); border-radius:6px; overflow:hidden;}
+.scenrow .strack i{display:block; height:100%; background:var(--accent-deep); border-radius:6px; transition:width .6s cubic-bezier(.2,.7,.2,1);}
+.scenrow.rec .strack i{background:var(--accent);}
+.scenrow .sv{font-family:"Unbounded",sans-serif; font-weight:700; font-size:16px; text-align:right; color:var(--text); position:relative;}
+.scenrow .sv .lead{display:block; font-family:"JetBrains Mono",monospace; font-size:8px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700;}
+.scen-pick-h{font-family:"Unbounded",sans-serif; font-weight:700; font-size:16px; margin:6px 0 12px;}
+#scenSeg{margin-bottom:16px;}
+.scen-detail{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.2);}
+.sd-head{display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px;}
+.sd-head b{color:var(--text);} .sd-sum{font-size:13px; color:var(--muted);} .sd-sum b{color:var(--accent); font-size:15px;}
+.rectag{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#fff;
+  background:var(--accent); border-radius:5px; padding:2px 7px; margin-left:6px;}
+.sd-leads{font-size:12.5px; color:var(--text2); margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line);}
+.sd-leads b{color:var(--accent-deep);}
+.sd-bars{display:flex; flex-direction:column; gap:8px;}
+.sdrow{display:grid; grid-template-columns:200px 1fr 56px; align-items:center; gap:12px;}
+@media(max-width:620px){ .sdrow{grid-template-columns:130px 1fr 48px;} }
+.sdn{font-size:12.5px; color:var(--text2);} .sdn .star{color:var(--accent);}
+.sdtrack{height:16px; background:rgba(0,0,0,.04); border-radius:5px; overflow:hidden;}
+.sdtrack i{display:block; height:100%; border-radius:5px; transition:width .5s cubic-bezier(.2,.7,.2,1);}
+.sdv{font-family:"JetBrains Mono",monospace; font-size:12.5px; font-weight:700; text-align:right; color:var(--text);}
+
+/* expert divider */
+.exp-divider{display:flex; align-items:center; gap:14px; margin:40px 0 28px; color:var(--faint);}
+.exp-divider::before,.exp-divider::after{content:""; height:1px; flex:1; background:var(--line2);}
+.exp-divider span{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase;}
+
+/* Q2 drive list + takeaway */
+.drive-take{margin:18px 0 8px; font-size:13.5px; color:var(--text2); line-height:1.6; padding:13px 16px;
+  background:rgba(255,0,50,.05); border:1px solid rgba(255,0,50,.22); border-radius:11px;}
+.drive-take b{color:var(--text);}
+.drive-list-h{font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin:20px 0 10px;}
+.drive-list{display:flex; flex-direction:column; gap:8px;}
+.dl-row{display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--panel); border:1px solid var(--line); border-radius:10px;}
+.dl-row.hot{border-color:rgba(255,0,50,.4); background:rgba(255,0,50,.03);}
+.dl-n{flex:1; font-size:13.5px; color:var(--text); font-weight:600;}
+.dl-tags{display:flex; gap:7px; flex-wrap:wrap;}
+.dl-t{font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--muted); background:var(--ink2); border:1px solid var(--line); border-radius:6px; padding:3px 8px;}
+.dl-t.p{color:#fff; background:var(--accent); border-color:var(--accent);}
+
+/* scenario base -> projected bars */
+.sdrow{display:grid; grid-template-columns:200px 1fr 96px; align-items:center; gap:12px;}
+@media(max-width:620px){ .sdrow{grid-template-columns:120px 1fr 84px;} }
+.sdtrack{height:16px; background:rgba(0,0,0,.04); border-radius:5px; overflow:hidden; display:flex;}
+.sdbase{display:block; height:100%; background:rgba(0,0,0,.13); border-radius:0;}
+.sdlift{display:block; height:100%; border-radius:0; transition:width .5s cubic-bezier(.2,.7,.2,1);}
+.sdv{font-family:"JetBrains Mono",monospace; font-size:12px; text-align:right; color:var(--muted);}
+.sdv b{color:var(--text);}
+
 @keyframes fu{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,0,50,.14),0 0 18px 2px rgba(255,0,50,.5);}
   50%{box-shadow:0 0 0 7px rgba(255,0,50,.05),0 0 22px 4px rgba(255,0,50,.65);}}
@@ -505,31 +635,85 @@ h1 .em{color:var(--accent);}
   <!-- MASTHEAD -->
   <header class="mast">
     <div>
-      <div class="brand"><span class="dot"></span><b>Brand Lift Lab · 2027</b></div>
-      <h1>Калькулятор прироста<br><span class="em">бренд-метрик</span></h1>
-      <p class="sub">Соберите медиаплан года из рекламных кампаний — задайте тип, подтип, масштаб и количество РК.
-      Модель пересчитает годовой прирост по каждому выбранному бренд-атрибуту.</p>
+      <div class="brand"><span class="dot"></span><b>Brand Lift Lab · МТС · 2027</b></div>
+      <h1>Прирост бренд-метрик<br><span class="em">и медиаинвестиции</span></h1>
+      <p class="sub">От позиции бренда — к сценариям и распределению бюджета. Четыре шага.</p>
     </div>
-    <div class="metabox">
-      <div class="metric-pill"><span class="k">Кампаний</span><span class="v" id="mCamp">0</span></div>
-      <div class="metric-pill"><span class="k">Охват, OTS</span><span class="v" id="mOts">0<small>млн</small></span></div>
-      <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/11</small></span></div>
+    <div class="modebox">
+      <div class="modetoggle" id="modeToggle" title="Кратко — для быстрого взгляда; Подробно — модель, формулы, экспертные инструменты">
+        <button data-m="brief" class="on">Кратко</button>
+        <button data-m="detail">Подробно</button>
+      </div>
+      <div class="metabox expert-only">
+        <div class="metric-pill"><span class="k">Кампаний</span><span class="v" id="mCamp">0</span></div>
+        <div class="metric-pill"><span class="k">Охват, OTS</span><span class="v" id="mOts">0<small>млн</small></span></div>
+        <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/11</small></span></div>
+      </div>
     </div>
   </header>
 
-  <!-- TAB NAV -->
+  <!-- STEP NAV -->
   <nav class="tabs" id="tabs">
-    <button data-t="calc" class="on"><span class="tn">01</span> Прирост метрик</button>
-    <button data-t="chrono"><span class="tn">02</span> Хронометраж</button>
-    <button data-t="budget"><span class="tn">03</span> Бюджет</button>
+    <button data-t="overview" class="on"><span class="tn">01</span> Обзор и фокус</button>
+    <button data-t="scenarios"><span class="tn">02</span> Сценарии</button>
+    <button data-t="calculator"><span class="tn">03</span> Калькулятор</button>
+    <button data-t="budget"><span class="tn">04</span> Куда инвестировать</button>
+    <button data-t="chrono"><span class="tn">05</span> Хронометраж</button>
   </nav>
 
-  <!-- ========== TAB: CALC ========== -->
-  <div class="tabpanel on" id="tab-calc">
+
+  <!-- ========== STEP 01: OVERVIEW + WHAT TO DRIVE ========== -->
+  <div class="tabpanel on" id="tab-overview">
+    <section class="totals-sec">
+      <div class="shead"><span class="no">01·А</span><h2>Где мы находимся</h2>
+        <span class="hint">BHT Q1'2026 · SOS 2025</span></div>
+      <div class="ov-fact wide">
+        <div class="ov-tiles">
+          <div class="ov-tile"><div class="t-big">№1</div><div class="t-lab">по знанию и образу бренда</div></div>
+          <div class="ov-tile"><div class="t-big">43,1<small> млрд</small></div><div class="t-lab">затраты категории, 2025 — <b>+34%</b> за год</div></div>
+          <div class="ov-tile"><div class="t-big">3-е</div><div class="t-lab">место МТС по доле затрат (<b>17%</b>)</div></div>
+        </div>
+        <div class="ov-cols">
+          <div><div class="ov-bd-h">Доля рекламных затрат (SOS 2025 · 43,1 млрд ₽)</div><div class="sos-mini" id="ovSos"></div></div>
+          <div><div class="ov-bd-h">Спонтанное знание бренда (Q1'26)</div><div class="ov-brand" id="ovBrand"></div></div>
+        </div>
+        <div class="ov-take"><b>МТС не наращивал медиабюджет</b> — менялось перераспределение между экосистемой и телекомом (телеком 6% + экосистема 17% доли категории). При этом МТС — №1 по бренду: выигрываем эффективностью. Образ «ровный» — дифференцируемся за счёт нужных атрибутов ↓</div>
+      </div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">01·Б</span><h2>Что драйвить для дифференциации</h2>
+        <span class="hint">позиция vs конкуренты × медиачувствительность</span></div>
+      <div class="mapwrap chart"><div id="driveMap"></div></div>
+      <div class="blegend" id="driveLegend"></div>
+      <div class="drive-take" id="driveTake"></div>
+      <div class="drive-list-h">Драйвить в первую очередь</div>
+      <div class="drive-list" id="driveList"></div>
+      <div class="exp-divider expert-only"><span>Состав групп фокусных атрибутов</span></div>
+      <div class="prio-groups expert-only" id="prioGroups"></div>
+    </section>
+  </div><!-- /tab-overview -->
+
+
+  <!-- ========== STEP 03: SCENARIOS ========== -->
+  <div class="tabpanel" id="tab-scenarios">
+    <section class="totals-sec">
+      <div class="shead"><span class="no">02</span><h2>Сценарии медиаплана</h2>
+        <span class="hint">6 опций · прогноз прироста по 11 атрибутам, п.п.</span></div>
+      <p class="step-lead">6 опций медиаплана. Сверху — суммарный прирост по каждой; ниже — результат выбранной на бренд-метрики: было → станет.</p>
+      <div class="scen-total" id="scenTotal"></div>
+      <div class="scen-pick-h">Результат на бренд-метрики</div>
+      <div class="seg mini" id="scenSeg"></div>
+      <div class="scen-detail" id="scenDetail"></div>
+    </section>
+  </div><!-- /tab-scenarios -->
+
+  <!-- ========== STEP 04: CALCULATOR ========== -->
+  <div class="tabpanel" id="tab-calculator">
 
   <!-- TOTALS -->
   <section class="totals-sec">
-    <div class="shead"><span class="no">01</span><h2>Годовой прирост по атрибутам</h2>
+    <div class="shead"><span class="no">03</span><h2>Калькулятор: соберите свой план</h2>
       <span class="hint">сумма по всем кампаниям</span></div>
     <div class="totals" id="totals"></div>
   </section>
@@ -537,7 +721,7 @@ h1 .em{color:var(--accent);}
   <!-- BUILDER -->
   <div class="builder">
     <section class="campaigns-sec">
-      <div class="shead"><span class="no">02</span><h2>Кампании в году</h2>
+      <div class="shead"><span class="no">03·Б</span><h2>Кампании в году</h2>
         <span class="hint" id="cCount"></span></div>
       <div class="panel">
         <div class="clist" id="clist"></div>
@@ -548,7 +732,7 @@ h1 .em{color:var(--accent);}
     </section>
 
     <section class="metrics-sec">
-      <div class="shead"><span class="no">03</span><h2>Прогнозируемые метрики</h2></div>
+      <div class="shead"><span class="no">03·В</span><h2>Прогнозируемые метрики</h2></div>
       <div class="panel">
         <div class="mlegend">Отметьте атрибуты для прогноза. В обновлённой модели заполнены <b style="color:var(--accent)">все 11 метрик</b> —
         «Развивает 5G» по-прежнему помечен как <b style="color:var(--accent)">предварительная оценка</b>.</div>
@@ -559,7 +743,7 @@ h1 .em{color:var(--accent);}
 
   <!-- MAP -->
   <section class="map-sec">
-    <div class="shead"><span class="no">04</span><h2>Карта вкладов кампаний</h2>
+    <div class="shead"><span class="no">03·Г</span><h2>Карта вкладов кампаний</h2>
       <span class="hint" id="mapHint"></span></div>
     <div class="mapctl">
       <div class="seg mini" id="modeSeg">
@@ -597,18 +781,18 @@ h1 .em{color:var(--accent);}
     </div>
   </div>
   <div class="src">источник: Данные_для_моделирования_2027.xlsx · вкладки Dataset + DETAILS (raw) · хроно.xlsx</div>
-  </div><!-- /tab-calc -->
+  </div><!-- /tab-calculator -->
 
   <!-- ========== TAB: CHRONO ========== -->
   <div class="tabpanel" id="tab-chrono">
     <section class="totals-sec">
-      <div class="shead"><span class="no">02</span><h2>Логика хронометража</h2>
+      <div class="shead"><span class="no">05</span><h2>Логика хронометража</h2>
         <span class="hint">роль задаёт диапазон · сложность и медиачувствительность — внутри него</span></div>
       <div class="chrono-logic" id="chronoLogic"></div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">02·Б</span><h2>Справочник: рекомендованный хронометраж</h2>
+      <div class="shead"><span class="no">05·Б</span><h2>Справочник: рекомендованный хронометраж</h2>
         <span class="hint">по обновлённому анализу</span></div>
       <div class="mapctl">
         <div class="seg mini" id="chRoleSeg">
@@ -626,7 +810,7 @@ h1 .em{color:var(--accent);}
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">02·В</span><h2>Длина vs OTS: где экономить</h2>
+      <div class="shead"><span class="no">05·В</span><h2>Длина vs OTS: где экономить</h2>
         <span class="hint">при фиксированном бюджете</span></div>
       <div class="brule" style="grid-template-columns:1fr">
         <div class="rcard">
@@ -648,30 +832,31 @@ h1 .em{color:var(--accent);}
   <!-- ========== TAB: BUDGET ========== -->
   <div class="tabpanel" id="tab-budget">
     <section class="totals-sec">
-      <div class="shead"><span class="no">03</span><h2>Правила распределения медиабюджета</h2>
-        <span class="hint">доля ∝ важность × медиачувствительность × разрыв</span></div>
-      <div class="brule" id="bRule"></div>
+      <div class="shead"><span class="no">04</span><h2>Куда и сколько инвестировать</h2>
+        <span class="hint">стратегия по каждому атрибуту</span></div>
+      <p class="step-lead">Куда инвестиции дают отдачу, а где мы переинвестируем — льём в атрибуты, где уже сильны и медиа не двигает. Карта — стратегия по каждому атрибуту, ниже — пере-/недоинвестирование к базе.</p>
       <div class="fwd-bar">
         <label class="fwd-toggle"><input type="checkbox" id="fwdToggle"><span class="track"></span><span class="lbl">Учесть форвардную важность</span></label>
         <span class="fwd-note">новые/растущие атрибуты ×2 (+100% к важности): продвинутость, «умнее», стабильность (с Q2'25), лидер технологий (Q3'25), финансовые (Q1'26), 5G — состав и величина согласуются с клиентом</span>
       </div>
+      <div class="brule expert-only" id="bRule"></div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">03·А</span><h2>Карта стратегий: важность × медиачувствительность</h2>
+      <div class="shead"><span class="no">04·А</span><h2>Карта стратегий: важность × медиачувствительность</h2>
         <span class="hint">размер = позиция МТС · форвардная важность двигает кружок вправо</span></div>
       <div class="mapwrap chart"><div id="budgetMap"></div></div>
       <div class="blegend" id="budgetLegend"></div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">03·Б</span><h2>Пере-/недоинвестирование к базе по атрибутам</h2>
+      <div class="shead"><span class="no">04·Б</span><h2>Пере-/недоинвестирование к базе по атрибутам</h2>
         <span class="hint" id="bAllocHint"></span></div>
       <div class="mapwrap" style="padding:18px 18px 8px"><div id="budgetAlloc"></div></div>
     </section>
 
-    <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">03·В</span><h2>Перевод в рубли · премия эффективности</h2>
+    <section class="map-sec expert-only" style="margin-top:34px">
+      <div class="shead"><span class="no">04·В</span><h2>Перевод в рубли · премия эффективности</h2>
         <span class="hint">ждём CPM</span></div>
       <div class="rub-panel" id="rubPanel"></div>
     </section>
@@ -684,13 +869,13 @@ h1 .em{color:var(--accent);}
 <script>
 const MODEL = {"scales":{"МАКСИМАЛЬНЫЙ ОХВАТ":3200000,"ШИРОКИЙ ОХВАТ":2800000,"СЕЛЕКТИВНЫЙ ОХВАТ":1250000},"scaleShort":{"МАКСИМАЛЬНЫЙ ОХВАТ":"Макс. охват","ШИРОКИЙ ОХВАТ":"Широкий охват","СЕЛЕКТИВНЫЙ ОХВАТ":"Селективный"},"complexity":{"ПРОСТОЕ":1,"СЛОЖНОЕ":1.75},
 "metrics":[
- {"i":0,"name":"Лидер технологий","short":"Лидер технологий","abbr":"ЛТ","hasData":true,"ms":0.014949592951770846,"grp":"poz","force30":true},
- {"i":1,"name":"Задает тренды на рынке","short":"Задаёт тренды","abbr":"ТР","hasData":true,"ms":0.02105017440074263,"grp":"poz"},
- {"i":2,"name":"Помогает чувствовать себя продвинутым","short":"Чувствую себя продвинутым","abbr":"ПР","hasData":true,"ms":0.021491273643561803,"grp":"poz"},
- {"i":3,"name":"Помогает умнее организовывать свою жизнь","short":"Умнее организую жизнь","abbr":"ОЖ","hasData":true,"ms":0.006740573016965476,"grp":"poz"},
+ {"i":0,"name":"Лидер технологий","short":"Лидер технологий","abbr":"ЛТ","hasData":true,"ms":0.014949592951770846,"grp":"poz","diff":true,"force30":true},
+ {"i":1,"name":"Задает тренды на рынке","short":"Задаёт тренды","abbr":"ТР","hasData":true,"ms":0.02105017440074263,"grp":"poz","diff":true},
+ {"i":2,"name":"Помогает чувствовать себя продвинутым","short":"Чувствую себя продвинутым","abbr":"ПР","hasData":true,"ms":0.021491273643561803,"grp":"poz","diff":true},
+ {"i":3,"name":"Помогает умнее организовывать свою жизнь","short":"Умнее организую жизнь","abbr":"ОЖ","hasData":true,"ms":0.006740573016965476,"grp":"poz","diff":true},
  {"i":5,"name":"Предлагает подходящие для меня тарифы и услуги","short":"Подходящие тарифы","abbr":"ТУ","hasData":true,"ms":0.007438242093615525,"grp":"prod","force30":true},
- {"i":6,"name":"Предлагает финансовые сервисы и услуги","short":"Финансовые сервисы","abbr":"ФС","hasData":true,"ms":0.008107683882040924,"grp":"prod","force30":true},
- {"i":7,"name":"Развивает технологии 5G","short":"Развивает 5G","abbr":"5G","hasData":true,"tentative":true,"ms":0.01345463365659376,"grp":"prod","force30":true},
+ {"i":6,"name":"Предлагает финансовые сервисы и услуги","short":"Финансовые сервисы","abbr":"ФС","hasData":true,"ms":0.008107683882040924,"grp":"prod","diff":true,"force30":true},
+ {"i":7,"name":"Развивает технологии 5G","short":"Развивает 5G","abbr":"5G","hasData":true,"tentative":true,"ms":0.01345463365659376,"grp":"prod","diff":true,"force30":true},
  {"i":8,"name":"Лучшее качество связи","short":"Лучшее качество связи","abbr":"КС","hasData":true,"ms":0.008833580246915624,"grp":"prod","force30":true},
  {"i":9,"name":"Оператор №1","short":"Оператор №1","abbr":"№1","hasData":true,"ms":0.014965024207654276,"grp":"lead","force30":true},
  {"i":10,"name":"Дает ощущение стабильности и предсказуемости","short":"Стабильность","abbr":"СТ","hasData":true,"ms":0.00665870370906711,"grp":"lead"},
@@ -730,7 +915,8 @@ const fmtOts = ots => { const m=ots/1e6; return (m>=10? m.toFixed(1): m.toFixed(
 
 let uid = 0;
 const state = {
-  tab: 'calc',                  // 'calc' | 'chrono' | 'budget'
+  tab: 'overview',              // overview | priorities | scenarios | budget | chrono
+  mode: 'brief',                // 'brief' (VP) | 'detail' (expert)
   campaigns: [],
   selected: new Set([8,9,1]),   // default: Лучшее качество связи, Оператор №1, Задаёт тренды
   mapMode: 'attr',              // 'attr' = по атрибутам | 'camp' = по кампаниям
@@ -1234,13 +1420,188 @@ function renderBubbles(cs,sel){
   return s;
 }
 
-// ============ TABS ============
+// ====== SCENARIOS (опции медиаплана, прогноз прироста по атрибутам, п.п. — презентация стр.7) ======
+const SCENARIOS=[
+ {id:1,name:'Опция 1',recipe:'Молодёжка + НГ промо',kpi:{0:0.95,1:1.04,2:1.09,3:1.19,5:0.76,6:0.54,7:0.54,8:0.64,9:0.75,10:0.84,11:0.75}},
+ {id:2,name:'Опция 2',recipe:'Молодёжка + Телеком с финтехом',kpi:{0:0.88,1:1.08,2:1.17,3:1.16,5:0.77,6:0.69,7:0.49,8:0.60,9:0.60,10:0.84,11:0.73}},
+ {id:3,name:'Опция 3',recipe:'Финтех + НГ промо',kpi:{0:1.04,1:1.21,2:1.27,3:1.28,5:0.84,6:0.80,7:0.62,8:0.72,9:0.81,10:0.94,11:0.86}},
+ {id:4,name:'Опция 4',recipe:'Финтех + Телеком с финтехом',kpi:{0:0.98,1:1.27,2:1.38,3:1.26,5:0.86,6:0.98,7:0.57,8:0.69,9:0.67,10:0.95,11:0.86}},
+ {id:5,name:'Опция 5',recipe:'Войстех + НГ промо',rec:true,kpi:{0:1.23,1:1.28,2:1.39,3:1.58,5:0.94,6:0.63,7:0.70,8:0.82,9:0.91,10:1.26,11:0.93}},
+ {id:6,name:'Опция 6',recipe:'Войстех + Телеком с финтехом',rec:true,kpi:{0:1.16,1:1.32,2:1.48,3:1.55,5:0.95,6:0.78,7:0.65,8:0.78,9:0.76,10:1.26,11:0.91}},
+];
+const SCEN_ATTRS=[0,1,2,3,5,6,7,8,9,10,11];
+const SCEN_BASE={0:34.9,1:36.6,2:28.1,3:27.0,5:32.5,6:40.4,7:34.7,8:28.7,9:26.8,10:29.1,11:29.9}; // KPI Q1'2026, %
+function scenTotal(s){ return SCEN_ATTRS.reduce((a,i)=>a+(s.kpi[i]||0),0); }
+function scenLeader(i){ let best=SCENARIOS[0]; SCENARIOS.forEach(s=>{ if((s.kpi[i]||0)>(best.kpi[i]||0)) best=s; }); return best.id; }
+let scenSel=5;
+
+// ====== OVERVIEW (SOS mini) ======
+function renderOverviewSos(){
+  const MUT='#9aa0aa';
+  const sos=[{n:'Мегафон',v:26,c:MUT},{n:'Т2',v:21,c:MUT},{n:'МТС·Эко',v:17,c:'#ffb3c1'},
+    {n:'билайн',v:14,c:MUT},{n:'Сбер',v:7,c:MUT},{n:'МТС·тел',v:6,c:'#ff0032'},{n:'YOTA',v:5,c:MUT},{n:'Т-Моб',v:5,c:MUT}];
+  const mx=Math.max(...sos.map(s=>s.v));
+  document.getElementById('ovSos').innerHTML = sos.map(s=>`<div class="sb"><span class="vv">${s.v}%</span>
+    <i style="height:${(s.v/mx*100).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
+  // спонтанное знание бренда Q1'26 (BHT)
+  const br=[{n:'МТС',v:83,c:'#ff0032'},{n:'Мегафон',v:77,c:'#9aa0aa'},{n:'билайн',v:74,c:'#9aa0aa'},{n:'Т2',v:66,c:'#9aa0aa'}];
+  const bx=Math.max(...br.map(b=>b.v));
+  document.getElementById('ovBrand').innerHTML = br.map(b=>`<div class="bdrow"><span class="bn">${b.n}</span>
+    <span class="bt"><i style="width:${(b.v/bx*100).toFixed(0)}%;background:${b.c}"></i></span><span class="bv">${b.v}</span></div>`).join('');
+}
+
+// ====== Q2: ЧТО ДРАЙВИТЬ — визуализация дифференциации ======
+function renderPriorities(){ renderDriveMap(); renderDriveList(); renderPrioGroups(); }
+
+function renderDriveMap(){
+  const W=900,H=460,x0=84,x1=862,y0=34,y1=384;
+  const xmin=-0.35,xmax=0.95, ymin=0,ymax=0.024;
+  const xp=v=>x0+(Math.max(xmin,Math.min(xmax,v))-xmin)/(xmax-xmin)*(x1-x0);
+  const yp=v=>y1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin)*(y1-y0);
+  const imax=Math.max(...META.map(m=>BUDGET.imp[m.i]));
+  const rows=META.map(m=>({m, pos:BUDGET.pos[m.i], ms:m.ms, imp:BUDGET.imp[m.i], diff:!!m.diff,
+    px:xp(BUDGET.pos[m.i]), py:yp(m.ms), r:12+Math.sqrt(BUDGET.imp[m.i]/imax)*18}));
+  // collision
+  for(let it=0;it<140;it++){let mv=false;for(let a=0;a<rows.length;a++)for(let b=a+1;b<rows.length;b++){
+    const A=rows[a],B=rows[b],dx=B.px-A.px,dy=B.py-A.py,d=Math.hypot(dx,dy)||0.1,mn=A.r+B.r+3;
+    if(d<mn){const p=(mn-d)/2+0.4,ux=dx/d,uy=dy/d;A.px-=ux*p;A.py-=uy*p;B.px+=ux*p;B.py+=uy*p;mv=true;}}if(!mv)break;}
+  rows.forEach(r=>{r.px=Math.max(x0+r.r,Math.min(x1-r.r,r.px));r.py=Math.max(y0+r.r,Math.min(y1-r.r,r.py));});
+  const px0=xp(0), pyMid=yp(0.012), zoneR=xp(0.22);
+  const ACC='#ff0032', MUT='#9aa0aa';
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+  const xc1=xp(-0.08), xc2=xp(0.12);
+  // полоса медиа-драйва (высокая медиачувствительность), разбитая на стратегии по позиции
+  s+=`<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${pyMid-y0}" fill="rgba(255,0,50,.05)"/>`;
+  s+=`<line class="guideline" x1="${x0}" y1="${pyMid.toFixed(1)}" x2="${x1}" y2="${pyMid.toFixed(1)}" style="opacity:.4;stroke-dasharray:4 4"/>`;
+  s+=`<text class="guidelab" x="${x0+4}" y="${pyMid-6}" style="fill:var(--faint)">порог медиачувствительности · выше — медиа двигает атрибут</text>`;
+  s+=`<line class="guideline" x1="${xc1.toFixed(1)}" y1="${y0}" x2="${xc1.toFixed(1)}" y2="${pyMid.toFixed(1)}" style="opacity:.5;stroke-dasharray:3 3"/>`;
+  s+=`<line class="guideline" x1="${xc2.toFixed(1)}" y1="${y0}" x2="${xc2.toFixed(1)}" y2="${pyMid.toFixed(1)}" style="opacity:.5;stroke-dasharray:3 3"/>`;
+  s+=`<text class="zlab" x="${((x0+xc1)/2).toFixed(0)}" y="${y0+15}" text-anchor="middle" style="fill:var(--muted)">ДОГНАТЬ</text>`;
+  s+=`<text class="zlab" x="${((xc1+xc2)/2).toFixed(0)}" y="${y0+15}" text-anchor="middle" style="fill:var(--accent)">СОЗДАТЬ ОТРЫВ</text>`;
+  s+=`<text class="zlab" x="${((xc2+x1)/2).toFixed(0)}" y="${y0+15}" text-anchor="middle" style="fill:var(--accent)">УСИЛИТЬ ОТРЫВ</text>`;
+  s+=`<line class="axisline" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/><line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
+  s+=`<text class="guidelab" x="${px0}" y="${y1+1}" text-anchor="middle" style="fill:var(--muted);transform:translateY(-2px)">паритет</text>`;
+  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">ПОЗИЦИЯ vs КОНКУРЕНТЫ</text>`;
+  s+=`<text class="guidelab" x="${x0+2}" y="${H-8}" text-anchor="start" style="fill:var(--muted)">отстаём ←</text>`;
+  s+=`<text class="guidelab" x="${x1-2}" y="${H-8}" text-anchor="end" style="fill:var(--muted)">→ опережаем</text>`;
+  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
+  rows.forEach(r=>{ const col=r.diff?ACC:MUT;
+    const drive=r.diff && r.ms>=0.012;
+    const st=driveStrat(r.pos);
+    s+=`<g class="bub${drive?' fwd':''}" data-name="${esc(r.m.name)}" data-sub="${r.diff?'дифференциатор':'коммодити'}" data-val="${drive?st.t:''}" data-x="позиция ${r.pos.toFixed(2)} · медиа ${BANDNAME[msBand(r.ms)]} · важн ${r.imp.toFixed(1)}%" data-col="${col}">`;
+    s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="${r.diff?0.82:0.5}" stroke="${col}"/>`;
+    s+=`<text class="bin" x="${r.px.toFixed(1)}" y="${r.py.toFixed(1)}" style="font-size:${Math.min(12,r.r*0.55).toFixed(0)}px">${r.m.abbr}</text></g>`;
+  });
+  s+=`</svg>`;
+  document.getElementById('driveMap').innerHTML=s;
+  document.getElementById('driveLegend').innerHTML =
+    `<span class="li"><span class="d" style="background:${ACC}"></span>дифференциатор</span>`
+    +`<span class="li"><span class="d" style="background:${MUT}"></span>коммодити</span>`
+    +`<span class="li" style="color:var(--faint)">размер = важность при выборе · обведено = медиачувствительный дифференциатор</span>`;
+}
+
+function driveStrat(pos){ return pos>=0.12?{t:'усилить отрыв',c:'lead'} : (pos<=-0.08?{t:'догнать',c:'lag'} : {t:'создать отрыв',c:'par'}); }
+function driveScore(m){ return (m.ms*100)*BUDGET.imp[m.i]; }   // как сильно медиа двигает × насколько важно — без привязки к позиции
+function renderDriveList(){
+  const cand=META.filter(m=>m.diff && m.ms>=0.012).sort((a,b)=>driveScore(b)-driveScore(a));
+  const lead=cand.filter(m=>BUDGET.pos[m.i]>=0.12).map(m=>m.short);
+  const par=cand.filter(m=>{const p=BUDGET.pos[m.i];return p>-0.08&&p<0.12;}).map(m=>m.short);
+  document.getElementById('driveTake').innerHTML =
+    `<b>Медиа-драйверы дифференциации</b> (медиа их двигает): ${cand.map(m=>m.short).join(', ')}. `
+    + (lead.length?`Где уже ведём — <b>${lead.join(', ')}</b> — усиливаем отрыв. `:'')
+    + (par.length?`У паритета — <b style="color:var(--accent)">${par.join(', ')}</b> — создаём отрыв (там конкуренты прокачивают).`:'');
+  document.getElementById('driveList').innerHTML = cand.map(m=>{
+    const st=driveStrat(BUDGET.pos[m.i]);
+    return `<div class="dl-row">
+      <span class="dl-n">${m.short}${m.tentative?' <span class="tent">оц.</span>':''}</span>
+      <span class="dl-tags"><span class="dl-t">медиа: ${BANDNAME[msBand(m.ms)]}</span>
+        <span class="dl-t">важн ${BUDGET.imp[m.i].toFixed(1)}%</span>
+        <span class="dl-t ${st.c==='par'?'p':''}">${st.t}</span></span>
+    </div>`;
+  }).join('');
+}
+
+// ====== состав групп (справочно, эксперт) ======
+function renderPrioGroups(){
+  const tag={poz:'Дифференциация · «Умный апгрейд связи»', prod:'Продуктовые преимущества', lead:'Лидерство категории'};
+  const order=['poz','prod','lead'];
+  document.getElementById('prioGroups').innerHTML = order.map(g=>{
+    const ms=META.filter(m=>m.grp===g);
+    const col=BUDGET.grpColor[g];
+    const rowsH=ms.map(m=>{
+      const imp=BUDGET.imp[m.i], band=msBand(m.ms), kpi=SCEN_BASE[m.i];
+      const bandTxt=['','низк','сред','выс'][band];
+      return `<div class="pc-row">
+        <span class="pc-n">${m.short}${m.tentative?' <span class="tent">оц.</span>':''}</span>
+        <span class="pc-m" title="влияние на выбор оператора">${imp.toFixed(1)}%</span>
+        <span class="pc-m b${band}" title="медиачувствительность">${bandTxt}</span>
+        <span class="pc-m" title="текущий KPI, Q1'26">${kpi!=null?kpi.toFixed(0):'—'}</span>
+      </div>`;
+    }).join('');
+    return `<div class="prio-card" style="--gc:${col}">
+      <div class="pc-bar"></div>
+      <div class="pc-h">${BUDGET.grpName[g]}</div>
+      <div class="pc-tag">${tag[g]}</div>
+      <div class="pc-cols"><span></span><span title="влияние на выбор">выбор</span><span title="медиачувствительность">медиа</span><span title="KPI Q1'26">KPI</span></div>
+      ${rowsH}
+    </div>`;
+  }).join('');
+}
+
+// ====== SCENARIOS ======
+function renderScenarios(){
+  const totals=SCENARIOS.map(s=>({s, tot:scenTotal(s)}));
+  const mx=Math.max(...totals.map(t=>t.tot)), best=totals.reduce((a,b)=>b.tot>a.tot?b:a);
+  // total bars
+  document.getElementById('scenTotal').innerHTML = `<div class="scen-th">Суммарный годовой прирост по 11 атрибутам, п.п.</div>`
+    + totals.map(({s,tot})=>{
+      const w=tot/mx*100, isBest=s.id===best.s.id;
+      return `<div class="scenrow ${s.rec?'rec':''}" data-id="${s.id}">
+        <span class="sn"><b>${s.name}</b><small>${s.recipe}</small></span>
+        <span class="strack"><i style="width:${w.toFixed(1)}%"></i></span>
+        <span class="sv">${tot.toFixed(1)}${isBest?'<span class="lead">лидер</span>':''}</span>
+      </div>`;
+    }).join('');
+  document.querySelectorAll('#scenTotal .scenrow').forEach(r=>r.addEventListener('click',()=>{scenSel=+r.dataset.id; renderScenarios();}));
+  // selector
+  document.getElementById('scenSeg').innerHTML = SCENARIOS.map(s=>`<button data-id="${s.id}" class="${s.id===scenSel?'on':''}">${s.id}</button>`).join('');
+  document.querySelectorAll('#scenSeg button').forEach(b=>b.addEventListener('click',()=>{scenSel=+b.dataset.id; renderScenarios();}));
+  // detail of selected — результат на бренд-метрики: было -> станет
+  const s=SCENARIOS.find(x=>x.id===scenSel);
+  const rows=SCEN_ATTRS.map(i=>({i,v:s.kpi[i]||0,base:SCEN_BASE[i],lead:scenLeader(i)===s.id})).sort((a,b)=>b.v-a.v);
+  const pmax=Math.max(...rows.map(r=>r.base+r.v));
+  const leads=rows.filter(r=>r.lead).map(r=>MBI[r.i].short);
+  document.getElementById('scenDetail').innerHTML = `
+    <div class="sd-head"><div><b>${s.name}</b> · ${s.recipe} ${s.rec?'<span class="rectag">рекомендуется</span>':''}</div>
+      <div class="sd-sum">сумма прироста <b>+${scenTotal(s).toFixed(1)} п.п.</b></div></div>
+    ${leads.length?`<div class="sd-leads">Сильнее всего отрывает: <b>${leads.join(', ')}</b></div>`:''}
+    <div class="sd-bars">${rows.map(r=>{const m=MBI[r.i],col=BUDGET.grpColor[m.grp];
+      const bw=r.base/pmax*100, lw=r.v/pmax*100;
+      return `<div class="sdrow"><span class="sdn">${m.short}${r.lead?' <span class="star">★</span>':''}</span>
+        <span class="sdtrack"><i class="sdbase" style="width:${bw.toFixed(1)}%"></i><i class="sdlift" style="width:${lw.toFixed(1)}%;background:${col}"></i></span>
+        <span class="sdv">${r.base.toFixed(1)} → <b>${(r.base+r.v).toFixed(1)}</b></span></div>`;}).join('')}</div>`;
+}
+
+// ====== MODE (Кратко / Подробно) ======
+function setMode(m){
+  state.mode=m;
+  document.body.classList.toggle('mode-detail', m==='detail');
+  document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+}
+document.querySelectorAll('#modeToggle button').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.m)));
+document.querySelectorAll('.ovq').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.go)));
+
+// ============ STEP NAV ============
 function switchTab(t){
   state.tab=t;
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+t));
+  if(t==='overview'){ renderOverviewSos(); renderPriorities(); }
+  if(t==='scenarios') renderScenarios();
+  if(t==='calculator') recalc();
+  if(t==='budget') renderBudget();
   if(t==='chrono'){ renderChronoLogic(); renderChronoTable(); renderEconomy(); }
-  if(t==='budget'){ renderBudget(); }
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
 
@@ -1392,7 +1753,8 @@ function renderBudgetRule(){
      <ul>
        <li>Это <b>не</b> деление одного бюджета на 100% — метрики не финансируются одновременно. Каждая — <b>самостоятельная кампания</b>.</li>
        <li>Смотрим на них как на рейтинг: на приоритетных тратим <b>выше базы</b>, на слабых — <b>ниже базы</b>.</li>
-       <li>Отклонение ограничено <b>±100% от средней кампании</b> (коэффициент ×0…×2) — реалистичный коридор пере-/недоинвестирования.</li>
+       <li>Отклонение ограничено <b>±50% от средней кампании</b> (коэффициент ×0,5…×1,5) — реалистичный коридор: мы не инвестируем в ноль и не утраиваем бюджет.</li>
+       <li>Форвардная важность работает как <b>стратегическая страховка</b>: ставочные атрибуты (финтех, 5G и др.) не опускаются ниже базы, даже если текущие данные тянут вниз.</li>
        <li>Стратегия (квадрант ниже) задаёт, <b>переинвестировать</b> атрибут или держать <b>минимум</b>; позиция МТС (размер круга) уточняет, догонять или защищать.</li>
      </ul>
    </div>
@@ -1470,31 +1832,36 @@ function layoutBudgetMap(){
   });
 }
 function renderBudgetAlloc(){
+  // базовая шкала считается БЕЗ форварда → при включении тумблера двигаются только ставочные метрики
+  const savedFwd=state.fwd; state.fwd=false; const base=budgetRows(); state.fwd=savedFwd;
+  const mean=base.reduce((a,r)=>a+r.raw,0)/base.length;
+  const maxAbs=Math.max(...base.map(r=>Math.abs(r.raw-mean)), 1e-9);
   const rows=budgetRows();
-  const mean=rows.reduce((a,r)=>a+r.raw,0)/rows.length;
   rows.forEach(r=>{
-    r.idx = r.raw/mean;                       // сырой приоритет относительно средней кампании
-    r.coef = Math.max(0, Math.min(2, r.idx)); // лимит: ×0…×2  (−100%…+100% от базы)
-    r.dev  = (r.coef-1)*100;                   // отклонение от базы, %
-    r.capped = r.idx>2;
+    let dev=(r.raw-mean)/maxAbs*50;            // ±50% коридор, база (средняя кампания) = 0
+    r.dataDev=dev;
+    if(r.fwd && dev<0){ dev=0; r.floored=true; } // стратегическая ставка: не недоинвестируем ниже базы
+    r.dev=Math.max(-50,Math.min(50,dev));
+    r.capped = r.dev>=50;
   });
-  rows.sort((a,b)=>b.coef-a.coef);
+  rows.sort((a,b)=>b.dev-a.dev || b.dataDev-a.dataDev);
   const gc=BUDGET.grpColor;
-  document.getElementById('bAllocHint').textContent='база = средняя кампания · лимит пере-/недоинвестирования ±100% (×0…×2)';
+  document.getElementById('bAllocHint').textContent='база = средняя кампания · коридор ±50% (×0,5…×1,5)';
   let head=`<div class="alloc-head">`+Object.keys(BUDGET.grpName).map(g=>
     `<span class="leg"><span class="gd" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
-    +`<span class="leg" style="color:var(--faint)">−100% ← база → +100%</span></div>`;
+    +`<span class="leg" style="color:var(--faint)">−50% ← база → +50%</span></div>`;
   let h=`<div class="alloc idx">`;
   rows.forEach(r=>{ const col=gc[r.m.grp]; const above=r.dev>=0;
-    const w=Math.abs(r.dev)/100*46;            // 100% = полуширина дорожки (46%)
+    const w=Math.abs(r.dev)/50*46;            // 50% = полуширина дорожки (46%)
     const bar = above
       ? `<i class="pos" style="left:50%;width:${w.toFixed(1)}%;background:${col}"></i>`
       : `<i class="neg" style="left:${(50-w).toFixed(1)}%;width:${w.toFixed(1)}%;background:${col};opacity:.55"></i>`;
     const lbl=(r.dev>=0?'+':'')+Math.round(r.dev)+'%';
     const fb = r.fwd?` <span class="tent fwdb"${BUDGET.fwdSince[r.m.i]?` title="новый замер с ${BUDGET.fwdSince[r.m.i]}"`:''}>форвард ×${r.fwd}</span>`:'';
+    const tag = r.floored ? 'ставка: не ниже базы' : (r.capped?'лимит':r.mode.t);
     h+=`<div class="arow idxrow">
       <span class="an"><span class="gd" style="background:${col}"></span>${r.m.short}${r.m.tentative?' <span class="tent">оц.</span>':''}${fb}</span>
-      <span class="track2"><span class="mid"></span>${bar}<span class="mode ${above?'r':'l'}">${r.mode.t}${r.capped?' · лимит':''}</span></span>
+      <span class="track2"><span class="mid"></span>${bar}<span class="mode ${above?'r':'l'}">${tag}</span></span>
       <span class="pct" style="color:${above?col:'var(--muted)'}">${lbl}</span>
     </div>`; });
   h+=`</div>`;
@@ -1528,6 +1895,7 @@ document.getElementById('ecTgt').innerHTML = META.map(m=>`<option value="${m.i}"
 
 // init
 seed(); renderCards(); renderChips(); recalc();
+setMode('brief'); renderOverviewSos(); renderPriorities();
 </script>
 </body>
 </html>
