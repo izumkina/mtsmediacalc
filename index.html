@@ -999,12 +999,12 @@ function seed(){
 // --- chrono model (обновлённый датасет: реко хроно берётся напрямую из столбца E по типу/подтипу) ---
 // архитектура: промо 30 · имидж-технологии 45 · имидж-позиционирование 60
 const REKO_CHRONO = {
- 'ИМИДЖ':{'ПОЗИЦИОНИРОВАНИЕ':'60','ИМИДЖ':'45'},
- 'ТЕЛЕКОМ':{'ПРОМО':'30','РОУМИНГ':'30','СЕМЕЙНАЯ ГРУППА':'45','ВЫСОКОДОХОДНЫЕ':'30','НЕРЕЗИДЕНТЫ':'30','КОНВЕРГЕНТ':'30'},
- 'МОЛОДЕЖКА':{'РИИЛ':'30'},
- 'КАЧЕСТВО СВЯЗИ':{'КАЧЕСТВО СВЯЗИ':'30'},
+ 'ИМИДЖ':{'ПОЗИЦИОНИРОВАНИЕ':'60','ИМИДЖ':'60'},
+ 'ТЕЛЕКОМ':{'ПРОМО':'45','РОУМИНГ':'30','СЕМЕЙНАЯ ГРУППА':'45','ВЫСОКОДОХОДНЫЕ':'45','НЕРЕЗИДЕНТЫ':'45','КОНВЕРГЕНТ':'45'},
+ 'МОЛОДЕЖКА':{'РИИЛ':'45'},
+ 'КАЧЕСТВО СВЯЗИ':{'КАЧЕСТВО СВЯЗИ':'45'},
  'ФИНТЕХ':{'БАНК':'45'},
- 'ТЕХНОЛОГИИ':{'ВОЙСТЕХ':'60','ЗАЩИТНИК':'45'},
+ 'ТЕХНОЛОГИИ':{'ВОЙСТЕХ':'45','ЗАЩИТНИК':'45'},
  'РТК':{'РТК':'30'}
 };
 // коэф. сложности при СЛОЖНОМ сообщении (столбец F); ПРОСТОЕ всегда ×1.
@@ -1720,11 +1720,13 @@ document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',
 
 // ============ CHRONO LOGIC (архитектура) ============
 function renderChronoLogic(){
+  const TITLE={'30':'Роуминг, РТК','45':'Телеком, технологии, качество','60':'Имидж, позиционирование'};
+  const list=sec=>{ const out=[]; CTYPES.forEach(t=>Object.keys(CALC.types[t].subtypes).forEach(s=>{
+      if(chAvail(t,s).some(k=>k!=='НОН-ВИДЕО') && rekoChrono(t,s)===sec) out.push(s===t?s.toLowerCase():s.toLowerCase()); }));
+    return [...new Set(out)].join(', '); };
   document.getElementById('chronoLogic').innerHTML = `
    <div class="chrono-arch">
-     <div class="ca-card"><div class="ca-sec">30<small>сек</small></div><div class="ca-t">Промо</div><div class="ca-d">телеком-промо, роуминг, РИИЛ, качество связи, РТК</div></div>
-     <div class="ca-card"><div class="ca-sec">45<small>сек</small></div><div class="ca-t">Имидж · технологии</div><div class="ca-d">имидж, семейная группа, банк, защитник</div></div>
-     <div class="ca-card"><div class="ca-sec">60<small>сек</small></div><div class="ca-t">Имидж · позиционирование</div><div class="ca-d">позиционирование, войстех</div></div>
+     ${['30','45','60'].map(sec=>`<div class="ca-card"><div class="ca-sec">${sec}<small>сек</small></div><div class="ca-t">${TITLE[sec]}</div>${list(sec).split(', ').every(x=>TITLE[sec].toLowerCase().includes(x))?'':`<div class="ca-d">${list(sec)}</div>`}</div>`).join('')}
    </div>
    <p class="mut" style="margin-top:14px">Хроно-реко закреплено за типом кампании. Для РК только в нон-видео хронометраж не нужен.</p>`;
 }
