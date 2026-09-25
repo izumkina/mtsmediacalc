@@ -233,6 +233,9 @@ h1 .em{color:var(--accent);}
 /* map controls */
 .mapctl{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
 .seg.mini{padding:3px;}
+.fgrid .step{min-height:40px;}
+.seg button.dis{opacity:.32; cursor:not-allowed;}
+.seg.off{opacity:.45; pointer-events:none;}
 .seg.mini button{font-size:11.5px; padding:7px 13px;}
 .tablelink{margin-left:auto; background:none; border:1px solid var(--line2); color:var(--text2);
   font:inherit; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer; transition:.16s;}
@@ -419,8 +422,8 @@ h1 .em{color:var(--accent);}
 .prem{margin-top:18px; font-size:13px; color:var(--text2); line-height:1.6;}
 .prem b{color:var(--text);}
 .sos-mini{display:flex; gap:7px; align-items:flex-end; height:90px; margin:14px 0 6px; padding:0 2px;}
-.sos-mini .sb{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; justify-content:flex-end;}
-.sos-mini .sb i{width:100%; max-width:42px; border-radius:5px 5px 0 0;}
+.sos-mini .sb{flex:1; height:100%; display:flex; flex-direction:column; align-items:center; gap:6px; justify-content:flex-end;}
+.sos-mini .sb i{display:block; width:100%; max-width:42px; min-height:2px; border-radius:5px 5px 0 0;}
 .sos-mini .sb .nm{font-size:10px; color:var(--muted); white-space:nowrap;}
 .sos-mini .sb .vv{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--text2); font-weight:700;}
 
@@ -544,6 +547,14 @@ body:not(.mode-detail) .expert-only{display:none !important;}
 @media(max-width:880px){ .prio-groups{grid-template-columns:1fr;} }
 .prio-card{position:relative; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 18px;
   overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 26px -16px rgba(0,0,0,.18);}
+.prio-card .pc-h{font-weight:700; font-size:14px; margin-top:2px;}
+.prio-card .pc-tag{font-size:12px; color:var(--muted); margin:3px 0 12px;}
+.prio-card .pc-cols,.prio-card .pc-row{display:grid; grid-template-columns:1fr 50px 56px 34px; gap:6px; align-items:center;}
+.prio-card .pc-cols{font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); padding-bottom:6px;}
+.prio-card .pc-cols span,.prio-card .pc-m{text-align:right;}
+.prio-card .pc-row{font-size:12.5px; padding:7px 0; border-top:1px solid var(--line);}
+.prio-card .pc-m{font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--text2);}
+.prio-card .pc-m.b3{color:var(--accent); font-weight:700;} .prio-card .pc-m.b2{color:var(--text);} .prio-card .pc-m.b1{color:var(--faint);}
 .prio-card .pc-bar{position:absolute; top:0; left:0; right:0; height:4px; background:var(--gc);}
 .pc-h{font-family:"Unbounded",sans-serif; font-weight:700; font-size:15px; margin:6px 0 10px; letter-spacing:-.01em;}
 .pc-p{font-size:12.5px; color:var(--muted); line-height:1.55; margin-bottom:16px; min-height:58px;}
@@ -649,7 +660,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
     <div>
       <div class="brand"><span class="dot"></span><b>Brand Lift Lab · МТС · 2027</b></div>
       <h1>Прирост бренд-метрик<br><span class="em">и медиаинвестиции</span></h1>
-      <p class="sub">От позиции бренда — к сценариям и распределению бюджета. Четыре шага.</p>
+      <p class="sub">От позиции бренда — к сценариям и распределению бюджета. Пять шагов.</p>
     </div>
     <div class="modebox">
       <div class="modetoggle" id="modeToggle" title="Кратко — для быстрого взгляда; Подробно — модель, формулы, экспертные инструменты">
@@ -658,8 +669,8 @@ body:not(.mode-detail) .expert-only{display:none !important;}
       </div>
       <div class="metabox expert-only">
         <div class="metric-pill"><span class="k">Кампаний</span><span class="v" id="mCamp">0</span></div>
-        <div class="metric-pill"><span class="k">Охват, OTS</span><span class="v" id="mOts">0<small>млн</small></span></div>
-        <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/11</small></span></div>
+        <div class="metric-pill"><span class="k">Объём, OTS</span><span class="v" id="mOts">0<small>млрд</small></span></div>
+        <div class="metric-pill"><span class="k">Метрик</span><span class="v" id="mMet">0<small>/6</small></span></div>
       </div>
     </div>
   </header>
@@ -710,9 +721,29 @@ body:not(.mode-detail) .expert-only{display:none !important;}
   <!-- ========== STEP 03: SCENARIOS ========== -->
   <div class="tabpanel" id="tab-scenarios">
     <section class="totals-sec">
-      <div class="shead"><span class="no">02</span><h2>Сценарии медиаплана</h2>
-        <span class="hint">6 опций · прогноз прироста по 11 атрибутам, п.п.</span></div>
-      <p class="step-lead">6 опций медиаплана. Сверху — суммарный прирост по каждой; ниже — результат выбранной на бренд-метрики: было → станет.</p>
+      <div class="shead"><span class="no">02</span><h2>ФМП 2027: прогноз на бренд-метрики</h2>
+        <span class="hint">новая модель · 6 атрибутов · п.п. за год</span></div>
+      <p class="step-lead">План 2027 прогнан через ту же модель, что и калькулятор: OTS каждой строки ФМП × прирост на OTS по типу, подтипу и каналу, сумма за год × годовой коэффициент атрибута. Сложность сообщения в ФМП не задана — строки считаются как простые.</p>
+      <div class="ov-tiles" id="fmpTiles"></div>
+      <div class="scen-detail" id="fmpDetail"></div>
+    </section>
+
+    <section class="map-sec" style="margin-top:34px">
+      <div class="shead"><span class="no">02·Б</span><h2>Флайтинг ФМП по месяцам</h2>
+        <span class="hint">OTS, млрд · ТВ / нон-ТВ / нон-видео</span></div>
+      <div class="mapwrap chart"><div id="fmpMonths"></div></div>
+      <div class="blegend" id="fmpLegend"></div>
+    </section>
+
+    <section class="map-sec expert-only" style="margin-top:34px">
+      <div class="shead"><span class="no">02·В</span><h2>Вклад строк ФМП по атрибутам</h2>
+        <span class="hint">годовой прогноз, п.п. (с k<sub>год</sub>) · сортировка по суммарному вкладу</span></div>
+      <div class="mapwrap"><div id="fmpTable"></div></div>
+    </section>
+
+    <section class="totals-sec expert-only" style="margin-top:34px">
+      <div class="shead"><span class="no">02·Г</span><h2>Опции со слайда 7 — для сравнения</h2>
+        <span class="hint">модель Q1'26, не пересчитаны: нет состава опций</span></div>
       <div class="scen-total" id="scenTotal"></div>
       <div class="scen-pick-h">Результат на бренд-метрики</div>
       <div class="seg mini" id="scenSeg"></div>
@@ -746,8 +777,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
     <section class="metrics-sec">
       <div class="shead"><span class="no">03·В</span><h2>Прогнозируемые метрики</h2></div>
       <div class="panel">
-        <div class="mlegend">Отметьте атрибуты для прогноза. В обновлённой модели заполнены <b style="color:var(--accent)">все 11 метрик</b> —
-        «Развивает 5G» по-прежнему помечен как <b style="color:var(--accent)">предварительная оценка</b>.</div>
+        <div class="mlegend">Отметьте атрибуты для прогноза. Датасет от 24.09 считает <b style="color:var(--accent)">6 атрибутов</b>, включая новый — «Заботится о моей безопасности».</div>
         <div class="chips" id="chips"></div>
       </div>
     </section>
@@ -763,7 +793,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
         <button data-v="camp">По кампаниям</button>
       </div>
       <div class="seg mini" id="xSeg">
-        <button data-v="ots" class="on">Объём ОТС, млн</button>
+        <button data-v="ots" class="on">Объём OTS, млрд</button>
         <button data-v="rk">Кол-во РК</button>
       </div>
       <button class="tablelink" id="tableBtn">Таблицей</button>
@@ -778,21 +808,18 @@ body:not(.mode-detail) .expert-only{display:none !important;}
     <div class="fcard">
       <h3>Логика расчёта</h3>
       <div class="eq">
-        <span class="hl">прирост за 1 РК</span> <span class="op">=</span> ОБЪЕМ<sub>OTS</sub>(масштаб)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">÷</span> [ стоимость<sub>метрики</sub>(тип) <span class="op">×</span> k<sub>подтип</sub> <span class="op">×</span> k<sub>сложн.</sub> ]<br><br>
-        <span class="hl">годовой прирост</span> <span class="op">=</span> Σ ( кол-во РК <span class="op">×</span> прирост за 1 РК )
+        <span class="hl">прирост за 1 РК</span> <span class="op">=</span> Σ<sub>каналы</sub> [ ОБЪЕМ<sub>OTS</sub> <span class="op">÷</span> стоимость<sub>метрики</sub> <span class="op">×</span> k<sub>сложн.</sub> ]<br><br>
+        <span class="hl">годовой прогноз</span> <span class="op">=</span> Σ ( кол-во РК <span class="op">×</span> прирост за 1 РК ) <span class="op">×</span> k<sub>год</sub>(метрика)
       </div>
     </div>
     <div class="fcard">
       <h3>Коэффициенты модели</h3>
-      <p><b>Масштаб (ОБЪЕМ OTS):</b> макс. охват 3,2 млн · широкий 2,8 млн · селективный 1,25 млн.</p>
-      <p><b>Сложность сообщения (динамический коэф.):</b> простое ×1,0; сложное — понятные продукты (безлимиты, роуминг, 5G) остаются ×1,0 и не удорожают прирост, семейная / РИИЛ / финтех ×1,25, войстех ×1,75. Чем выше коэф., тем дороже пункт прироста и ниже прирост на тот же охват.</p>
-      <p><b>Прирост измеряется в пунктах прироста</b> (отношение объёма OTS к стоимости метрики).</p>
-      <p><b>Новые направления</b> (Безопасность, Дети) и метрика «Развивает 5G» — предварительная оценка по части данных: атрибуты новые, полноты факторов в модели могло не хватать.</p>
-      <p><b>k подтипа</b> и базовые стоимости по типу взяты из исходной модели без изменений.</p>
+      <p><b>Медиа-сплит:</b> объём OTS (в датасете — в тысячах) и стоимость метрики заданы отдельно для ТВ, нон-ТВ и нон-видео по каждому подтипу. Набор каналов в карточке ограничен тем, что есть в датасете.</p>
+      <p><b>Сложность сообщения:</b> простое ×1,0, сложное ×0,75 к приросту. Для нон-видео коэффициент не задан и не применяется.</p>
+      <p><b>Годовой коэффициент</b> применяется к сумме приростов по всем РК: Оператор №1 ×0,175 · Уверенность ×0,065 · Лидер технологий ×0,2 · Продвинутость ×0,13 · Умнее организую жизнь ×0,075 · Безопасность ×0,165.</p>
     </div>
   </div>
-  <div class="src">источник: Данные_для_моделирования_2027.xlsx · вкладки Dataset + DETAILS (raw) · хроно.xlsx</div>
+  <div class="src">источник калькулятора: Dataset_2509.xlsx · лист Dataset upd · хроно — архитектура 30/45/60</div>
   </div><!-- /tab-calculator -->
 
   <!-- ========== TAB: CHRONO ========== -->
@@ -818,7 +845,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
       <p class="step-lead">Куда инвестиции дают отдачу, а где мы переинвестируем — льём в атрибуты, где уже сильны и медиа не двигает. Карта — стратегия по каждому атрибуту, ниже — пере-/недоинвестирование к базе.</p>
       <div class="fwd-bar">
         <label class="fwd-toggle"><input type="checkbox" id="fwdToggle"><span class="track"></span><span class="lbl">Учесть форвардную важность</span></label>
-        <span class="fwd-note">новые/растущие атрибуты ×2 (+100% к важности): продвинутость, «умнее», стабильность (с Q2'25), лидер технологий (Q3'25), финансовые (Q1'26), 5G — состав и величина согласуются с клиентом</span>
+        <span class="fwd-note">новые/растущие атрибуты ×2 (+100% к важности): продвинутость, «умнее» (с Q2'25), лидер технологий (Q3'25) — состав и величина согласуются с клиентом</span>
       </div>
       <div class="brule expert-only" id="bRule"></div>
     </section>
@@ -883,23 +910,76 @@ const BUDGET = {
  grpColor:{poz:"#ff0032",prod:"#2d7ff9",lead:"#ff7a00"}
 };
 
-const MCOLOR = {0:"#1d2023",1:"#ff0032",2:"#8e5bff",3:"#ff7a00",4:"#ff5ba8",5:"#00b7c3",6:"#9aa0aa",7:"#2d7ff9",8:"#0fb5a0",9:"#e3002d",10:"#6e56cf",11:"#19c37d"};
+
+// ====== КАЛЬКУЛЯТОР · датасет Dataset_2509.xlsx (лист «Dataset upd») ======
+// прирост за 1 РК по каналу = ОБЪЕМ OTS ÷ стоимость метрики в OTS (столбцы N–S); сложное сообщение ×0,75 (столбец D)
+// годовой прогноз = Σ приростов по выбранным РК × годовой коэф. метрики (строки 49–54)
+const CALC = {"cx": {"ПРОСТОЕ": 1, "СЛОЖНОЕ": 0.75}, "annual": {"9": 0.175, "11": 0.065, "0": 0.2, "2": 0.13, "3": 0.075, "12": 0.165}, "types": {"ИМИДЖ": {"subtypes": {"ПОЗИЦИОНИРОВАНИЕ": {"ch": {"ТВ": {"ots": 2500000, "lift": {"9": 0.6827708784512213, "11": 0.78547663627944, "0": 1.2291523180341668, "2": 0.8526321890589451, "3": 0.6928712537906255, "12": 1.012386194144479}, "cx": true}}}, "ИМИДЖ": {"ch": {"ТВ": {"ots": 2300000, "lift": {"9": 0.6281492081751235, "11": 0.7226385053770847, "0": 1.1308201325914333, "2": 0.7844216139342295, "3": 0.6374415534873755, "12": 0.9313952986129207}, "cx": true}}}}, "role": "имидж"}, "ТЕЛЕКОМ": {"subtypes": {"ПРОМО": {"ch": {"ТВ": {"ots": 2500000, "lift": {"9": 0.3376710978978682, "11": 0.6270875745356291, "0": 0.4727142830044332, "2": 0.3440618520132937, "3": 0.49360680765354986, "12": 0.4047074725780466}, "cx": true}, "НОН-ТВ": {"ots": 92000, "lift": {"9": 0.011684427960692797, "11": 0.02169910198214033, "0": 0.01635732527936534, "2": 0.011905567129964477, "3": 0.017080268997969997, "12": 0.014004086633208106}, "cx": true}}}, "РОУМИНГ": {"ch": {"ТВ": {"ots": 1800000, "lift": {"9": 0.30571314238348607, "11": 0.36120244293252235, "0": 0.2722834270105535, "2": 0.19817962675965717, "3": 0.2843175212084447, "12": 0.23311150420495486}, "cx": true}, "НОН-ТВ": {"ots": 35000, "lift": {"9": 0.005589531334623438, "11": 0.006604074516303579, "0": 0.00497831638937206, "2": 0.003623433474337015, "3": 0.005198342738512608, "12": 0.0042621133231502935}, "cx": true}}}, "СЕМЕЙНАЯ ГРУППА": {"ch": {"ТВ": {"ots": 2200000, "lift": {"9": 0.29715056615012403, "11": 0.5518370655913536, "0": 0.4159885690439012, "2": 0.30277442977169844, "3": 0.4343739907351239, "12": 0.35614257586868103}, "cx": true}, "НОН-ТВ": {"ots": 26000, "lift": {"9": 0.0033021209454131817, "11": 0.00613235490799618, "0": 0.00462272236155977, "2": 0.003364616797598657, "3": 0.004827032542904564, "12": 0.003957676657210986}, "cx": true}, "НОН-ВИДЕО": {"ots": 7500, "lift": {"9": 0.0008624302365229337, "11": 0.0016016155619896476, "0": 0.0012073378309167282, "2": 0.0008787525679798989, "3": 0.0012606984681962287, "12": 0.0010336447610439301}, "cx": false}}}, "ВЫСОКОДОХОДНЫЕ": {"ch": {"НОН-ТВ": {"ots": 65000, "lift": {"9": 0.008255302363532955, "11": 0.015330887269990452, "0": 0.011556805903899426, "2": 0.008411541993996642, "3": 0.01206758135726141, "12": 0.009894191643027466}, "cx": true}}}, "НЕРЕЗИДЕНТЫ": {"ch": {"НОН-ВИДЕО": {"ots": 15000, "lift": {"9": 0.0017248604730458674, "11": 0.003203231123979295, "0": 0.0024146756618334563, "2": 0.0017575051359597978, "3": 0.0025213969363924575, "12": 0.0020672895220878603}, "cx": false}}}, "КОНВЕРГЕНТ": {"ch": {"НОН-ВИДЕО": {"ots": 65000, "lift": {"9": 0.007474395383198758, "11": 0.013880668203910278, "0": 0.010463594534611645, "2": 0.007615855589159124, "3": 0.010926053391033983, "12": 0.00895825459571406}, "cx": false}}}}, "role": "промо"}, "МОЛОДЕЖКА": {"subtypes": {"РИИЛ": {"ch": {"ТВ": {"ots": 2200000, "lift": {"9": 0.8061243414303445, "11": 0.6843693362014306, "0": 0.6876961008412555, "2": 0.9711255676394478, "3": 0.7054479482087052, "12": 0.5596526192222131}, "cx": true}, "НОН-ТВ": {"ots": 1700000, "lift": {"9": 0.5857253525589544, "11": 0.4972588596144722, "0": 0.49967606784327306, "2": 0.7056143032169935, "3": 0.5125744589766099, "12": 0.40664040379035965}, "cx": true}}}}, "role": "промо"}, "КАЧЕСТВО СВЯЗИ": {"subtypes": {"КАЧЕСТВО СВЯЗИ": {"ch": {"ТВ": {"ots": 2400000, "lift": {"9": 0.7161282644955359, "11": 0.8184141560720053, "0": 1.074569866833462, "2": 0.6649658359190206, "3": 0.537116143567345, "12": 0.7201263775288511}, "cx": true}, "НОН-ТВ": {"ots": 52000, "lift": {"9": 0.014589777328901586, "11": 0.016673661537884882, "0": 0.02189235624220411, "2": 0.01354743829894721, "3": 0.010942739342827253, "12": 0.014671231422789277}, "cx": true}}}}, "role": "промо"}, "ФИНТЕХ": {"subtypes": {"БАНК": {"ch": {"НОН-ТВ": {"ots": 60000, "lift": {"9": 0.0065036415225744534, "11": 0.011710363354412978, "0": 0.009394187105263215, "2": 0.01867013557785703, "3": 0.009813884229060781, "12": 0.01004640997599712}, "cx": true}}}}, "role": "промо"}, "ТЕХНОЛОГИИ": {"subtypes": {"ВОЙСТЕХ": {"ch": {"ТВ": {"ots": 2400000, "lift": {"9": 0.6751238446125676, "11": 0.7766792979531103, "0": 1.215385812072184, "2": 1.3166695236109445, "3": 1.2276289820384227, "12": 1.232801224160819}, "cx": true}, "НОН-ТВ": {"ots": 52000, "lift": {"9": 0.01375438877456947, "11": 0.01582339166725366, "0": 0.02476121841012733, "2": 0.026824685070581177, "3": 0.025010650156454428, "12": 0.025116024939992803}, "cx": true}}}, "ЗАЩИТНИК": {"ch": {"НОН-ТВ": {"ots": 80000, "lift": {"9": 0.021160598114722262, "11": 0.024343679488082557, "0": 0.03809418216942666, "2": 0.041268746262432585, "3": 0.0384779233176222, "12": 0.0386400383692197}, "cx": true}}}}, "role": "имидж"}, "РТК": {"subtypes": {"РТК": {"ch": {"ТВ": {"ots": 680000, "lift": {"9": 0.06532317190663407, "11": 0.1176199634980281, "0": 0.0943560768332875, "2": 0.1875245539962889, "3": 0.09857155323545178, "12": 0.10090706316279296}, "cx": true}, "НОН-ТВ": {"ots": 380000, "lift": {"9": 0.03432477470247628, "11": 0.06180469548162405, "0": 0.049580431944444746, "2": 0.0985368266609121, "3": 0.051795500097820794, "12": 0.053022719317762576}, "cx": true}, "НОН-ВИДЕО": {"ots": 280000, "lift": {"9": 0.02289945851416982, "11": 0.04123243553468235, "0": 0.0330771302730364, "2": 0.06573793983494707, "3": 0.0345548926683897, "12": 0.03537362071128117}, "cx": false}}}}, "role": "промо"}}};
+const OTS_UNIT = 1000;   // в датасете OTS указаны в тысячах
+const CALC_META = [
+ {i:9, name:"Оператор №1", short:"Оператор №1", abbr:"№1"},
+ {i:11,name:"Оператор, с которым чувствуешь себя уверенно", short:"Уверенность", abbr:"УВ"},
+ {i:0, name:"Лидер технологий", short:"Лидер технологий", abbr:"ЛТ"},
+ {i:2, name:"Помогает чувствовать себя продвинутым", short:"Чувствую себя продвинутым", abbr:"ПР"},
+ {i:3, name:"Помогает умнее организовать свою жизнь", short:"Умнее организую жизнь", abbr:"ОЖ"},
+ {i:12,name:"Заботится о моей безопасности", short:"Заботится о безопасности", abbr:"БЗ"}
+];
+const CMBI = Object.fromEntries(CALC_META.map(m=>[m.i,m]));
+const CTYPES = Object.keys(CALC.types);
+const CHANNELS = ['ТВ','НОН-ТВ','НОН-ВИДЕО'];
+const CHSHORT = {'ТВ':'ТВ','НОН-ТВ':'Нон-ТВ','НОН-ВИДЕО':'Нон-видео'};
+const chAvail = (t,s) => Object.keys(CALC.types[t].subtypes[s].ch);
+const hasVideo = c => c.ch.some(k=>k!=='НОН-ВИДЕО');
+const cxApplies = c => c.ch.some(k=>CALC.types[c.type].subtypes[c.subtype].ch[k].cx);
+
+// «Безопасность»: позиция = МТС ÷ среднее (Билайн, Мегафон, Т2) − 1, BHT март 2026 (Dataset_2509, лист «Атрибут безопасность»)
+// МТС 32.8 · Билайн 24.3 · Мегафон 24.4 · Т2 25.4. Важность при выборе — нет данных.
+BUDGET.pos[12] = 0.3292;
+BUDGET.comp12 = {"МТС": 32.8, "Билайн": 24.3, "Мегафон": 24.4, "Т2": 25.4};
+const MCOLOR = {12:"#5b6cff",0:"#1d2023",1:"#ff0032",2:"#8e5bff",3:"#ff7a00",4:"#ff5ba8",5:"#00b7c3",6:"#9aa0aa",7:"#2d7ff9",8:"#0fb5a0",9:"#e3002d",10:"#6e56cf",11:"#19c37d"};
 const CCOLOR = ["#ff0032","#1d2023","#2d7ff9","#19c37d","#ff7a00","#8e5bff","#00b7c3","#ff5ba8"];
 const TYPES = Object.keys(MODEL.types);
 const SCALES = Object.keys(MODEL.scales);
-const META = MODEL.metrics;
+// Медиачувствительность = годовой прирост (п.п., с k_год) на 1 млрд OTS в среднем по портфелю РК датасета
+// (Σ приростов по всем строкам тип×подтип×канал ÷ Σ OTS). Индекс 1,0 = среднее по всем 6 атрибутам датасета.
+const MS_RAW = (()=>{ const ids=CALC_META.map(m=>m.i), num={}; let den=0; ids.forEach(i=>num[i]=0);
+  Object.values(CALC.types).forEach(T=>Object.values(T.subtypes).forEach(S=>Object.values(S.ch).forEach(r=>{
+    den+=r.ots*OTS_UNIT; ids.forEach(i=>num[i]+=r.lift[i]); })));
+  const o={}; ids.forEach(i=>o[i]=num[i]/den*1e9*CALC.annual[i]); return o; })();
+const MS_MEAN = Object.values(MS_RAW).reduce((a,v)=>a+v,0)/Object.keys(MS_RAW).length;
+const MS_THR = 1.0;   // порог «медиа двигает атрибут»: не ниже среднего
+const IDX_RANGE = () => { const v=META.map(m=>m.idx); return [Math.min(0.6, Math.floor(Math.min(...v)*10)/10-0.1), Math.max(1.4, Math.ceil(Math.max(...v)*10)/10+0.1)]; };
+const META = [   // 6 атрибутов; у «Безопасности» нет важности при выборе → в бюджет (04) не входит
+ {i:0, name:"Лидер технологий", short:"Лидер технологий", abbr:"ЛТ", grp:"poz", diff:true},
+ {i:2, name:"Помогает чувствовать себя продвинутым", short:"Чувствую себя продвинутым", abbr:"ПР", grp:"poz", diff:true},
+ {i:3, name:"Помогает умнее организовать свою жизнь", short:"Умнее организую жизнь", abbr:"ОЖ", grp:"poz", diff:true},
+ {i:9, name:"Оператор №1", short:"Оператор №1", abbr:"№1", grp:"lead"},
+ {i:11,name:"Оператор, с которым чувствуешь себя уверенно", short:"Уверенность", abbr:"УВ", grp:"lead"},
+ {i:12,name:"Заботится о моей безопасности", short:"Заботится о безопасности", abbr:"БЗ", grp:"prod", diff:true}
+].map(m=>({...m, hasData:true, ms:MS_RAW[m.i], idx:MS_RAW[m.i]/MS_MEAN}));
+const fmtIdx = v => '×'+v.toFixed(2).replace('.',',');
+const msCls = idx => idx>=1.1 ? 3 : (idx>=MS_THR ? 2 : 1);
+const MSTXT = {1:'ниже средней',2:'выше средней',3:'высокая'};
+const GRPS_USED = [...new Set(META.map(m=>m.grp))];
+const hasImp = m => BUDGET.imp[m.i]!=null;
+const BUDGET_META = META.filter(hasImp);                 // бюджет считается только там, где известна важность
+const GRPS_BUDGET = [...new Set(BUDGET_META.map(m=>m.grp))];
+const fmtImp = i => BUDGET.imp[i]!=null ? BUDGET.imp[i].toFixed(1)+'%' : 'н/д';
 const MBI = Object.fromEntries(META.map(m=>[m.i,m]));   // доступ по i (массив больше не сплошной)
 
 const nf = new Intl.NumberFormat('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt = x => nf.format(x);
 const fmtOts = ots => { const m=ots/1e6; return (m>=10? m.toFixed(1): m.toFixed(2)).replace('.',','); };
+const otsParts = ots => ots>=1e9 ? {v:(ots/1e9>=10?(ots/1e9).toFixed(1):(ots/1e9).toFixed(2)).replace('.',','), u:'млрд'}
+                                  : {v:Math.round(ots/1e6).toLocaleString('ru-RU'), u:'млн'};
+const fmtOtsU = ots => { const p=otsParts(ots); return p.v+' '+p.u; };
 
 let uid = 0;
 const state = {
   tab: 'overview',              // overview | priorities | scenarios | budget | chrono
   mode: 'brief',                // 'brief' (VP) | 'detail' (expert)
   campaigns: [],
-  selected: new Set([8,9,1]),   // default: Лучшее качество связи, Оператор №1, Задаёт тренды
+  selected: new Set([9,0,12]),  // калькулятор: Оператор №1, Лидер технологий, Безопасность
   mapMode: 'attr',              // 'attr' = по атрибутам | 'camp' = по кампаниям
   xUnit: 'ots',                 // 'ots' = объём ОТС, млн | 'rk' = кол-во РК
   mapView: 'bubbles',           // 'bubbles' | 'table'
@@ -911,20 +991,21 @@ const state = {
 // seed two example campaigns (role/msgs/tgt drive chronometer)
 function seed(){
   state.campaigns = [
-    {id:uid++, type:"ТЕЛЕКОМ ПРОМО", subtype:"БЕЗЛИМИТЫ", scale:"МАКСИМАЛЬНЫЙ ОХВАТ", cx:"ПРОСТОЕ", n:2, role:"промо", msgs:1, tgt:9},
-    {id:uid++, type:"ТЕХНОЛОГИИ", subtype:"5G", scale:"ШИРОКИЙ ОХВАТ", cx:"СЛОЖНОЕ", n:3, role:"имидж", msgs:2, tgt:1},
+    {id:uid++, type:"ТЕЛЕКОМ", subtype:"ПРОМО", ch:["ТВ","НОН-ТВ"], cx:"ПРОСТОЕ", n:2, role:"промо", msgs:1, tgt:9},
+    {id:uid++, type:"ТЕХНОЛОГИИ", subtype:"ВОЙСТЕХ", ch:["ТВ","НОН-ТВ"], cx:"СЛОЖНОЕ", n:1, role:"имидж", msgs:2, tgt:0},
   ];
 }
 
 // --- chrono model (обновлённый датасет: реко хроно берётся напрямую из столбца E по типу/подтипу) ---
 // архитектура: промо 30 · имидж-технологии 45 · имидж-позиционирование 60
 const REKO_CHRONO = {
- 'ТЕЛЕКОМ ПРОМО':{'БЕЗЛИМИТЫ':'30','РОУМИНГ':'30','СЕМЕЙНАЯ ГРУППА':'45'},
+ 'ИМИДЖ':{'ПОЗИЦИОНИРОВАНИЕ':'60','ИМИДЖ':'45'},
+ 'ТЕЛЕКОМ':{'ПРОМО':'30','РОУМИНГ':'30','СЕМЕЙНАЯ ГРУППА':'45','ВЫСОКОДОХОДНЫЕ':'30','НЕРЕЗИДЕНТЫ':'30','КОНВЕРГЕНТ':'30'},
  'МОЛОДЕЖКА':{'РИИЛ':'30'},
- 'ФИНТЕХ':{'дебет карта с кэшбеком':'45'},
- 'ТЕХНОЛОГИИ':{'ВОЙСТЕХ':'60','5G':'45'},
- 'БЕЗОПАСНОСТЬ':{'ЗАЩИТНИК':'45'},
- 'ДЕТИ':{'ДЕТСКИЙ':'30'}
+ 'КАЧЕСТВО СВЯЗИ':{'КАЧЕСТВО СВЯЗИ':'30'},
+ 'ФИНТЕХ':{'БАНК':'45'},
+ 'ТЕХНОЛОГИИ':{'ВОЙСТЕХ':'60','ЗАЩИТНИК':'45'},
+ 'РТК':{'РТК':'30'}
 };
 // коэф. сложности при СЛОЖНОМ сообщении (столбец F); ПРОСТОЕ всегда ×1.
 // понятные/осязаемые продукты не удорожают прирост (остаются ×1)
@@ -934,22 +1015,23 @@ const SLOZH_SUB = {
  'ВОЙСТЕХ':1.75,'ЗАЩИТНИК':1.75
 };
 function kSlozh(subtype, cx){ return (cx==='ПРОСТОЕ'||cx==='простое') ? 1 : (SLOZH_SUB[subtype] ?? 1.75); }
-function rekoChrono(type, subtype){ const t=REKO_CHRONO[type]; return (t&&t[subtype]) || (MODEL.types[type] && MODEL.types[type].role==='имидж' ? '45' : '30'); }
-function campChrono(c){ return rekoChrono(c.type, c.subtype); }   // строка секунд ('30' | '45' | '45–60')
+function rekoChrono(type, subtype){ const t=REKO_CHRONO[type]; return (t&&t[subtype]) || (CALC.types[type] && CALC.types[type].role==='имидж' ? '45' : '30'); }
+function campChrono(c){ return hasVideo(c) ? rekoChrono(c.type, c.subtype) : '—'; }   // строка секунд ('30' | '45' | '45–60')
+function msBandTxt(i){ const m=MBI[i]; return m&&m.ms!=null ? BANDNAME[msBand(m.ms)] : 'н/д'; }
 function msBand(ms){ return ms<0.012 ? 1 : (ms<0.019 ? 2 : 3); }   // 1 низк · 2 сред · 3 выс
 const BANDNAME={1:'низкая',2:'средняя',3:'высокая'};
 
 // --- model math ---
-function perCampaign(c, mi){
-  const base = MODEL.types[c.type].base[mi];
-  if(base==null) return null;
-  const kpt = MODEL.types[c.type].subtypes[c.subtype];
-  const ksl = kSlozh(c.subtype, c.cx);
-  const vol = MODEL.scales[c.scale];
-  return vol/(base*kpt*ksl);
+function perCampaign(c, mi){          // прирост за 1 РК (Σ по выбранным каналам), до годового коэф.
+  const S = CALC.types[c.type].subtypes[c.subtype]; let v=0;
+  c.ch.forEach(k=>{ const r=S.ch[k]; if(!r) return; const kcx = r.cx ? (CALC.cx[c.cx]??1) : 1; v += r.lift[mi]*kcx; });
+  return v;
 }
-const contrib = (c, mi) => { const p=perCampaign(c,mi); return p==null? null : p*c.n; };
-const reachOf = c => MODEL.scales[c.scale]*c.n;
+const rawContrib = (c, mi) => perCampaign(c,mi)*c.n;                   // Σ приростов
+const contrib = (c, mi) => rawContrib(c,mi)*(CALC.annual[mi]??1);       // вклад в годовой прогноз
+const reachOf = c => { const S=CALC.types[c.type].subtypes[c.subtype]; return c.ch.reduce((a,k)=>a+(S.ch[k]?S.ch[k].ots:0),0)*OTS_UNIT*c.n; };
+const chLabel = c => c.ch.map(k=>CHSHORT[k]).join(' + ');
+const cxLabel = c => cxApplies(c) ? (c.cx==='ПРОСТОЕ'?'простое':'сложное') : 'без коэф. сложности';
 
 // ============ CAMPAIGN CARDS ============
 const clist = document.getElementById('clist');
@@ -958,37 +1040,27 @@ function buildCard(c, idx){
   const col = CCOLOR[idx % CCOLOR.length];
   const el = document.createElement('div');
   el.className='ccard'; el.style.setProperty('--c',col);
-  const subOpts = Object.keys(MODEL.types[c.type].subtypes);
+  const subOpts = Object.keys(CALC.types[c.type].subtypes);
+  const avail = chAvail(c.type, c.subtype);
   const ch = campChrono(c);
-  const tentType = MODEL.types[c.type].tentative;
+  const tentType = false;
 
   el.innerHTML = `
     <div class="edge"></div>
     <div class="chead">
       <span class="ctag">К${idx+1}</span>
       ${tentType?`<span class="tent" title="Новое направление — оценка по части данных">оценка</span>`:''}
-      <span class="creach">охват ≈ <b>${fmtOts(reachOf(c))} млн</b> OTS</span>
+      <span class="creach">объём ≈ <b>${fmtOtsU(reachOf(c))}</b> OTS</span>
       <button class="cdel" title="Удалить кампанию" aria-label="Удалить">×</button>
     </div>
     <div class="fgrid">
       <div class="field full">
         <label>Тип РК · продукт</label>
-        <div class="sel"><select data-f="type">${TYPES.map(t=>`<option ${t===c.type?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="sel"><select data-f="type">${CTYPES.map(t=>`<option ${t===c.type?'selected':''}>${t}</option>`).join('')}</select></div>
       </div>
       <div class="field">
         <label>Подтип</label>
         <div class="sel"><select data-f="subtype">${subOpts.map(s=>`<option ${s===c.subtype?'selected':''}>${s}</option>`).join('')}</select></div>
-      </div>
-      <div class="field">
-        <label>Масштаб РК</label>
-        <div class="sel"><select data-f="scale">${SCALES.map(s=>`<option value="${s}" ${s===c.scale?'selected':''}>${MODEL.scaleShort[s]}</option>`).join('')}</select></div>
-      </div>
-      <div class="field">
-        <label>Сложность сообщения</label>
-        <div class="seg" data-f="cx">
-          <button data-v="ПРОСТОЕ" class="${c.cx==='ПРОСТОЕ'?'on':''}">Простое</button>
-          <button data-v="СЛОЖНОЕ" class="${c.cx==='СЛОЖНОЕ'?'on':''}">Сложное</button>
-        </div>
       </div>
       <div class="field">
         <label>Кол-во РК</label>
@@ -996,6 +1068,17 @@ function buildCard(c, idx){
           <button data-s="-1" aria-label="минус">–</button>
           <input type="number" min="1" max="99" value="${c.n}" data-f="n" inputmode="numeric">
           <button data-s="1" aria-label="плюс">+</button>
+        </div>
+      </div>
+      <div class="field full">
+        <label>Медиа-сплит · каналы РК</label>
+        <div class="seg multi" data-f="ch">${CHANNELS.map(k=>`<button data-v="${k}" class="${c.ch.includes(k)?'on':''}${avail.includes(k)?'':' dis'}" ${avail.includes(k)?'':'disabled title="Нет в датасете для этого подтипа"'}>${CHSHORT[k]}</button>`).join('')}</div>
+      </div>
+      <div class="field full">
+        <label>Сложность сообщения</label>
+        <div class="seg${cxApplies(c)?'':' off'}" data-f="cx">
+          <button data-v="ПРОСТОЕ" class="${c.cx==='ПРОСТОЕ'?'on':''}">Простое</button>
+          <button data-v="СЛОЖНОЕ" class="${c.cx==='СЛОЖНОЕ'?'on':''}">Сложное</button>
         </div>
       </div>
     </div>
@@ -1017,15 +1100,11 @@ function buildCard(c, idx){
           <button data-v="3" class="${c.msgs===3?'on':''}">3</button>
         </div>
       </div>
-      <div class="field full">
-        <label>Целевая метрика ролика</label>
-        <div class="sel"><select data-f="tgt">${META.map(m=>`<option value="${m.i}" ${m.i===c.tgt?'selected':''}>${m.short}${m.tentative?' · оценка':''}</option>`).join('')}</select></div>
-      </div>
       <div class="field full chrono-wrap">
         <div class="chrono-badge" data-sec="${ch}">
           <span class="cb-lab">Реко хронометраж</span>
-          <span class="cb-val">${ch}<small>сек</small></span>
-          <span class="cb-meta">${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · медиа: ${BANDNAME[msBand(MBI[c.tgt].ms)]}</span>
+          <span class="cb-val">${ch}<small>${ch==='—'?'не видео':'сек'}</small></span>
+          <span class="cb-meta">${c.role} · ${cxLabel(c)}</span>
         </div>
       </div>
     </div>`;
@@ -1033,13 +1112,19 @@ function buildCard(c, idx){
   // type change -> repopulate subtype + reset role default by product
   el.querySelector('[data-f="type"]').addEventListener('change', e=>{
     c.type = e.target.value;
-    const subs = Object.keys(MODEL.types[c.type].subtypes);
-    c.subtype = subs[0];
-    c.role = MODEL.types[c.type].role || c.role;
+    const subs = Object.keys(CALC.types[c.type].subtypes);
+    c.subtype = subs[0]; c.ch = chAvail(c.type,c.subtype);
+    c.role = CALC.types[c.type].role || c.role;
     renderCards(); recalc();
   });
-  el.querySelector('[data-f="subtype"]').addEventListener('change', e=>{ c.subtype=e.target.value; recalc(); });
-  el.querySelector('[data-f="scale"]').addEventListener('change', e=>{ c.scale=e.target.value; sync(el,c); recalc(); });
+  el.querySelector('[data-f="subtype"]').addEventListener('change', e=>{ c.subtype=e.target.value;
+    const av=chAvail(c.type,c.subtype); const keep=c.ch.filter(k=>av.includes(k)); c.ch = keep.length? keep : av;
+    renderCards(); recalc(); });
+  el.querySelectorAll('[data-f="ch"] button').forEach(b=>b.addEventListener('click',()=>{
+    if(b.disabled) return; const k=b.dataset.v;
+    if(c.ch.includes(k)){ if(c.ch.length===1) return; c.ch=c.ch.filter(x=>x!==k); } else c.ch=CHANNELS.filter(x=>x===k||c.ch.includes(x));
+    renderCards(); recalc();
+  }));
   el.querySelectorAll('[data-f="cx"] button').forEach(b=>b.addEventListener('click',()=>{
     c.cx=b.dataset.v;
     el.querySelectorAll('[data-f="cx"] button').forEach(x=>x.classList.toggle('on',x===b));
@@ -1055,7 +1140,6 @@ function buildCard(c, idx){
     el.querySelectorAll('[data-f="msgs"] button').forEach(x=>x.classList.toggle('on',x===b));
     syncChrono(el,c);
   }));
-  el.querySelector('[data-f="tgt"]').addEventListener('change', e=>{ c.tgt=parseInt(e.target.value,10); syncChrono(el,c); });
   const inp = el.querySelector('[data-f="n"]');
   inp.addEventListener('input', e=>{ let v=parseInt(e.target.value||'0',10); if(isNaN(v))v=0; c.n=v; sync(el,c); recalc(); });
   inp.addEventListener('blur', e=>{ let v=parseInt(e.target.value||'1',10); if(isNaN(v)||v<1)v=1; if(v>99)v=99; c.n=v; e.target.value=v; sync(el,c); recalc(); });
@@ -1067,11 +1151,11 @@ function buildCard(c, idx){
   });
   return el;
 }
-function sync(el,c){ el.querySelector('.creach b').textContent = fmtOts(reachOf(c))+' млн'; }
+function sync(el,c){ el.querySelector('.creach b').textContent = fmtOtsU(reachOf(c)); }
 function syncChrono(el,c){ const ch=campChrono(c); const b=el.querySelector('.chrono-badge');
   b.dataset.sec=ch;
   b.querySelector('.cb-val').innerHTML = ch+'<small>сек</small>';
-  b.querySelector('.cb-meta').textContent = `${c.role} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · медиа: ${BANDNAME[msBand(MBI[c.tgt].ms)]}`;
+  b.querySelector('.cb-meta').textContent = `${c.role} · ${cxLabel(c)}`;
 }
 
 function renderCards(){
@@ -1080,9 +1164,9 @@ function renderCards(){
 }
 
 document.getElementById('addBtn').addEventListener('click',()=>{
-  const t=TYPES[0];
-  state.campaigns.push({id:uid++, type:t, subtype:Object.keys(MODEL.types[t].subtypes)[0],
-    scale:SCALES[0], cx:"ПРОСТОЕ", n:1, role:MODEL.types[t].role||"промо", msgs:1, tgt:9});
+  const t=CTYPES[0], s=Object.keys(CALC.types[t].subtypes)[0];
+  state.campaigns.push({id:uid++, type:t, subtype:s, ch:chAvail(t,s),
+    cx:"ПРОСТОЕ", n:1, role:CALC.types[t].role||"промо", msgs:1, tgt:9});
   renderCards(); recalc();
 });
 document.getElementById('clrBtn').addEventListener('click',()=>{ state.campaigns=[]; renderCards(); recalc(); });
@@ -1091,7 +1175,7 @@ document.getElementById('clrBtn').addEventListener('click',()=>{ state.campaigns
 const chipsEl = document.getElementById('chips');
 function renderChips(){
   chipsEl.innerHTML='';
-  META.forEach(m=>{
+  CALC_META.map(m=>({...m,hasData:true})).forEach(m=>{
     const b=document.createElement('button');
     b.className='chip'+(m.hasData?'':' dis')+(m.tentative?' tent':'')+(state.selected.has(m.i)?' on':'');
     b.style.setProperty('--c',MCOLOR[m.i]);
@@ -1140,7 +1224,7 @@ mapEl.addEventListener('mouseover', e=>{
     + (d.sub?`<div class="sub2">${d.sub}</div>`:'')
     + `<div class="big2" style="color:${d.col}">${d.val}</div>`
     + (d.meta?`<div class="tr2"><span>параметры</span><b>${d.meta}</b></div>`:'')
-    + `<div class="tr2"><span>${state.xUnit==='ots'?'объём ОТС':'кол-во РК'}</span><b>${d.x}</b></div>`;
+    + `<div class="tr2"><span>${state.xUnit==='ots'?'объём OTS':'кол-во РК'}</span><b>${d.x}</b></div>`;
   btip.classList.add('on');
 });
 mapEl.addEventListener('mousemove', e=>{
@@ -1170,7 +1254,7 @@ function wireTip(host){
 }
 wireTip(document.getElementById('budgetMap'));
 
-function selectedMetrics(){ return META.filter(m=>m.hasData && state.selected.has(m.i)); }
+function selectedMetrics(){ return CALC_META.filter(m=>state.selected.has(m.i)); }
 
 function recalc(){
   const cs=state.campaigns, sel=selectedMetrics();
@@ -1178,8 +1262,8 @@ function recalc(){
   // header meta
   document.getElementById('mCamp').textContent = cs.length;
   const ots=cs.reduce((a,c)=>a+reachOf(c),0);
-  document.getElementById('mOts').innerHTML = fmtOts(ots)+'<small>млн</small>';
-  document.getElementById('mMet').innerHTML = sel.length+'<small>/11</small>';
+  { const p=otsParts(ots); document.getElementById('mOts').innerHTML = p.v+'<small>'+p.u+'</small>'; }
+  document.getElementById('mMet').innerHTML = sel.length+'<small>/'+CALC_META.length+'</small>';
   document.getElementById('cCount').textContent = cs.length? cs.length+' '+plural(cs.length,'кампания','кампании','кампаний') : '';
 
   // ---- TOTALS ----
@@ -1189,6 +1273,7 @@ function recalc(){
     totalsEl.innerHTML = sel.map(m=>{
       const parts = cs.map((c,i)=>({i, v:contrib(c,m.i)||0, col:CCOLOR[i%CCOLOR.length], c})).filter(p=>p.v>0);
       const tot = parts.reduce((a,p)=>a+p.v,0);
+      const raw = cs.reduce((a,c)=>a+rawContrib(c,m.i),0), ky=CALC.annual[m.i];
       parts.sort((a,b)=>b.v-a.v);
       const seg = parts.map((p,k)=>{
         const op=(1-0.62*(k/Math.max(1,parts.length-1))).toFixed(2);
@@ -1198,7 +1283,7 @@ function recalc(){
         <div class="topbar"></div>
         <div class="mname"><span class="sw"></span>${m.name}</div>
         <div class="big">+${fmt(tot)}</div>
-        <div class="cap">единиц прироста · год</div>
+        <div class="cap">прогноз на год · Σ ${fmt(raw)} × k<sub>год</sub> ${String(ky).replace('.',',')}</div>
         <div class="stackbar">${seg}</div>
         <div class="froml">из ${cs.length} ${plural(cs.length,'кампании','кампаний','кампаний')}</div>
       </div>`;
@@ -1245,7 +1330,7 @@ function renderMatrix(cs,sel){
     const col=CCOLOR[i%CCOLOR.length];
     html += `<div class="mcell rowh" style="--c:${col}">
       <div class="rt"><span class="rtag">К${i+1}</span><span class="rname">${c.type}</span></div>
-      <div class="rmeta">${c.subtype} · <b>${MODEL.scaleShort[c.scale]}</b> · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · <b>×${c.n}</b></div>
+      <div class="rmeta">${c.subtype} · <b>${chLabel(c)}</b> · ${cxLabel(c)} · <b>×${c.n}</b></div>
     </div>`;
     sel.forEach((m,j)=>{
       const v=contrib(c,m.i);
@@ -1292,15 +1377,15 @@ function renderBubbles(cs,sel){
   // build points
   let pts=[], guideX=0;
   if(mode==='attr'){
-    guideX = unit==='ots' ? cs.reduce((a,c)=>a+reachOf(c),0)/1e6 : cs.reduce((a,c)=>a+c.n,0);
+    guideX = unit==='ots' ? cs.reduce((a,c)=>a+reachOf(c),0)/1e9 : cs.reduce((a,c)=>a+c.n,0);
     sel.forEach(m=>{ const v=cs.reduce((a,c)=>a+(contrib(c,m.i)||0),0);
-      if(v>0) pts.push({x:guideX, v, mi:m.i, name:m.short, full:m.name, abbr:m.abbr, sub:'вклад всех кампаний за год'}); });
+      if(v>0) pts.push({x:guideX, v, mi:m.i, name:m.short, full:m.name, abbr:m.abbr, sub:'годовой прогноз по всем кампаниям'}); });
   } else {
-    cs.forEach((c,ci)=>{ const cx = unit==='ots' ? reachOf(c)/1e6 : c.n;
+    cs.forEach((c,ci)=>{ const cx = unit==='ots' ? reachOf(c)/1e9 : c.n;
       sel.forEach(m=>{ const v=contrib(c,m.i);
         if(v&&v>0) pts.push({x:cx, v, mi:m.i, name:m.short, full:m.name, abbr:m.abbr, ci,
           sub:`К${ci+1} · ${c.type} · ${c.subtype}`,
-          meta:`${MODEL.scaleShort[c.scale]} · ${c.cx==='ПРОСТОЕ'?'простое':'сложное'} · ×${c.n}`}); }); });
+          meta:`${chLabel(c)} · ${cxLabel(c)} · ×${c.n}`}); }); });
   }
 
   // scales
@@ -1349,14 +1434,14 @@ function renderBubbles(cs,sel){
     s+=`<line class="gridline" x1="${x.toFixed(1)}" y1="${y0}" x2="${x.toFixed(1)}" y2="${y1}"/>`;
     s+=`<text class="axislab" x="${x.toFixed(1)}" y="${y1+21}" text-anchor="middle">${fmtX(t)}</text>`; });
   // axis titles
-  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-9}" text-anchor="middle">${unit==='ots'?'ОБЪЁМ ОТС, МЛН':'КОЛИЧЕСТВО РК'}</text>`;
+  s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-9}" text-anchor="middle">${unit==='ots'?'ОБЪЁМ OTS, МЛРД':'КОЛИЧЕСТВО РК'}</text>`;
   s+=`<text class="axistitle" transform="translate(15,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">ГОДОВОЙ ПРИРОСТ</text>`;
   // guides
   if(mode==='attr'){ const gx=xpos(guideX);
     s+=`<line class="guideline" x1="${gx.toFixed(1)}" y1="${y0}" x2="${gx.toFixed(1)}" y2="${y1}"/>`;
-    s+=`<text class="guidelab" x="${gx.toFixed(1)}" y="${(y0-9)}" text-anchor="middle">план: ${fmtX(guideX)} ${unit==='ots'?'млн ОТС':'РК'}</text>`;
+    s+=`<text class="guidelab" x="${gx.toFixed(1)}" y="${(y0-9)}" text-anchor="middle">план: ${fmtX(guideX)} ${unit==='ots'?'млрд OTS':'РК'}</text>`;
   } else {
-    cs.forEach((c,ci)=>{ const xv= unit==='ots'? reachOf(c)/1e6 : c.n; const gx=xpos(xv);
+    cs.forEach((c,ci)=>{ const xv= unit==='ots'? reachOf(c)/1e9 : c.n; const gx=xpos(xv);
       s+=`<line x1="${gx.toFixed(1)}" y1="${y0}" x2="${gx.toFixed(1)}" y2="${y1}" stroke="rgba(0,0,0,.11)" stroke-dasharray="3 4"/>`;
       s+=`<text class="guidelab" x="${gx.toFixed(1)}" y="${(y0-9)}" text-anchor="middle" style="fill:var(--muted)">К${ci+1}</text>`; });
   }
@@ -1376,7 +1461,7 @@ function renderBubbles(cs,sel){
   }
   // bubbles
   pts.forEach(p=>{ const col=MCOLOR[p.mi];
-    const dx=fmtX(p.x)+(unit==='ots'?' млн ОТС':' РК');
+    const dx=fmtX(p.x)+(unit==='ots'?' млрд OTS':' РК');
     s+=`<g class="bub" data-name="${esc(p.full)}" data-sub="${esc(p.sub||'')}" data-meta="${esc(p.meta||'')}" data-val="+${esc(fmt(p.v))}" data-x="${esc(dx)}" data-col="${col}">`;
     s+=`<circle cx="${p.px.toFixed(1)}" cy="${p.py.toFixed(1)}" r="${p.r.toFixed(1)}" fill="${col}" fill-opacity="0.8" stroke="${col}"/>`;
     if(p.r>=15) s+=`<text class="bin" x="${p.px.toFixed(1)}" y="${p.py.toFixed(1)}" style="font-size:${Math.min(15,p.r*0.6).toFixed(0)}px">${p.abbr}</text>`;
@@ -1395,11 +1480,69 @@ const SCENARIOS=[
  {id:5,name:'Опция 5',recipe:'Войстех + НГ промо',rec:true,kpi:{0:1.23,1:1.28,2:1.39,3:1.58,5:0.94,6:0.63,7:0.70,8:0.82,9:0.91,10:1.26,11:0.93}},
  {id:6,name:'Опция 6',recipe:'Войстех + Телеком с финтехом',rec:true,kpi:{0:1.16,1:1.32,2:1.48,3:1.55,5:0.95,6:0.78,7:0.65,8:0.78,9:0.76,10:1.26,11:0.91}},
 ];
-const SCEN_ATTRS=[0,1,2,3,5,6,7,8,9,10,11];
+const SCEN_ATTRS=[0,2,3,9,11];   // опции слайда 7 посчитаны только по этим 5 атрибутам
 const SCEN_BASE={0:34.9,1:36.6,2:28.1,3:27.0,5:32.5,6:40.4,7:34.7,8:28.7,9:26.8,10:29.1,11:29.9}; // KPI Q1'2026, %
 function scenTotal(s){ return SCEN_ATTRS.reduce((a,i)=>a+(s.kpi[i]||0),0); }
 function scenLeader(i){ let best=SCENARIOS[0]; SCENARIOS.forEach(s=>{ if((s.kpi[i]||0)>(best.kpi[i]||0)) best=s; }); return best.id; }
 let scenSel=5;
+
+// ====== ФМП 2027 (лист «ФМП 2027»: OTS по строкам плана и месяцам, в тысячах) ======
+const FMP = [{"t": "ИМИДЖ", "s": "ПОЗИЦИОНИРОВАНИЕ", "ch": "ТВ", "m": [0, 744488.437, 1707276.873, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"t": "ИМИДЖ", "s": "ИМИДЖ", "ch": "ТВ", "m": [0, 0, 0, 0, 709238.563, 1636777.127, 0, 0, 0, 354619.282, 1991396.408, 0]}, {"t": "КАЧЕСТВО СВЯЗИ", "s": "КАЧЕСТВО СВЯЗИ", "ch": "ТВ", "m": [737438.46, 1693176.92, 0, 0, 0, 1693176.92, 737438.46, 0, 0, 0, 0, 0]}, {"t": "ТЕЛЕКОМ", "s": "ПРОМО", "ch": "ТВ", "m": [933908.082, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2413011.279]}, {"t": "ТЕЛЕКОМ", "s": "СЕМЕЙНАЯ ГРУППА", "ch": "ТВ", "m": [0, 0, 0, 538427.897, 1581855.793, 0, 0, 1581855.793, 538427.897, 0, 0, 0]}, {"t": "ТЕХНОЛОГИИ", "s": "ВОЙСТЕХ", "ch": "ТВ", "m": [0, 0, 0, 0, 0, 0, 1173007.845, 1173007.845, 0, 0, 0, 0]}, {"t": "МОЛОДЕЖКА", "s": "РИИЛ", "ch": "ТВ", "m": [0, 0, 931929.853, 1251524.707, 0, 0, 0, 0, 1091727.28, 1091727.28, 0, 0]}, {"t": "ТЕЛЕКОМ", "s": "РОУМИНГ", "ch": "ТВ", "m": [0, 0, 0, 0, 204259.4, 1572432.6, 1555195.6, 204259.4, 0, 0, 0, 0]}, {"t": "РТК", "s": "РТК", "ch": "ТВ", "m": [0, 337442.905, 337442.905, 0, 0, 0, 337442.905, 337442.905, 0, 0, 0, 0]}, {"t": "МОЛОДЕЖКА", "s": "РИИЛ", "ch": "НОН-ТВ", "m": [0, 0, 0, 0, 0, 0, 1014324.537, 760743.403, 0, 0, 0, 0]}, {"t": "КАЧЕСТВО СВЯЗИ", "s": "КАЧЕСТВО СВЯЗИ", "ch": "НОН-ТВ", "m": [52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348]}, {"t": "ТЕХНОЛОГИИ", "s": "ЗАЩИТНИК", "ch": "НОН-ТВ", "m": [0, 0, 0, 0, 0, 0, 0, 0, 39631.761, 39631.761, 0, 0]}, {"t": "ТЕЛЕКОМ", "s": "ВЫСОКОДОХОДНЫЕ", "ch": "НОН-ТВ", "m": [0, 0, 0, 32412.5, 32412.5, 0, 0, 0, 0, 0, 0, 0]}, {"t": "ТЕХНОЛОГИИ", "s": "ВОЙСТЕХ", "ch": "НОН-ТВ", "m": [52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348, 52842.348]}, {"t": "ТЕЛЕКОМ", "s": "СЕМЕЙНАЯ ГРУППА", "ch": "НОН-ТВ", "m": [25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950]}, {"t": "ТЕЛЕКОМ", "s": "РОУМИНГ", "ch": "НОН-ТВ", "m": [6813.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3406.7, 28851.8]}, {"t": "ТЕЛЕКОМ", "s": "ПРОМО", "ch": "НОН-ТВ", "m": [0, 0, 293920, 0, 0, 293920, 0, 0, 0, 293920, 0, 0]}, {"t": "ФИНТЕХ", "s": "БАНК", "ch": "НОН-ТВ", "m": [23675.556, 87351.113, 134702.226, 0, 0, 0, 35513.335, 112188.891, 44837.778, 0, 0, 0]}, {"t": "РТК", "s": "РТК", "ch": "НОН-ТВ", "m": [0, 0, 381800, 0, 381800, 0, 0, 0, 0, 0, 219800.0, 162000]}, {"t": "ТЕЛЕКОМ", "s": "НЕРЕЗИДЕНТЫ", "ch": "НОН-ВИДЕО", "m": [0, 0, 27146.667, 27146.667, 0, 0, 0, 27146.667, 27146.667, 27146.667, 0, 0]}, {"t": "ТЕЛЕКОМ", "s": "КОНВЕРГЕНТ", "ch": "НОН-ВИДЕО", "m": [0, 0, 0, 0, 0, 0, 0, 21408.75, 42817.5, 0, 0, 0]}, {"t": "ТЕЛЕКОМ", "s": "СЕМЕЙНАЯ ГРУППА", "ch": "НОН-ВИДЕО", "m": [25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950, 25950]}, {"t": "РТК", "s": "РТК", "ch": "НОН-ВИДЕО", "m": [211473.684, 68526.316, 0, 0, 0, 211473.684, 68526.316, 0, 0, 179375, 107625, 0]}];
+const FMP_BASE = Object.assign({}, SCEN_BASE, {12:32.8});  // Безопасность: трекер, 03.2026
+const MONTHS = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+function fmpRowLift(r, i){ const rec=CALC.types[r.t].subtypes[r.s].ch[r.ch];
+  const ots=r.m.reduce((a,b)=>a+b,0); const kcx = rec.cx ? (CALC.cx['ПРОСТОЕ']??1) : 1;
+  return ots*rec.lift[i]/rec.ots*kcx*(CALC.annual[i]??1); }
+function fmpTotal(i){ return FMP.reduce((a,r)=>a+fmpRowLift(r,i),0); }
+const fmt3 = v => v>0 && v<0.005 ? '<0,01' : fmt(v);
+function renderFmp(){
+  const otsAll=FMP.reduce((a,r)=>a+r.m.reduce((x,y)=>x+y,0),0)*OTS_UNIT;
+  const byCh={}; FMP.forEach(r=>{ byCh[r.ch]=(byCh[r.ch]||0)+r.m.reduce((x,y)=>x+y,0)*OTS_UNIT; });
+  const tv=(byCh['ТВ']||0)/otsAll*100;
+  const res=CALC_META.map(m=>({m, v:fmpTotal(m.i), base:FMP_BASE[m.i]})).sort((a,b)=>b.v-a.v);
+  const top=res[0], p=otsParts(otsAll);
+  document.getElementById('fmpTiles').innerHTML = `
+    <div class="ov-tile"><div class="t-big">${p.v}<small> ${p.u}</small></div><div class="t-lab">OTS в ФМП 2027 · ${FMP.length} строк плана</div></div>
+    <div class="ov-tile"><div class="t-big">${Math.round(tv)}<small>%</small></div><div class="t-lab">OTS в ТВ · нон-ТВ и нон-видео — <b>${Math.round(100-tv)}%</b></div></div>
+    <div class="ov-tile"><div class="t-big">+${fmt(top.v)}<small> п.п.</small></div><div class="t-lab">наибольший прирост — <b>${top.m.short}</b></div></div>`;
+  const pmax=Math.max(...res.map(r=>r.base+r.v));
+  document.getElementById('fmpDetail').innerHTML = `
+    <div class="sd-head"><div><b>ФМП 2027</b> · результат на бренд-метрики: было (Q1'26) → станет</div>
+      <div class="sd-sum">сумма прироста <b>+${fmt(res.reduce((a,r)=>a+r.v,0))} п.п.</b></div></div>
+    <div class="sd-bars">${res.map(r=>{ const col=MCOLOR[r.m.i];
+      const bw=r.base/pmax*100, lw=r.v/pmax*100;
+      return `<div class="sdrow"><span class="sdn">${r.m.short}</span>
+        <span class="sdtrack"><i class="sdbase" style="width:${bw.toFixed(1)}%"></i><i class="sdlift" style="width:${lw.toFixed(1)}%;background:${col}"></i></span>
+        <span class="sdv">${r.base.toFixed(1).replace('.',',')} → <b>${(r.base+r.v).toFixed(1).replace('.',',')}</b></span></div>`; }).join('')}</div>
+    <p class="mut" style="margin-top:12px;font-size:12px">База: BHT Q1'26; «Безопасность» — трекер, март 2026. Прирост «Безопасности» в ФМП даёт не только «Защитник»: атрибут растёт от всех кампаний плана.</p>`;
+  // --- флайтинг
+  const CH=[['ТВ','#ff0032'],['НОН-ТВ','#1d2023'],['НОН-ВИДЕО','#9aa0aa']];
+  const mon=MONTHS.map((_,k)=>{ const o={}; CH.forEach(([c])=>o[c]=FMP.filter(r=>r.ch===c).reduce((a,r)=>a+r.m[k],0)*OTS_UNIT/1e9); return o; });
+  const tot=mon.map(o=>CH.reduce((a,[c])=>a+o[c],0)), mx=niceCeil(Math.max(...tot)*1.08);
+  const W=900,H=330,x0=58,x1=880,y0=22,y1=282, bw=(x1-x0)/12;
+  const yp=v=>y1-v/mx*(y1-y0);
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Флайтинг ФМП 2027">`;
+  linTicks(mx).forEach(t=>{ const y=yp(t); s+=`<line class="gridline" x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}"/><text class="axislab" x="${x0-10}" y="${(y+3.6).toFixed(1)}" text-anchor="end">${fmtTick(t)}</text>`; });
+  s+=`<line class="axisline" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>`;
+  mon.forEach((o,k)=>{ let acc=0; const x=x0+k*bw+bw*0.18, w=bw*0.64;
+    CH.forEach(([c,col])=>{ const v=o[c]; if(!v) return; const ya=yp(acc+v), yb=yp(acc);
+      s+=`<g class="bub" data-name="${MONTHS[k]} 2027 · ${CHSHORT[c]}" data-val="${fmt(v)} млрд OTS" data-x="${fmt(tot[k])} млрд за месяц" data-col="${col}"><rect x="${x.toFixed(1)}" y="${ya.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(0.5,yb-ya).toFixed(1)}" fill="${col}" fill-opacity="${c==='ТВ'?0.85:0.7}"/></g>`;
+      acc+=v; });
+    s+=`<text class="axislab" x="${(x0+k*bw+bw/2).toFixed(1)}" y="${y1+18}" text-anchor="middle">${MONTHS[k]}</text>`;
+    s+=`<text class="axislab" x="${(x0+k*bw+bw/2).toFixed(1)}" y="${(yp(tot[k])-6).toFixed(1)}" text-anchor="middle">${tot[k].toFixed(1).replace('.',',')}</text>`; });
+  s+=`<text class="axistitle" transform="translate(14,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">OTS, МЛРД</text></svg>`;
+  document.getElementById('fmpMonths').innerHTML=s;
+  document.getElementById('fmpLegend').innerHTML = CH.map(([c,col])=>`<span class="li"><span class="d" style="background:${col}"></span>${CHSHORT[c]} · ${fmtOtsU(byCh[c]||0)}</span>`).join('');
+  // --- вклад строк
+  const rows=FMP.map(r=>({r, v:CALC_META.map(m=>fmpRowLift(r,m.i)), ots:r.m.reduce((a,b)=>a+b,0)*OTS_UNIT}))
+    .map(x=>({...x, sum:x.v.reduce((a,b)=>a+b,0)})).sort((a,b)=>b.sum-a.sum);
+  let t=`<table class="chtable"><thead><tr><th class="lft">Тип · подтип</th><th class="lft">Канал</th><th>OTS</th>${CALC_META.map(m=>`<th title="${esc(m.name)}">${m.abbr}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach(x=>{ t+=`<tr><td class="lft mname2">${x.r.t} · ${x.r.s}</td><td class="lft"><span class="chms">${CHSHORT[x.r.ch]}</span></td><td>${fmtOtsU(x.ots)}</td>${x.v.map(v=>`<td>+${fmt3(v)}</td>`).join('')}</tr>`; });
+  t+=`<tr><td class="lft"><b>Σ Итого / год</b></td><td></td><td><b>${fmtOtsU(otsAll)}</b></td>${CALC_META.map(m=>`<td><b>+${fmt(fmpTotal(m.i))}</b></td>`).join('')}</tr></tbody></table>`;
+  document.getElementById('fmpTable').innerHTML=t;
+}
+wireTip(document.getElementById('fmpMonths'));
+
 
 // ====== OVERVIEW (SOS mini) ======
 function renderOverviewSos(){
@@ -1408,7 +1551,7 @@ function renderOverviewSos(){
     {n:'билайн',v:14,c:MUT},{n:'Сбер',v:7,c:MUT},{n:'МТС·тел',v:6,c:'#ff0032'},{n:'YOTA',v:5,c:MUT},{n:'Т-Моб',v:5,c:MUT}];
   const mx=Math.max(...sos.map(s=>s.v));
   document.getElementById('ovSos').innerHTML = sos.map(s=>`<div class="sb"><span class="vv">${s.v}%</span>
-    <i style="height:${(s.v/mx*100).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
+    <i style="height:${(s.v/mx*62).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
   // спонтанное знание бренда Q1'26 (BHT)
   const br=[{n:'МТС',v:83,c:'#ff0032'},{n:'Мегафон',v:77,c:'#9aa0aa'},{n:'билайн',v:74,c:'#9aa0aa'},{n:'Т2',v:66,c:'#9aa0aa'}];
   const bx=Math.max(...br.map(b=>b.v));
@@ -1421,25 +1564,26 @@ function renderPriorities(){ renderDriveMap(); renderDriveList(); renderPrioGrou
 
 function renderDriveMap(){
   const W=900,H=460,x0=84,x1=862,y0=34,y1=384;
-  const xmin=-0.35,xmax=0.95, ymin=0,ymax=0.024;
+  const xmin=-0.35,xmax=0.95, [ymin,ymax]=IDX_RANGE();
   const xp=v=>x0+(Math.max(xmin,Math.min(xmax,v))-xmin)/(xmax-xmin)*(x1-x0);
   const yp=v=>y1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin)*(y1-y0);
-  const imax=Math.max(...META.map(m=>BUDGET.imp[m.i]));
-  const rows=META.map(m=>({m, pos:BUDGET.pos[m.i], ms:m.ms, imp:BUDGET.imp[m.i], diff:!!m.diff,
-    px:xp(BUDGET.pos[m.i]), py:yp(m.ms), r:12+Math.sqrt(BUDGET.imp[m.i]/imax)*18}));
+  const imax=Math.max(...BUDGET_META.map(m=>BUDGET.imp[m.i]));
+  const impMed=[...BUDGET_META.map(m=>BUDGET.imp[m.i])].sort((a,b)=>a-b)[Math.floor(BUDGET_META.length/2)];
+  const rows=META.map(m=>({m, pos:BUDGET.pos[m.i], ms:m.idx, imp:BUDGET.imp[m.i], noImp:!hasImp(m), diff:!!m.diff,
+    px:xp(BUDGET.pos[m.i]), py:yp(m.idx), r:12+Math.sqrt((hasImp(m)?BUDGET.imp[m.i]:impMed)/imax)*18}));
   // collision
   for(let it=0;it<140;it++){let mv=false;for(let a=0;a<rows.length;a++)for(let b=a+1;b<rows.length;b++){
     const A=rows[a],B=rows[b],dx=B.px-A.px,dy=B.py-A.py,d=Math.hypot(dx,dy)||0.1,mn=A.r+B.r+3;
     if(d<mn){const p=(mn-d)/2+0.4,ux=dx/d,uy=dy/d;A.px-=ux*p;A.py-=uy*p;B.px+=ux*p;B.py+=uy*p;mv=true;}}if(!mv)break;}
   rows.forEach(r=>{r.px=Math.max(x0+r.r,Math.min(x1-r.r,r.px));r.py=Math.max(y0+r.r,Math.min(y1-r.r,r.py));});
-  const px0=xp(0), pyMid=yp(0.012), zoneR=xp(0.22);
+  const px0=xp(0), pyMid=yp(MS_THR), zoneR=xp(0.22);
   const ACC='#ff0032', MUT='#9aa0aa';
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
   const xc1=xp(-0.08), xc2=xp(0.12);
   // полоса медиа-драйва (высокая медиачувствительность), разбитая на стратегии по позиции
   s+=`<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${pyMid-y0}" fill="rgba(255,0,50,.05)"/>`;
   s+=`<line class="guideline" x1="${x0}" y1="${pyMid.toFixed(1)}" x2="${x1}" y2="${pyMid.toFixed(1)}" style="opacity:.4;stroke-dasharray:4 4"/>`;
-  s+=`<text class="guidelab" x="${x0+4}" y="${pyMid-6}" style="fill:var(--faint)">порог медиачувствительности · выше — медиа двигает атрибут</text>`;
+  s+=`<text class="guidelab" x="${x1-4}" y="${pyMid+14}" text-anchor="end" style="fill:var(--faint)">порог = средняя медиачувствительность · выше — медиа двигает</text>`;
   s+=`<line class="guideline" x1="${xc1.toFixed(1)}" y1="${y0}" x2="${xc1.toFixed(1)}" y2="${pyMid.toFixed(1)}" style="opacity:.5;stroke-dasharray:3 3"/>`;
   s+=`<line class="guideline" x1="${xc2.toFixed(1)}" y1="${y0}" x2="${xc2.toFixed(1)}" y2="${pyMid.toFixed(1)}" style="opacity:.5;stroke-dasharray:3 3"/>`;
   s+=`<text class="zlab" x="${((x0+xc1)/2).toFixed(0)}" y="${y0+15}" text-anchor="middle" style="fill:var(--muted)">ДОГНАТЬ</text>`;
@@ -1450,12 +1594,12 @@ function renderDriveMap(){
   s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">ПОЗИЦИЯ vs КОНКУРЕНТЫ</text>`;
   s+=`<text class="guidelab" x="${x0+2}" y="${H-8}" text-anchor="start" style="fill:var(--muted)">отстаём ←</text>`;
   s+=`<text class="guidelab" x="${x1-2}" y="${H-8}" text-anchor="end" style="fill:var(--muted)">→ опережаем</text>`;
-  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
+  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ, ИНДЕКС →</text>`;
   rows.forEach(r=>{ const col=r.diff?ACC:MUT;
-    const drive=r.diff && r.ms>=0.012;
+    const drive=r.diff && r.ms>=MS_THR;
     const st=driveStrat(r.pos);
-    s+=`<g class="bub${drive?' fwd':''}" data-name="${esc(r.m.name)}" data-sub="${r.diff?'дифференциатор':'коммодити'}" data-val="${drive?st.t:''}" data-x="позиция ${r.pos.toFixed(2)} · медиа ${BANDNAME[msBand(r.ms)]} · важн ${r.imp.toFixed(1)}%" data-col="${col}">`;
-    s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="${r.diff?0.82:0.5}" stroke="${col}"/>`;
+    s+=`<g class="bub${drive?' fwd':''}" data-name="${esc(r.m.name)}" data-sub="${r.diff?'дифференциатор':'коммодити'}" data-val="${drive?st.t:''}" data-x="позиция ${r.pos.toFixed(2)} · медиа ${fmtIdx(r.ms)} к среднему · важн ${fmtImp(r.m.i)}" data-col="${col}">`;
+    s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="${r.diff?0.82:0.5}" stroke="${col}"${r.noImp?' stroke-dasharray="3 3" stroke-width="2"':''}/>`;
     s+=`<text class="bin" x="${r.px.toFixed(1)}" y="${r.py.toFixed(1)}" style="font-size:${Math.min(12,r.r*0.55).toFixed(0)}px">${r.m.abbr}</text></g>`;
   });
   s+=`</svg>`;
@@ -1463,25 +1607,26 @@ function renderDriveMap(){
   document.getElementById('driveLegend').innerHTML =
     `<span class="li"><span class="d" style="background:${ACC}"></span>дифференциатор</span>`
     +`<span class="li"><span class="d" style="background:${MUT}"></span>коммодити</span>`
-    +`<span class="li" style="color:var(--faint)">размер = важность при выборе · обведено = медиачувствительный дифференциатор</span>`;
+    +`<span class="li" style="color:var(--faint)">размер = важность при выборе · обведено = медиачувствительный дифференциатор</span>`
+    + (META.some(m=>!hasImp(m))?`<span class="li" style="color:var(--faint)">пунктир — важность при выборе н/д, размер условный</span>`:'');
 }
 
 function driveStrat(pos){ return pos>=0.12?{t:'усилить отрыв',c:'lead'} : (pos<=-0.08?{t:'догнать',c:'lag'} : {t:'создать отрыв',c:'par'}); }
-function driveScore(m){ return (m.ms*100)*BUDGET.imp[m.i]; }   // как сильно медиа двигает × насколько важно — без привязки к позиции
+function driveScore(m){ return hasImp(m) ? m.idx*BUDGET.imp[m.i] : -1; }   // как сильно медиа двигает × насколько важно — без привязки к позиции
 function renderDriveList(){
-  const cand=META.filter(m=>m.diff && m.ms>=0.012).sort((a,b)=>driveScore(b)-driveScore(a));
+  const cand=META.filter(m=>m.diff && m.idx>=MS_THR).sort((a,b)=>driveScore(b)-driveScore(a));
   const lead=cand.filter(m=>BUDGET.pos[m.i]>=0.12).map(m=>m.short);
   const par=cand.filter(m=>{const p=BUDGET.pos[m.i];return p>-0.08&&p<0.12;}).map(m=>m.short);
   document.getElementById('driveTake').innerHTML =
-    `<b>Медиа-драйверы дифференциации</b> (медиа их двигает): ${cand.map(m=>m.short).join(', ')}. `
+    (cand.length?`<b>Медиа-драйверы дифференциации</b> (медиа их двигает): ${cand.map(m=>m.short).join(', ')}. `:`<b>Нет дифференциаторов с медиачувствительностью выше средней.</b> `)
     + (lead.length?`Где уже ведём — <b>${lead.join(', ')}</b> — усиливаем отрыв. `:'')
     + (par.length?`У паритета — <b style="color:var(--accent)">${par.join(', ')}</b> — создаём отрыв (там конкуренты прокачивают).`:'');
   document.getElementById('driveList').innerHTML = cand.map(m=>{
     const st=driveStrat(BUDGET.pos[m.i]);
     return `<div class="dl-row">
       <span class="dl-n">${m.short}${m.tentative?' <span class="tent">оц.</span>':''}</span>
-      <span class="dl-tags"><span class="dl-t">медиа: ${BANDNAME[msBand(m.ms)]}</span>
-        <span class="dl-t">важн ${BUDGET.imp[m.i].toFixed(1)}%</span>
+      <span class="dl-tags"><span class="dl-t">медиа ${fmtIdx(m.idx)}</span>
+        <span class="dl-t">важн ${fmtImp(m.i)}</span>
         <span class="dl-t ${st.c==='par'?'p':''}">${st.t}</span></span>
     </div>`;
   }).join('');
@@ -1490,16 +1635,16 @@ function renderDriveList(){
 // ====== состав групп (справочно, эксперт) ======
 function renderPrioGroups(){
   const tag={poz:'Дифференциация · «Умный апгрейд связи»', prod:'Продуктовые преимущества', lead:'Лидерство категории'};
-  const order=['poz','prod','lead'];
+  const order=['poz','prod','lead'].filter(g=>GRPS_USED.includes(g));
   document.getElementById('prioGroups').innerHTML = order.map(g=>{
     const ms=META.filter(m=>m.grp===g);
     const col=BUDGET.grpColor[g];
     const rowsH=ms.map(m=>{
-      const imp=BUDGET.imp[m.i], band=msBand(m.ms), kpi=SCEN_BASE[m.i];
-      const bandTxt=['','низк','сред','выс'][band];
+      const band=msCls(m.idx), kpi=FMP_BASE[m.i];
+      const bandTxt=fmtIdx(m.idx);
       return `<div class="pc-row">
         <span class="pc-n">${m.short}${m.tentative?' <span class="tent">оц.</span>':''}</span>
-        <span class="pc-m" title="влияние на выбор оператора">${imp.toFixed(1)}%</span>
+        <span class="pc-m" title="влияние на выбор оператора">${fmtImp(m.i)}</span>
         <span class="pc-m b${band}" title="медиачувствительность">${bandTxt}</span>
         <span class="pc-m" title="текущий KPI, Q1'26">${kpi!=null?kpi.toFixed(0):'—'}</span>
       </div>`;
@@ -1516,10 +1661,11 @@ function renderPrioGroups(){
 
 // ====== SCENARIOS ======
 function renderScenarios(){
+  renderFmp();
   const totals=SCENARIOS.map(s=>({s, tot:scenTotal(s)}));
   const mx=Math.max(...totals.map(t=>t.tot)), best=totals.reduce((a,b)=>b.tot>a.tot?b:a);
   // total bars
-  document.getElementById('scenTotal').innerHTML = `<div class="scen-th">Суммарный годовой прирост по 11 атрибутам, п.п.</div>`
+  document.getElementById('scenTotal').innerHTML = `<div class="scen-th">Суммарный годовой прирост по 5 атрибутам, п.п.</div>`
     + totals.map(({s,tot})=>{
       const w=tot/mx*100, isBest=s.id===best.s.id;
       return `<div class="scenrow ${s.rec?'rec':''}" data-id="${s.id}">
@@ -1575,28 +1721,29 @@ document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',
 function renderChronoLogic(){
   document.getElementById('chronoLogic').innerHTML = `
    <div class="chrono-arch">
-     <div class="ca-card"><div class="ca-sec">30<small>сек</small></div><div class="ca-t">Промо</div><div class="ca-d">короткие охватные ролики: безлимиты, роуминг, РИИЛ</div></div>
-     <div class="ca-card"><div class="ca-sec">45<small>сек</small></div><div class="ca-t">Имидж · технологии</div><div class="ca-d">5G, семейная группа, финтех</div></div>
-     <div class="ca-card"><div class="ca-sec">60<small>сек</small></div><div class="ca-t">Имидж · позиционирование</div><div class="ca-d">войстех · «Умный апгрейд связи»</div></div>
+     <div class="ca-card"><div class="ca-sec">30<small>сек</small></div><div class="ca-t">Промо</div><div class="ca-d">телеком-промо, роуминг, РИИЛ, качество связи, РТК</div></div>
+     <div class="ca-card"><div class="ca-sec">45<small>сек</small></div><div class="ca-t">Имидж · технологии</div><div class="ca-d">имидж, семейная группа, банк, защитник</div></div>
+     <div class="ca-card"><div class="ca-sec">60<small>сек</small></div><div class="ca-t">Имидж · позиционирование</div><div class="ca-d">позиционирование, войстех</div></div>
    </div>
-   <p class="mut" style="margin-top:14px">Хроно-реко закреплено за типом кампании; коэффициент сложности — динамический.</p>`;
+   <p class="mut" style="margin-top:14px">Хроно-реко закреплено за типом кампании. Для РК только в нон-видео хронометраж не нужен.</p>`;
 }
 
 // ============ CHRONO REFERENCE (по типам кампаний) ============
 function renderChronoTable(){
-  let h=`<table class="chtable"><thead><tr><th class="lft">Тип</th><th class="lft">Подтип</th><th>Роль</th><th>Реко хроно</th><th>Коэф. сложности<br><small>простое / сложное</small></th></tr></thead><tbody>`;
-  TYPES.forEach(t=>{
-    const subs=Object.keys(MODEL.types[t].subtypes);
-    const role=MODEL.types[t].role, tent=MODEL.types[t].tentative;
+  let h=`<table class="chtable"><thead><tr><th class="lft">Тип</th><th class="lft">Подтип</th><th>Роль</th><th>Каналы</th><th>Реко хроно</th><th>Коэф. сложности<br><small>простое / сложное</small></th></tr></thead><tbody>`;
+  CTYPES.forEach(t=>{
+    const subs=Object.keys(CALC.types[t].subtypes);
+    const role=CALC.types[t].role;
     subs.forEach((sub,i)=>{
-      const reko=rekoChrono(t,sub);
-      const ksl=kSlozh(sub,'СЛОЖНОЕ');
-      const kl=ksl.toFixed(2).replace('.',',');
-      h+=`<tr>${i===0?`<td class="lft" rowspan="${subs.length}"><b>${t}</b>${tent?' <span class="tent">оц.</span>':''}</td>`:''}
+      const chs=chAvail(t,sub), vid=chs.some(k=>k!=='НОН-ВИДЕО'), cxOn=chs.some(k=>CALC.types[t].subtypes[sub].ch[k].cx);
+      const reko=vid?rekoChrono(t,sub):'—';
+      const kl=String(CALC.cx['СЛОЖНОЕ']).replace('.',',');
+      h+=`<tr>${i===0?`<td class="lft" rowspan="${subs.length}"><b>${t}</b></td>`:''}
         <td class="lft mname2">${sub}</td>
         <td><span class="chms">${role}</span></td>
-        <td><span class="chsec s${reko}">${reko}<small>с</small></span></td>
-        <td><span class="chk">×1,0 / ×${kl}</span>${ksl===1?' <span class="chnote">не удорожает</span>':''}</td>
+        <td><span class="chms">${chs.map(k=>CHSHORT[k]).join(' · ')}</span></td>
+        <td>${vid?`<span class="chsec s${reko}">${reko}<small>с</small></span>`:'<span class="chnote">не видео</span>'}</td>
+        <td>${cxOn?`<span class="chk">×1,0 / ×${kl}</span>`:'<span class="chnote">не применяется</span>'}</td>
       </tr>`;
     });
   });
@@ -1611,15 +1758,15 @@ function effImp(i){ const f=(state.fwd && BUDGET.fwd[i])? BUDGET.fwd[i] : 1; ret
 function budgetRows(){
   // доля ∝ важность × медиачувствительность × разрыв, с поправкой на стратегию (квадрант важность × чувствительность)
   const quadW={over:1.3, base:1.0, spot:0.85, min:0.65};
-  const IMP_HI=3.0, MS_HI=0.012;
-  return META.map(m=>{
-    const imp=effImp(m.i), pos=BUDGET.pos[m.i], ms=m.ms;
+  const IMP_HI=3.0, MS_HI=MS_THR;
+  return BUDGET_META.map(m=>{
+    const imp=effImp(m.i), pos=BUDGET.pos[m.i], ms=m.idx;
     const gap = Math.max(0.25, 1 - Math.max(-0.5,Math.min(0.9,pos))); // слабая позиция → больше веса (догонять)
     const impHi=imp>=IMP_HI, sensHi=ms>=MS_HI;
     const quad = impHi
       ? (sensHi ? {k:'over', t:'Переинвестировать'} : {k:'base', t:'Удержание'})
       : (sensHi ? {k:'spot', t:'Точечные инвестиции'} : {k:'min', t:'Минимальные инвестиции'});
-    const raw = imp * (ms*100) * gap * quadW[quad.k];
+    const raw = imp * ms * gap * quadW[quad.k];
     return {m, imp, pos, ms, raw, mode:quad, fwd:(state.fwd && BUDGET.fwd[m.i])||0};
   });
 }
@@ -1636,10 +1783,12 @@ function renderBudgetRule(){
      <div class="eqx"><span class="hl">коэффициент к базе</span> <span class="op">∝</span> важность<sub>при выборе</sub>
        <span class="op">×</span> медиачувствительность <span class="op">×</span> разрыв<sub>до цели</sub></div>
      <ul>
+       <li><b>Позиция «Безопасности»</b> — МТС к среднему по Билайну, Мегафону и Т2 (BHT, март 2026).</li>
+       <li><b>Медиачувствительность</b> — годовой прирост атрибута на 1 млрд OTS в среднем по портфелю РК из датасета; индекс ×1,0 = среднее по атрибутам.</li>
        <li>Это <b>не</b> деление одного бюджета на 100% — метрики не финансируются одновременно. Каждая — <b>самостоятельная кампания</b>.</li>
        <li>Смотрим на них как на рейтинг: на приоритетных тратим <b>выше базы</b>, на слабых — <b>ниже базы</b>.</li>
        <li>Отклонение ограничено <b>±50% от средней кампании</b> (коэффициент ×0,5…×1,5) — реалистичный коридор: мы не инвестируем в ноль и не утраиваем бюджет.</li>
-       <li>Форвардная важность работает как <b>стратегическая страховка</b>: ставочные атрибуты (финтех, 5G и др.) не опускаются ниже базы, даже если текущие данные тянут вниз.</li>
+       <li>Форвардная важность работает как <b>стратегическая страховка</b>: ставочные атрибуты (лидер технологий, продвинутость, «умнее») не опускаются ниже базы, даже если текущие данные тянут вниз.</li>
        <li>Стратегия (квадрант ниже) задаёт, <b>переинвестировать</b> атрибут или держать <b>минимум</b>; позиция МТС (размер круга) уточняет, догонять или защищать.</li>
      </ul>
    </div>
@@ -1657,7 +1806,7 @@ function budgetLayout(){
   const W=900,H=480,x0=78,x1=864,y0=34,y1=404;
   const rows=budgetRows();
   const xmin=0, xmax=10;       // важность при выборе, %
-  const ymin=0, ymax=0.024;    // медиачувствительность
+  const [ymin,ymax]=IDX_RANGE();    // медиачувствительность, индекс к среднему
   const xp=v=> x0+(Math.max(xmin,Math.min(xmax,v))-xmin)/(xmax-xmin)*(x1-x0);
   const yp=v=> y1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin)*(y1-y0);
   const rad=pos=>{ const p=Math.max(-0.25,Math.min(0.9,pos)); return 12+(p+0.25)/1.15*26; }; // позиция: отстаёт→мал, перебивает→велик
@@ -1672,10 +1821,10 @@ function budgetLayout(){
   return {W,H,x0,x1,y0,y1,xp,yp,xmin,xmax,ymin,ymax,rows};
 }
 function posLabel(p){ return p>0.2?'перебивает конкурентов':(p<0?'отстаёт':'на уровне'); }
-function bubTip(r){ const since=BUDGET.fwdSince[r.m.i]; return `важн ${r.imp.toFixed(1)}%${r.fwd?` (форвард ×${r.fwd}${since?', замер с '+since:''})`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')} · позиция: ${posLabel(r.pos)} (${r.pos.toFixed(2)})`; }
+function bubTip(r){ const since=BUDGET.fwdSince[r.m.i]; return `медиа ${fmtIdx(r.ms)} · важн ${r.imp.toFixed(1)}%${r.fwd?` (форвард ×${r.fwd}${since?', замер с '+since:''})`:(BUDGET.impApprox[r.m.i]?' (оц.)':'')} · позиция: ${posLabel(r.pos)} (${r.pos.toFixed(2)})`; }
 function renderBudgetMap(){
   const G=budgetLayout(); const {W,H,x0,x1,y0,y1,xp,yp,rows}=G;
-  const midx=xp(3.0), midy=yp(0.012); const gc=BUDGET.grpColor;
+  const midx=xp(3.0), midy=yp(MS_THR); const gc=BUDGET.grpColor;
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
   // приоритетная зона (выс. важность + выс. чувствительность) = верх-право
   s+=`<rect x="${midx}" y="${y0}" width="${x1-midx}" height="${midy-y0}" fill="rgba(255,0,50,.06)"/>`;
@@ -1688,7 +1837,7 @@ function renderBudgetMap(){
   s+=`<text class="guidelab" x="${x1-8}" y="${y1-10}" text-anchor="end" style="fill:var(--muted)">Удержание</text>`;
   s+=`<text class="guidelab" x="${x0+8}" y="${y1-10}" style="fill:var(--muted)">Минимальные инвестиции</text>`;
   s+=`<text class="axistitle" x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle">ВАЖНОСТЬ ПРИ ВЫБОРЕ →</text>`;
-  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ →</text>`;
+  s+=`<text class="axistitle" transform="translate(16,${(y0+y1)/2}) rotate(-90)" text-anchor="middle">МЕДИАЧУВСТВИТЕЛЬНОСТЬ, ИНДЕКС →</text>`;
   rows.forEach(r=>{ const col=gc[r.m.grp];
     s+=`<g class="bub${r.fwd?' fwd':''}" data-i="${r.m.i}" data-name="${esc(r.m.name)}" data-sub="${esc(BUDGET.grpName[r.m.grp])}" data-val="стратегия: ${r.mode.t}" data-x="${bubTip(r)}" data-col="${col}">`;
     s+=`<circle class="bcore" cx="${r.px.toFixed(1)}" cy="${r.py.toFixed(1)}" r="${r.r.toFixed(1)}" fill="${col}" fill-opacity="0.78" stroke="${col}"/>`;
@@ -1696,9 +1845,10 @@ function renderBudgetMap(){
   });
   s+=`</svg>`;
   document.getElementById('budgetMap').innerHTML=s;
-  document.getElementById('budgetLegend').innerHTML = Object.keys(BUDGET.grpName).map(g=>
+  document.getElementById('budgetLegend').innerHTML = GRPS_BUDGET.map(g=>
     `<span class="li"><span class="d" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
-    + `<span class="li" style="color:var(--faint)">размер круга = позиция МТС: больше — перебивает конкурентов, меньше — отстаёт</span>`;
+    + `<span class="li" style="color:var(--faint)">размер круга = позиция МТС: больше — перебивает конкурентов, меньше — отстаёт</span>`
+    + (META.length>BUDGET_META.length?`<span class="li" style="color:var(--faint)">без «${META.filter(m=>!hasImp(m)).map(m=>m.short).join('», «')}»: нет важности при выборе</span>`:'');
 }
 // animate existing bubbles to the new layout (forward toggle) — без перестроения SVG
 function layoutBudgetMap(){
@@ -1731,8 +1881,8 @@ function renderBudgetAlloc(){
   });
   rows.sort((a,b)=>b.dev-a.dev || b.dataDev-a.dataDev);
   const gc=BUDGET.grpColor;
-  document.getElementById('bAllocHint').textContent='база = средняя кампания · коридор ±50% (×0,5…×1,5)';
-  let head=`<div class="alloc-head">`+Object.keys(BUDGET.grpName).map(g=>
+  document.getElementById('bAllocHint').textContent='база = средняя кампания · коридор ±50% (×0,5…×1,5)'+(META.length>BUDGET_META.length?' · без «Безопасности» (нет важности)':'');
+  let head=`<div class="alloc-head">`+GRPS_BUDGET.map(g=>
     `<span class="leg"><span class="gd" style="background:${gc[g]}"></span>${BUDGET.grpName[g]}</span>`).join('')
     +`<span class="leg" style="color:var(--faint)">−50% ← база → +50%</span></div>`;
   let h=`<div class="alloc idx">`;
@@ -1758,7 +1908,7 @@ function renderRubPanel(){
     {n:'билайн',v:5.9,c:'#ffd24b'},{n:'YOTA',v:2.3,c:'#4fd1ff'},{n:'Сбер',v:2.9,c:'#7be36b'},{n:'Т-Моб',v:2.2,c:'#b084ff'}];
   const mx=Math.max(...sos.map(s=>s.v));
   const bars=sos.map(s=>`<div class="sb"><span class="vv">${s.v.toFixed(1).replace('.',',')}</span>
-    <i style="height:${(s.v/mx*100).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
+    <i style="height:${(s.v/mx*62).toFixed(0)}%;background:${s.c}"></i><span class="nm">${s.n}</span></div>`).join('');
   document.getElementById('rubPanel').innerHTML = `
     <div class="pend">
       <span class="ic">₽</span>
