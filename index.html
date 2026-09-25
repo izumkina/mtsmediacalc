@@ -660,7 +660,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
     <div>
       <div class="brand"><span class="dot"></span><b>Brand Lift Lab · МТС · 2027</b></div>
       <h1>Прирост бренд-метрик<br><span class="em">и медиаинвестиции</span></h1>
-      <p class="sub">От позиции бренда — к сценариям и распределению бюджета. Пять шагов.</p>
+      <p class="sub" id="heroSub">От позиции бренда — к сценариям и распределению бюджета. Пять шагов.</p>
     </div>
     <div class="modebox">
       <div class="modetoggle" id="modeToggle" title="Кратко — для быстрого взгляда; Подробно — модель, формулы, экспертные инструменты">
@@ -681,7 +681,7 @@ body:not(.mode-detail) .expert-only{display:none !important;}
     <button data-t="scenarios"><span class="tn">02</span> Сценарии</button>
     <button data-t="calculator"><span class="tn">03</span> Калькулятор</button>
     <button data-t="budget"><span class="tn">04</span> Куда инвестировать</button>
-    <button data-t="chrono"><span class="tn">05</span> Хронометраж</button>
+    <button data-t="chrono"><span class="tn" id="tnChrono">05</span> Хронометраж</button>
   </nav>
 
 
@@ -825,13 +825,13 @@ body:not(.mode-detail) .expert-only{display:none !important;}
   <!-- ========== TAB: CHRONO ========== -->
   <div class="tabpanel" id="tab-chrono">
     <section class="totals-sec">
-      <div class="shead"><span class="no">05</span><h2>Хронометраж</h2>
+      <div class="shead"><span class="no" data-chno="">05</span><h2>Хронометраж</h2>
         <span class="hint">обновлённая архитектура · реко берётся по типу кампании</span></div>
       <div class="chrono-logic" id="chronoLogic"></div>
     </section>
 
     <section class="map-sec" style="margin-top:34px">
-      <div class="shead"><span class="no">05·Б</span><h2>Рекомендованный хронометраж по кампаниям</h2>
+      <div class="shead"><span class="no" data-chno="·Б">05·Б</span><h2>Рекомендованный хронометраж по кампаниям</h2>
         <span class="hint">тип → подтип → реко хроно и коэф. сложности</span></div>
       <div class="mapwrap"><div id="chronoTable"></div></div>
     </section>
@@ -1930,6 +1930,15 @@ function renderRubPanel(){
 
 // populate length-economy metric selector
 
+// ====== видимость вкладки 04 «Куда инвестировать» ======
+// скрыта, пока нет данных по «Безопасности» для бюджета; чтобы вернуть — SHOW_BUDGET = true
+const SHOW_BUDGET = false;
+if(!SHOW_BUDGET){
+  const b=document.querySelector('#tabs button[data-t="budget"]'); if(b) b.style.display='none';
+  document.getElementById('tnChrono').textContent='04';
+  document.querySelectorAll('[data-chno]').forEach(el=>el.textContent='04'+el.dataset.chno);
+  document.getElementById('heroSub').textContent='От позиции бренда — к сценариям, медиаплану и хронометражу. Четыре шага.';
+}
 // init
 seed(); renderCards(); renderChips(); recalc();
 setMode('brief'); renderOverviewSos(); renderPriorities();
